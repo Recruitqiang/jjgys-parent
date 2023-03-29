@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgFbgcQlgcQmhpMapper">
+
+    <select id="selectqlmc" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT qlmc from jjg_fbgc_qlgc_qmhp  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
+    </select>
+
+    <select id="selectzh" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT zh from jjg_fbgc_qlgc_qmhp  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and qlmc=#{qlmc}
+    </select>
+
+</mapper>

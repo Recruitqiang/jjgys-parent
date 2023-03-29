@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgFbgcJtaqssJabxMapper">
+
+    <select id="selectbxnfsxs" resultType="java.lang.String" parameterType="java.util.List">
+        SELECT jbbx1.* from jjg_fbgc_jtaqss_jabx jbbx1
+                                LEFT JOIN (
+            SELECT * FROM jjg_fbgc_jtaqss_jabx WHERE proname=#{proname} and htd=#{htd} and fbgc=#{fbgc}) jabx2
+                                          on jbbx1.id=jabx2.id
+        WHERE jbbx1.bxnfsxsgdz is not null
+          and jbbx1.bxscz1 is not null
+          and jbbx1.bxscz2 is not null
+          and jbbx1.bxscz3 is not null
+          and jbbx1.bxscz4 is not null
+          and jbbx1.bxscz5 is not null
+    </select>
+
+    <select id="selecthxnfsxs" resultType="java.lang.String" parameterType="java.util.List">
+        SELECT jbbx1.* from jjg_fbgc_jtaqss_jabx jbbx1
+                                LEFT JOIN (
+            SELECT * FROM jjg_fbgc_jtaqss_jabx WHERE proname=#{proname} and htd=#{htd} and fbgc=#{fbgc}) jabx2
+                                          on jbbx1.id=jabx2.id
+        WHERE jbbx1.hxnfsxsgdz is not null
+          and jbbx1.hxscz1 is not null
+          and jbbx1.hxscz2 is not null
+          and jbbx1.hxscz3 is not null
+          and jbbx1.hxscz4 is not null
+          and jbbx1.hxscz5 is not null
+    </select>
+
+</mapper>

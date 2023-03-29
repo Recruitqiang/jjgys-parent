@@ -1,0 +1,125 @@
+package glgc.jjgys.system.controller;
+
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import glgc.jjgys.common.result.Result;
+import glgc.jjgys.model.project.JjgFbgcLjgcLjtsfysdHt;
+import glgc.jjgys.model.project.JjgFbgcLjgcLjtsfysdSl;
+import glgc.jjgys.model.projectvo.ljgc.CommonInfoVo;
+import glgc.jjgys.system.service.JjgFbgcLjgcLjtsfysdSlService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * <p>
+ *  路基土石方压实度_砂砾
+ * </p>
+ *
+ * @author wq
+ * @since 2023-02-21
+ */
+@RestController
+@RequestMapping("/jjg/fbgc/ljgc/ljtsfysd")
+@CrossOrigin
+public class JjgFbgcLjgcLjtsfysdSlController {
+
+    @Autowired
+    private JjgFbgcLjgcLjtsfysdSlService jjgFbgcLjgcLjtsfysdSlService;
+
+    /*@ApiOperation("生成路基土石方压实度_砂砾鉴定表")
+    @PostMapping("generateJdb")
+    public void generateJdb(@RequestBody CommonInfoVo commonInfoVo) throws Exception {
+        jjgFbgcLjgcLjtsfysdSlService.generateJdb(commonInfoVo);
+
+    }*/
+
+   /* @ApiOperation("查看路基土石方压实度_砂砾鉴定结果")
+    @PostMapping("lookJdbjg")
+    public Result lookJdbjg(@RequestBody CommonInfoVo commonInfoVo) throws IOException {
+        List<Map<String,Object>> jdjg = jjgFbgcLjgcLjtsfysdSlService.lookJdbjg(commonInfoVo);
+        return Result.ok(jdjg);
+
+    }*/
+
+    @ApiOperation("路基土石方压实度_砂砾模板文件导出")
+    @GetMapping("exportysdsl")
+    public void exportysdsl(HttpServletResponse response) throws IOException {
+        jjgFbgcLjgcLjtsfysdSlService.exportysdsl(response);
+    }
+
+    @ApiOperation(value = "路基土石方压实度_砂砾数据文件导入")
+    @PostMapping("importysdsl")
+    public Result importysdsl(@RequestParam("file") MultipartFile file,CommonInfoVo commonInfoVo) throws IOException, ParseException {
+        jjgFbgcLjgcLjtsfysdSlService.importysdsl(file,commonInfoVo);
+        return Result.ok();
+    }
+
+    @PostMapping("findQueryPageSL/{current}/{limit}")
+    public Result findQueryPageSL(@PathVariable long current,
+                                @PathVariable long limit,
+                                @RequestBody JjgFbgcLjgcLjtsfysdSl jjgFbgcLjgcLjtsfysdSl){
+        //创建page对象
+        Page<JjgFbgcLjgcLjtsfysdSl> pageParam=new Page<>(current,limit);
+        if (jjgFbgcLjgcLjtsfysdSl != null){
+            QueryWrapper<JjgFbgcLjgcLjtsfysdSl> wrapper=new QueryWrapper<>();
+            wrapper.like("proname",jjgFbgcLjgcLjtsfysdSl.getProname());
+            wrapper.like("htd",jjgFbgcLjgcLjtsfysdSl.getHtd());
+            wrapper.like("fbgc",jjgFbgcLjgcLjtsfysdSl.getFbgc());
+            Date sysj = jjgFbgcLjgcLjtsfysdSl.getSysj();
+            if (!StringUtils.isEmpty(sysj)){
+                wrapper.like("sysj",sysj);
+            }
+            //调用方法分页查询
+            IPage<JjgFbgcLjgcLjtsfysdSl> pageModel = jjgFbgcLjgcLjtsfysdSlService.page(pageParam, wrapper);
+            //返回
+            return Result.ok(pageModel);
+        }
+        return Result.ok().message("无数据");
+
+    }
+
+    @ApiOperation("批量删除路基土石方压实度_砂砾数据")
+    @DeleteMapping("removeBeatchSL")
+    public Result removeBeatchSL(@RequestBody List<String> idList){
+        boolean hd = jjgFbgcLjgcLjtsfysdSlService.removeByIds(idList);
+        if(hd){
+            return Result.ok();
+        } else {
+            return Result.fail().message("删除失败！");
+        }
+
+    }
+
+    @ApiOperation("根据id查询")
+    @GetMapping("getSl/{id}")
+    public Result getSl(@PathVariable String id) {
+        JjgFbgcLjgcLjtsfysdSl user = jjgFbgcLjgcLjtsfysdSlService.getById(id);
+        return Result.ok(user);
+    }
+
+    @ApiOperation("修改路基土石方压实度_砂砾数据")
+    @PostMapping("updateSl")
+    public Result updateSl(@RequestBody JjgFbgcLjgcLjtsfysdSl user) {
+        boolean is_Success = jjgFbgcLjgcLjtsfysdSlService.updateById(user);
+        if(is_Success) {
+            return Result.ok();
+        } else {
+            return Result.fail();
+        }
+    }
+
+
+}
+

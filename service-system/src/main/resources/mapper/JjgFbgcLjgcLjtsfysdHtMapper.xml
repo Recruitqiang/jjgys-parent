@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgFbgcLjgcLjtsfysdHtMapper">
+
+    <select id="selectNums" resultType="java.lang.String" parameterType="java.util.List">
+        SELECT count(*) FROM jjg_fbgc_ljgc_ljtsfysd_ht
+        WHERE proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
+        group by  xh
+    </select>
+
+
+</mapper>

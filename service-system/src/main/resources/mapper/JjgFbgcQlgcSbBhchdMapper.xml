@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgFbgcQlgcSbBhchdMapper">
+
+    <select id="selectnum" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT COUNT(*) num from jjg_fbgc_qlgc_sb_bhchd where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} GROUP BY qlmc
+    </select>
+
+</mapper>
