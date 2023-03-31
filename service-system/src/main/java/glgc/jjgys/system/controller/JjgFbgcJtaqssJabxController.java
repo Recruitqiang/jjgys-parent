@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -73,6 +74,14 @@ public class JjgFbgcJtaqssJabxController {
     @PostMapping("generateJdb")
     public void generateJdb(@RequestBody CommonInfoVo commonInfoVo) throws Exception {
         jjgFbgcJtaqssJabxService.generateJdb(commonInfoVo);
+
+    }
+
+    @ApiOperation("查看交安标线鉴定结果")
+    @PostMapping("lookJdbjg")
+    public Result lookJdbjg(@RequestBody CommonInfoVo commonInfoVo) throws IOException {
+        List<Map<String,Object>> jdjg = jjgFbgcJtaqssJabxService.lookJdbjg(commonInfoVo);
+        return Result.ok(jdjg);
 
     }
 

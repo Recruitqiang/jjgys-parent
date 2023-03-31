@@ -15,6 +15,7 @@ import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -25,18 +26,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -80,7 +76,7 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("service-system/src/main/resources");
+            File directory = new File("src/main/resources");
             String reportPath = directory.getCanonicalPath();
             String path = reportPath + "/static/交安标线厚度新.xlsx";
             Files.copy(Paths.get(path), new FileOutputStream(f));
@@ -110,6 +106,7 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
             if (hxnfsxsdata !=null || hxnfsxsdata.size()>0){
                 hxnfsxs(data);
             }
+
 
         }
 
@@ -312,6 +309,57 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
 
         }
 
+    }
+
+    @Override
+    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String fbgc = commonInfoVo.getFbgc();
+        String title = "道路交通标线施工质量鉴定表";
+        String sheetname = "标线";
+
+        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+
+        //获取鉴定表文件
+        File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"57交安标线厚度.xlsx");
+        if(!f.exists()){
+            return null;
+        }else {
+            XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+            //读取工作表
+            XSSFSheet slSheet = xwb.getSheet(sheetname);
+            XSSFCell bt = slSheet.getRow(0).getCell(0);
+            XSSFCell xmname = slSheet.getRow(1).getCell(4);//陕西高速
+            XSSFCell htdname = slSheet.getRow(1).getCell(14);//LJ-1
+            XSSFCell hd = slSheet.getRow(2).getCell(14);//涵洞
+            List<Map<String,Object>> mapList = new ArrayList<>();
+            Map<String,Object> jgmap = new HashMap<>();
+            if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
+                //获取到最后一行
+                int lastRowNum = slSheet.getLastRowNum();
+                slSheet.getRow(lastRowNum-4).getCell(14).setCellType(XSSFCell.CELL_TYPE_STRING);
+                slSheet.getRow(lastRowNum-3).getCell(14).setCellType(XSSFCell.CELL_TYPE_STRING);
+                slSheet.getRow(lastRowNum-2).getCell(14).setCellType(XSSFCell.CELL_TYPE_STRING);
+                slSheet.getRow(lastRowNum-1).getCell(14).setCellType(XSSFCell.CELL_TYPE_STRING);
+                double zds= Double.valueOf(slSheet.getRow(lastRowNum-4).getCell(14).getStringCellValue());
+                double hgds= Double.valueOf(slSheet.getRow(lastRowNum-3).getCell(14).getStringCellValue());
+                double bhgds= Double.valueOf(slSheet.getRow(lastRowNum-2).getCell(14).getStringCellValue());
+                double hgl = Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(14).getStringCellValue());
+                String zdsz = decf.format(zds);
+                String hgdsz = decf.format(hgds);
+                String bhgdsz = decf.format(bhgds);
+                String hglz = df.format(hgl);
+                jgmap.put("总点数",zdsz);
+                jgmap.put("合格点数",hgdsz);
+                jgmap.put("不合格点数",bhgdsz);
+                jgmap.put("合格率",hglz);
+                mapList.add(jgmap);
+                return mapList;
+            }
+            return null;
+        }
     }
 
     /**
@@ -841,18 +889,19 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
         int record = 0;
         record = tableNum;
         for (int i = 1; i <record; i++) {
-            if(i < record-1){//表示
-                RowCopy.copyRows(wb, "标线", "标线", 7, 37, (i - 1) * 30 + 37);  // 每页表 6组数据  共30行，第一页 加上表头 37行
+            if(i < record-1){
+                RowCopy.copyRows(wb, "标线", "标线", 7, 36, (i - 1) * 30 + 37);  // 每页表 6组数据  共30行，第一页 加上表头 37行
             }
             else{
-                RowCopy.copyRows(wb, "标线", "标线", 7, 35, (i - 1) * 30 + 37);//  最后一页 表 五组数据
+                RowCopy.copyRows(wb, "标线", "标线", 7, 31, (i - 1) * 30 + 37);//  最后一页 表 五组数据
             }
         }
         if(record == 1){
             wb.getSheet("标线").shiftRows(33, 37, -1);
         }
-        RowCopy.copyRows(wb, "source", "标线", 0, 5,(record) * 30 + 1);
-        wb.setPrintArea(wb.getSheetIndex("标线"), 0, 18, 0, record * 30+5);//第二，第三参数是列，四五是行
+        //合计的
+        RowCopy.copyRows(wb, "source", "标线", 0, 5,(record) * 30 + 2);
+        wb.setPrintArea(wb.getSheetIndex("标线"), 0, 18, 0, record * 30+6);//第二，第三参数是列，四五是行
         for(int i = 0 ; i < 17; i++) {
             wb.getSheet("标线").setColumnWidth(i,1200); //设置第一列宽度为1200
         }

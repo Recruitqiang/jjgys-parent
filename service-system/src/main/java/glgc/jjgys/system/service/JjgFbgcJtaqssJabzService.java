@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -24,4 +26,6 @@ public interface JjgFbgcJtaqssJabzService extends IService<JjgFbgcJtaqssJabz> {
     void exportjabz(HttpServletResponse response);
 
     void generateJdb(CommonInfoVo commonInfoVo) throws IOException, ParseException;
+
+    List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo);
 }

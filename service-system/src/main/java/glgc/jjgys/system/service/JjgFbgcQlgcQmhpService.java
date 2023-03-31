@@ -28,4 +28,6 @@ public interface JjgFbgcQlgcQmhpService extends IService<JjgFbgcQlgcQmhp> {
     void export(HttpServletResponse response);
 
     void importqmhp(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    List<Map<String, Object>> selectqlmc(String proname, String htd, String fbgc);
 }

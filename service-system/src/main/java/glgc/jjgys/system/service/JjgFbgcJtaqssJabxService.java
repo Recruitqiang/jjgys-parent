@@ -6,9 +6,11 @@ import glgc.jjgys.model.projectvo.ljgc.CommonInfoVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -27,4 +29,6 @@ public interface JjgFbgcJtaqssJabxService extends IService<JjgFbgcJtaqssJabx> {
     void importjabx(MultipartFile file, CommonInfoVo commonInfoVo);
 
     void bxnfsxs(List<JjgFbgcJtaqssJabx> data) throws IOException, ParseException;
+
+    List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException;
 }

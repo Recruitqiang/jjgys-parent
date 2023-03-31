@@ -104,17 +104,19 @@ public class JjgFbgcJtaqssJathlqdServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
         File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"59交安砼护栏强度.xlsx");
         if(!f.exists()){
             return null;
-        }
-        Map<String,Object> map = new HashMap<>();
-        map.put("proname",proname);
-        map.put("title",title);
-        map.put("htd",htd);
-        map.put("fbgc",fbgc);
-        map.put("f",f);
-        map.put("sheetname",sheetname);
-        List<Map<String, Object>> mapList = JjgFbgcCommonUtils.gettqdjcjg(map);
+        }else {
+            Map<String,Object> map = new HashMap<>();
+            map.put("proname",proname);
+            map.put("title",title);
+            map.put("htd",htd);
+            map.put("fbgc",fbgc);
+            map.put("f",f);
+            map.put("sheetname",sheetname);
+            List<Map<String, Object>> mapList = JjgFbgcCommonUtils.gettqdjcjg(map);
 
-        return mapList;
+            return mapList;
+        }
+
     }
 
     @Override

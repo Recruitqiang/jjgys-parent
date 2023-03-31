@@ -14,6 +14,7 @@ import java.nio.channels.WritableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -211,6 +212,8 @@ public class JjgFbgcCommonUtils {
     public static List<Map<String,Object>> gettqdjcjg(Map<String,Object> map) throws IOException {
         List<Map<String,Object>> mapList = new ArrayList<>();
         Map<String,Object> jgmap = new HashMap<>();
+        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat decf = new DecimalFormat("0.##");
         //创建工作簿
         XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(map.get("f").toString()));
         //读取工作表
@@ -218,20 +221,25 @@ public class JjgFbgcCommonUtils {
         slSheet.getRow(2).getCell(34).setCellType(XSSFCell.CELL_TYPE_STRING);
         slSheet.getRow(2).getCell(35).setCellType(XSSFCell.CELL_TYPE_STRING);
         slSheet.getRow(2).getCell(36).setCellType(XSSFCell.CELL_TYPE_STRING);
-        XSSFCell bt = slSheet.getRow(0).getCell(0);//混凝土强度质量鉴定表（回弹法）
-        String bt1 = bt.getStringCellValue();
-        XSSFCell xmname = slSheet.getRow(1).getCell(2);//陕西高速
-        String xmname1 = xmname.getStringCellValue();
-        XSSFCell htdname = slSheet.getRow(1).getCell(29);//LJ-1
-        String htdname1 = htdname.getStringCellValue();
-        XSSFCell hd = slSheet.getRow(2).getCell(2);//涵洞
-        String hd1 = hd.getStringCellValue();
-        System.out.println(bt+"-"+xmname+"-"+htdname+"-"+hd);
+        String bt = slSheet.getRow(0).getCell(0).getStringCellValue();//混凝土强度质量鉴定表（回弹法）
+        //String bt1 = bt.getStringCellValue();
+        String xmname = slSheet.getRow(1).getCell(2).getStringCellValue();//陕西高速
+        //String xmname1 = xmname.getStringCellValue();
+        String htdname = slSheet.getRow(1).getCell(29).getStringCellValue();//LJ-1
+        //String htdname1 = htdname.getStringCellValue();
+        String hd = slSheet.getRow(2).getCell(2).getStringCellValue();//涵洞
+        //String hd1 = hd.getStringCellValue();
         if(slSheet != null){
-            if(map.get("proname").toString().equals(xmname1) && map.get("title").toString().equals(bt1) && map.get("htd").toString().equals(htdname1) && map.get("fbgc").toString().equals(hd1)){
-                jgmap.put("总点数",slSheet.getRow(2).getCell(34).getStringCellValue());
-                jgmap.put("合格点数",slSheet.getRow(2).getCell(35).getStringCellValue());
-                jgmap.put("合格率",slSheet.getRow(2).getCell(36).getStringCellValue());
+            if(map.get("proname").toString().equals(xmname) && map.get("title").toString().equals(bt) && map.get("htd").toString().equals(htdname) && map.get("fbgc").toString().equals(hd)){
+                double zds= Double.valueOf(slSheet.getRow(2).getCell(34).getStringCellValue());
+                double hgds= Double.valueOf(slSheet.getRow(2).getCell(35).getStringCellValue());
+                double hgl= Double.valueOf(slSheet.getRow(2).getCell(36).getStringCellValue());
+                String zdsz = decf.format(zds);
+                String hgdsz = decf.format(hgds);
+                String hglz = df.format(hgl);
+                jgmap.put("总点数",zdsz);
+                jgmap.put("合格点数",hgdsz);
+                jgmap.put("合格率",hglz);
                 mapList.add(jgmap);
             }else {
                 return null;
@@ -251,6 +259,8 @@ public class JjgFbgcCommonUtils {
     public static List<Map<String,Object>> getdmcjjcjg(Map<String,Object> map) throws IOException {
         List<Map<String,Object>> mapList = new ArrayList<>();
         Map<String,Object> jgmap = new HashMap<>();
+        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat decf = new DecimalFormat("0.##");
         //创建工作簿
         XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(map.get("f").toString()));
         //读取工作表
@@ -259,8 +269,6 @@ public class JjgFbgcCommonUtils {
         XSSFCell xmname = slSheet.getRow(1).getCell(1);//陕西高速
         XSSFCell htdname = slSheet.getRow(1).getCell(6);//LJ-1
         XSSFCell hd = slSheet.getRow(2).getCell(1);//涵洞
-        System.out.println(bt+"-"+xmname+"-"+htdname+"-"+hd);
-
         if(slSheet != null){
             if(map.get("proname").toString().equals(xmname.toString()) && map.get("title").toString().equals(bt.toString()) && map.get("htd").toString().equals(htdname.toString()) && map.get("fbgc").toString().equals(hd.toString())){
                 //获取到最后一行
@@ -268,9 +276,15 @@ public class JjgFbgcCommonUtils {
                 slSheet.getRow(lastRowNum-1).getCell(1).setCellType(XSSFCell.CELL_TYPE_STRING);
                 slSheet.getRow(lastRowNum-1).getCell(3).setCellType(XSSFCell.CELL_TYPE_STRING);
                 slSheet.getRow(lastRowNum-1).getCell(6).setCellType(XSSFCell.CELL_TYPE_STRING);
-                jgmap.put("检测总点数",slSheet.getRow(lastRowNum-1).getCell(1).getStringCellValue());
-                jgmap.put("合格点数",slSheet.getRow(lastRowNum-1).getCell(3).getStringCellValue());
-                jgmap.put("合格率",slSheet.getRow(lastRowNum-1).getCell(6).getStringCellValue());
+                double zds= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(1).getStringCellValue());
+                double hgds= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(3).getStringCellValue());
+                double hgl= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(6).getStringCellValue());
+                String zdsz = decf.format(zds);
+                String hgdsz = decf.format(hgds);
+                String hglz = df.format(hgl);
+                jgmap.put("检测总点数",zdsz);
+                jgmap.put("合格点数",hgdsz);
+                jgmap.put("合格率",hglz);
                 mapList.add(jgmap);
             }else {
                 return null;

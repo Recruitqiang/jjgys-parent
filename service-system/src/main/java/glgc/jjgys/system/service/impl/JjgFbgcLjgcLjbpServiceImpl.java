@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -238,21 +239,43 @@ public class JjgFbgcLjgcLjbpServiceImpl extends ServiceImpl<JjgFbgcLjgcLjbpMappe
         String fbgc = commonInfoVo.getFbgc();
         String title = "路基边坡质量检测鉴定表";
         String sheetname = "路基边坡";
+        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat decf = new DecimalFormat("0.##");
         //获取鉴定表文件
         File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"03路基边坡.xlsx");
         if(!f.exists()){
             return null;
+        }else {
+            XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+            //读取工作表
+            XSSFSheet slSheet = xwb.getSheet(sheetname);
+            XSSFCell bt = slSheet.getRow(0).getCell(0);
+            XSSFCell xmname = slSheet.getRow(1).getCell(1);
+            XSSFCell htdname = slSheet.getRow(1).getCell(6);
+            XSSFCell hd = slSheet.getRow(2).getCell(1);
+            List<Map<String,Object>> mapList = new ArrayList<>();
+            Map<String,Object> jgmap = new HashMap<>();
+            if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
+                //获取到最后一行
+                int lastRowNum = slSheet.getLastRowNum();
+                slSheet.getRow(lastRowNum).getCell(1).setCellType(XSSFCell.CELL_TYPE_STRING);
+                slSheet.getRow(lastRowNum).getCell(3).setCellType(XSSFCell.CELL_TYPE_STRING);
+                slSheet.getRow(lastRowNum).getCell(7).setCellType(XSSFCell.CELL_TYPE_STRING);
+                double zds= Double.valueOf(slSheet.getRow(lastRowNum).getCell(1).getStringCellValue());
+                double hgds= Double.valueOf(slSheet.getRow(lastRowNum).getCell(3).getStringCellValue());
+                double hgl = Double.valueOf(slSheet.getRow(lastRowNum).getCell(7).getStringCellValue());
+                String zdsz = decf.format(zds);
+                String hgdsz = decf.format(hgds);
+                String hglz = df.format(hgl);
+                jgmap.put("总点数",zdsz);
+                jgmap.put("合格点数",hgdsz);
+                jgmap.put("合格率",hglz);
+                mapList.add(jgmap);
+                return mapList;
+            }
+            return null;
         }
-        Map<String,Object> map = new HashMap<>();
-        map.put("proname",proname);
-        map.put("title",title);
-        map.put("htd",htd);
-        map.put("fbgc",fbgc);
-        map.put("f",f);
-        map.put("sheetname",sheetname);
-        List<Map<String, Object>> mapList = JjgFbgcCommonUtils.getdmcjjcjg(map);
 
-        return mapList;
     }
 
     @Override

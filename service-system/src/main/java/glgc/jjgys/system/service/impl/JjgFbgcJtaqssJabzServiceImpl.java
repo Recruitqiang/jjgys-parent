@@ -36,6 +36,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -118,7 +119,7 @@ public class JjgFbgcJtaqssJabzServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabzM
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("service-system/src/main/resources/static");
+            File directory = new File("src/main/resources/static");
             String reportPath = directory.getCanonicalPath();
             String name = "标志.xlsx";
             String path = reportPath + File.separator + name;
@@ -145,6 +146,11 @@ public class JjgFbgcJtaqssJabzServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabzM
             wb.close();
         }
 
+    }
+
+    @Override
+    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) {
+        return null;
     }
 
     private void calculateOneSheet(XSSFSheet sheet,XSSFWorkbook xwb) {

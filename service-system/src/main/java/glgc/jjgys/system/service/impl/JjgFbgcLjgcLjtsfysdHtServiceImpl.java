@@ -95,7 +95,7 @@ public class JjgFbgcLjgcLjtsfysdHtServiceImpl extends ServiceImpl<JjgFbgcLjgcLjt
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("service-system/src/main/resources/static");
+            File directory = new File("src/main/resources/static");
             String reportPath = directory.getCanonicalPath();
             String ss = "路基压实度.xlsx";
             String path =reportPath+File.separator+ss;
@@ -117,14 +117,12 @@ public class JjgFbgcLjgcLjtsfysdHtServiceImpl extends ServiceImpl<JjgFbgcLjgcLjt
                 if(xwb.getSheet("压实度单点(灰土)") == null || xwb.getSheet("压实度单点(灰土)").getRow(1) == null
                         || xwb.getSheet("压实度单点(灰土)").getRow(1).getCell(1) == null || "".equals(xwb.getSheet("压实度单点(灰土)").getRow(1).getCell(1).toString())){
 
-                    System.out.println("wb.setSheetHidden(wb.getSheetIndex(\"评定单元(2)\"), true)");
                     xwb.setSheetHidden(xwb.getSheetIndex("评定单元(2)"), 2);//把sheet工作表都给隐藏掉,0=显示 1=隐藏 2=非常隐秘(在excel里就看不见了，等于删除)
                     xwb.setSheetHidden(xwb.getSheetIndex("压实度单点(灰土)"), 2);
                 }
                 if(xwb.getSheet("压实度单点(砂砾)") == null || xwb.getSheet("压实度单点(砂砾)").getRow(1) == null
                         || xwb.getSheet("压实度单点(砂砾)").getRow(1).getCell(2) == null || "".equals(xwb.getSheet("压实度单点(砂砾)").getRow(1).getCell(2).toString())){
 
-                    System.out.println("wb.setSheetHidden(wb.getSheetIndex(\"评定单元\"), true)");
                     xwb.setSheetHidden(xwb.getSheetIndex("评定单元"), true);
                     xwb.setSheetHidden(xwb.getSheetIndex("压实度单点(砂砾)"), true);
                 }
@@ -775,8 +773,104 @@ public class JjgFbgcLjgcLjtsfysdHtServiceImpl extends ServiceImpl<JjgFbgcLjgcLjt
     }
 
     @Override
-    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) {
-        return null;
+    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String fbgc = commonInfoVo.getFbgc();
+        String title = "路基压实度质量鉴定表（评定单元）";
+        String slsheetname = "评定单元";
+        String htsheetname = "评定单元(2)";
+        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat bzcdf = new DecimalFormat(".000");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        //获取鉴定表文件
+        File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"01路基土石方压实度.xlsx");
+        if(!f.exists()){
+            return null;
+        }else {
+            XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+            XSSFSheet slSheet = xwb.getSheet(slsheetname);
+            XSSFCell bt = slSheet.getRow(0).getCell(0);
+            XSSFCell xmname = slSheet.getRow(1).getCell(2);
+            XSSFCell htdname = slSheet.getRow(1).getCell(7);
+            XSSFCell hd = slSheet.getRow(2).getCell(2);
+            boolean slsheetHidden = xwb.isSheetHidden(0);
+            boolean htsheetHidden = xwb.isSheetHidden(1);
+            List<Map<String,Object>> mapList = new ArrayList<>();
+            Map<String,Object> sljgmap = new HashMap<>();
+            Map<String,Object> htjgmap = new HashMap<>();
+            if (!slsheetHidden && proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
+                int sllastRowNum = slSheet.getLastRowNum();
+
+                slSheet.getRow(sllastRowNum-2).getCell(3).setCellType(CellType.STRING);//平均值
+                slSheet.getRow(sllastRowNum-2).getCell(5).setCellType(CellType.STRING);//标准差
+                slSheet.getRow(sllastRowNum-2).getCell(7).setCellType(CellType.STRING);//代表值
+                slSheet.getRow(sllastRowNum-1).getCell(3).setCellType(CellType.STRING);//规定值
+                slSheet.getRow(sllastRowNum-1).getCell(6).setCellType(CellType.STRING);//结果
+                slSheet.getRow(sllastRowNum).getCell(3).setCellType(CellType.STRING);//检测点数
+                slSheet.getRow(sllastRowNum).getCell(5).setCellType(CellType.STRING);//合格点数
+                slSheet.getRow(sllastRowNum).getCell(7).setCellType(CellType.STRING);//合格率（%）
+
+                sljgmap.put("压实度项目","沙砾");
+                sljgmap.put("检测点数",decf.format(Double.valueOf(slSheet.getRow(sllastRowNum).getCell(3).getStringCellValue())));
+                sljgmap.put("合格点数",decf.format(Double.valueOf(slSheet.getRow(sllastRowNum).getCell(5).getStringCellValue())));
+                sljgmap.put("合格率",df.format(Double.valueOf(slSheet.getRow(sllastRowNum).getCell(7).getStringCellValue())));
+                sljgmap.put("平均值",df.format(Double.valueOf(slSheet.getRow(sllastRowNum-2).getCell(3).getStringCellValue())));
+                sljgmap.put("标准差",Double.valueOf(slSheet.getRow(sllastRowNum-2).getCell(5).getStringCellValue()));
+                sljgmap.put("代表值",df.format(Double.valueOf(slSheet.getRow(sllastRowNum-2).getCell(7).getStringCellValue())));
+                sljgmap.put("规定值",decf.format(Double.valueOf(slSheet.getRow(sllastRowNum-1).getCell(3).getStringCellValue())));
+                sljgmap.put("结果",slSheet.getRow(sllastRowNum-1).getCell(6).getStringCellValue());
+                mapList.add(sljgmap);
+            }else {
+                sljgmap.put("压实度项目","沙砾");
+                sljgmap.put("检测点数",0);
+                sljgmap.put("合格点数",0);
+                sljgmap.put("合格率",0);
+                sljgmap.put("平均值",0);
+                sljgmap.put("标准差",0);
+                sljgmap.put("代表值",0);
+                sljgmap.put("规定值",0);
+                sljgmap.put("结果","无结果");
+                mapList.add(sljgmap);
+
+            }
+            if (!htsheetHidden && proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
+                XSSFSheet htSheet = xwb.getSheet(htsheetname);
+                int htlastRowNum = htSheet.getLastRowNum();
+
+                htSheet.getRow(htlastRowNum-3).getCell(3).setCellType(CellType.STRING);//平均值
+                htSheet.getRow(htlastRowNum-3).getCell(5).setCellType(CellType.STRING);//标准差
+                htSheet.getRow(htlastRowNum-3).getCell(7).setCellType(CellType.STRING);//代表值
+                htSheet.getRow(htlastRowNum-2).getCell(3).setCellType(CellType.STRING);//规定值
+                htSheet.getRow(htlastRowNum-2).getCell(6).setCellType(CellType.STRING);//结果
+                htSheet.getRow(htlastRowNum-1).getCell(3).setCellType(CellType.STRING);//检测点数
+                htSheet.getRow(htlastRowNum-1).getCell(5).setCellType(CellType.STRING);//合格点数
+                htSheet.getRow(htlastRowNum-1).getCell(7).setCellType(CellType.STRING);//合格率（%）
+                htjgmap.put("压实度项目","灰土");
+                htjgmap.put("检测点数",decf.format(Double.valueOf(htSheet.getRow(htlastRowNum-1).getCell(3).getStringCellValue())));
+                htjgmap.put("合格点数",decf.format(Double.valueOf(htSheet.getRow(htlastRowNum-1).getCell(5).getStringCellValue())));
+                htjgmap.put("合格率",df.format(Double.valueOf(htSheet.getRow(htlastRowNum-1).getCell(7).getStringCellValue())));
+                htjgmap.put("平均值",df.format(Double.valueOf(htSheet.getRow(htlastRowNum-3).getCell(3).getStringCellValue())));
+                htjgmap.put("标准差",bzcdf.format(Double.valueOf(htSheet.getRow(htlastRowNum-3).getCell(5).getStringCellValue())));
+                htjgmap.put("代表值",df.format(Double.valueOf(htSheet.getRow(htlastRowNum-3).getCell(7).getStringCellValue())));
+                htjgmap.put("规定值",decf.format(Double.valueOf(htSheet.getRow(htlastRowNum-2).getCell(3).getStringCellValue())));
+                htjgmap.put("结果",htSheet.getRow(htlastRowNum-2).getCell(6).getStringCellValue());
+                mapList.add(htjgmap);
+            }else {
+                htjgmap.put("压实度项目","灰土");
+                htjgmap.put("检测点数",0);
+                htjgmap.put("合格点数",0);
+                htjgmap.put("合格率",0);
+                htjgmap.put("平均值",0);
+                htjgmap.put("标准差",0);
+                htjgmap.put("代表值",0);
+                htjgmap.put("规定值",0);
+                htjgmap.put("结果","无结果");
+                mapList.add(htjgmap);
+
+            }
+            return mapList;
+        }
     }
 
     /**

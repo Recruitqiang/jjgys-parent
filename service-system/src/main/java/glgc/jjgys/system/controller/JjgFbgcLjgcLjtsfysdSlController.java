@@ -38,20 +38,6 @@ public class JjgFbgcLjgcLjtsfysdSlController {
     @Autowired
     private JjgFbgcLjgcLjtsfysdSlService jjgFbgcLjgcLjtsfysdSlService;
 
-    /*@ApiOperation("生成路基土石方压实度_砂砾鉴定表")
-    @PostMapping("generateJdb")
-    public void generateJdb(@RequestBody CommonInfoVo commonInfoVo) throws Exception {
-        jjgFbgcLjgcLjtsfysdSlService.generateJdb(commonInfoVo);
-
-    }*/
-
-   /* @ApiOperation("查看路基土石方压实度_砂砾鉴定结果")
-    @PostMapping("lookJdbjg")
-    public Result lookJdbjg(@RequestBody CommonInfoVo commonInfoVo) throws IOException {
-        List<Map<String,Object>> jdjg = jjgFbgcLjgcLjtsfysdSlService.lookJdbjg(commonInfoVo);
-        return Result.ok(jdjg);
-
-    }*/
 
     @ApiOperation("路基土石方压实度_砂砾模板文件导出")
     @GetMapping("exportysdsl")

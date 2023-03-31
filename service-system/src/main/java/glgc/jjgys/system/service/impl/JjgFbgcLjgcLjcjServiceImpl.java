@@ -78,7 +78,7 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("service-system/src/main/resources/static");
+            File directory = new File("src/main/resources/static");
             String reportPath = directory.getCanonicalPath();
             String path =reportPath + File.separator+"路基沉降.xlsx";
             Files.copy(Paths.get(path), new FileOutputStream(f));
@@ -229,9 +229,10 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
 
     public void fillTitleCellData(XSSFSheet sheet, int tableNum, JjgFbgcLjgcLjcj row,String proname,String htd,String position) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
-        sheet.getRow(tableNum * 33 + 2).getCell(0).setCellValue("项目名称："+proname);
-        sheet.getRow(tableNum * 33 + 2).getCell(3).setCellValue("合同段："+htd);
-        sheet.getRow(tableNum*33+3).getCell(3).setCellValue("检测时间："+simpleDateFormat.format(row.getJcsj()));//检测日期
+        sheet.getRow(tableNum * 33 + 2).getCell(1).setCellValue(proname);
+        sheet.getRow(tableNum * 33 + 2).getCell(4).setCellValue(htd);
+        sheet.getRow(tableNum * 33 + 3).getCell(1).setCellValue(row.getFbgc());
+        sheet.getRow(tableNum*33+3).getCell(4).setCellValue(simpleDateFormat.format(row.getJcsj()));//检测日期
 
         sheet.getRow(tableNum*33+4).getCell(0).setCellValue("检查段落："+position);//工程部位
         sheet.getRow(tableNum*33+4).getCell(3).setCellValue("允许偏差："+Double.valueOf(row.getYxps()).intValue()+"mm");
@@ -277,37 +278,36 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
         File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"01路基压实度沉降.xlsx");
         if(!f.exists()){
             return null;
-        }
-        List<Map<String,Object>> mapList = new ArrayList<>();//存放结果
-        Map<String,Object> jgmap = new HashMap<>();
-        //创建工作簿
-        XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
-        //读取工作表
-        XSSFSheet slSheet = xwb.getSheet(sheetname);
-        slSheet.getRow(7).getCell(8).setCellType(CellType.STRING);
-        slSheet.getRow(7).getCell(9).setCellType(CellType.STRING);
-        slSheet.getRow(7).getCell(10).setCellType(CellType.STRING);
-        XSSFCell bt = slSheet.getRow(0).getCell(0);
-        String bt1 = bt.getStringCellValue();
-        XSSFCell xmname = slSheet.getRow(2).getCell(0);//陕西高速
-        String xmname1 = xmname.getStringCellValue().substring(5);
-        XSSFCell htdname = slSheet.getRow(2).getCell(3);//LJ-1
-        String htdname1 = htdname.getStringCellValue().substring(4);
-        XSSFCell hd = slSheet.getRow(3).getCell(0);//涵洞
-        String hd1 = hd.getStringCellValue().substring(7);
-        System.out.println(bt1+"-"+xmname1+"-"+htdname1+"-"+hd1);
-        if(slSheet != null){
-            if(proname.equals(xmname1) && title.equals(bt1) && htd.equals(htdname1) && fbgc.equals(hd1)){
-                System.out.println(slSheet.getRow(7).getCell(8).getStringCellValue());
-                jgmap.put("总点数",slSheet.getRow(7).getCell(8).getStringCellValue());
-                jgmap.put("合格点数",slSheet.getRow(7).getCell(9).getStringCellValue());
-                jgmap.put("合格率",slSheet.getRow(7).getCell(10).getStringCellValue());
-                mapList.add(jgmap);
-            }else {
-                return null;
+        }else {
+            List<Map<String,Object>> mapList = new ArrayList<>();//存放结果
+            Map<String,Object> jgmap = new HashMap<>();
+            DecimalFormat df = new DecimalFormat(".00");
+            DecimalFormat decf = new DecimalFormat("0.##");
+            //创建工作簿
+            XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+            //读取工作表
+            XSSFSheet slSheet = xwb.getSheet(sheetname);
+            slSheet.getRow(7).getCell(8).setCellType(CellType.STRING);
+            slSheet.getRow(7).getCell(9).setCellType(CellType.STRING);
+            slSheet.getRow(7).getCell(10).setCellType(CellType.STRING);
+            XSSFCell bt = slSheet.getRow(0).getCell(0);
+            String bt1 = bt.getStringCellValue();
+            String xmname = slSheet.getRow(2).getCell(1).toString();//陕西高速
+            String htdname = slSheet.getRow(2).getCell(4).toString();//LJ-1
+            String hd = slSheet.getRow(3).getCell(1).toString();//涵洞
+            if(slSheet != null){
+                if(proname.equals(xmname) && title.equals(bt1) && htd.equals(htdname) && fbgc.equals(hd)){
+                    jgmap.put("总点数",decf.format(Double.valueOf(slSheet.getRow(7).getCell(8).getStringCellValue())));
+                    jgmap.put("合格点数",decf.format(Double.valueOf(slSheet.getRow(7).getCell(9).getStringCellValue())));
+                    jgmap.put("合格率",df.format(Double.valueOf(slSheet.getRow(7).getCell(10).getStringCellValue())));
+                    mapList.add(jgmap);
+                }else {
+                    return null;
+                }
             }
+            return mapList;
         }
-        return mapList;
+
     }
 
     @Override

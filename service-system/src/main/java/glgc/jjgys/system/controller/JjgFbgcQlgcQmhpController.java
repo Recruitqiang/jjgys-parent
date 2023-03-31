@@ -45,11 +45,21 @@ public class JjgFbgcQlgcQmhpController {
     private String filespath;
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public void downloadExport(HttpServletResponse response, String proname, String htd) throws IOException {
-        //暂定
-        String fileName = ".xlsx";
-        String p = filespath+ File.separator +proname+File.separator+htd+File.separator+fileName;
-        JjgFbgcCommonUtils.download(response,p,fileName);
+    public void downloadExport(HttpServletResponse response, String proname, String htd,String fbgc) throws IOException {
+
+        List<Map<String,Object>> qlmclist = jjgFbgcQlgcQmhpService.selectqlmc(proname,htd,fbgc);
+        if (qlmclist.size()>0) {
+            for (Map<String, Object> m : qlmclist) {
+                for (String k : m.keySet()) {
+                    String qlmc = "35桥面横坡-"+m.get(k).toString()+".xlsx";
+                    String p = filespath+ File.separator +proname+File.separator+htd+File.separator+qlmc;
+                    File file =new File(p);
+                    if (file.exists()){
+                        JjgFbgcCommonUtils.download(response,p,qlmc);
+                    }
+                }
+            }
+        }
     }
 
     @ApiOperation("生成桥面横坡鉴定表")
