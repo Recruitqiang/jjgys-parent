@@ -95,7 +95,7 @@ public class JjgFbgcLjgcLjtsfysdHtServiceImpl extends ServiceImpl<JjgFbgcLjgcLjt
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("src/main/resources/static");
+            File directory = new File("service-system/src/main/resources/static");
             String reportPath = directory.getCanonicalPath();
             String ss = "路基压实度.xlsx";
             String path =reportPath+File.separator+ss;

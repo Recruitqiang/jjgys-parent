@@ -119,7 +119,7 @@ public class JjgFbgcJtaqssJabzServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabzM
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("src/main/resources/static");
+            File directory = new File("service-system/src/main/resources/static");
             String reportPath = directory.getCanonicalPath();
             String name = "标志.xlsx";
             String path = reportPath + File.separator + name;
