@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -920,8 +917,42 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
     }
 
     @Override
-    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) {
-        return null;
+    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String fbgc = commonInfoVo.getFbgc();
+        String title = "路面弯沉质量鉴定结果汇总表";
+        String sheetname = "评定单元";
+        //获取鉴定表文件
+        File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "02路基弯沉(贝克曼梁法).xlsx");
+        if (!f.exists()) {
+            return null;
+        } else {
+            XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+            //读取工作表
+            XSSFSheet slSheet = xwb.getSheet(sheetname);
+            XSSFCell bt = slSheet.getRow(0).getCell(0);//标题
+            XSSFCell xmname = slSheet.getRow(1).getCell(2);//项目名
+            XSSFCell htdname = slSheet.getRow(1).getCell(7);//合同段名
+            XSSFCell hd = slSheet.getRow(2).getCell(2);//分布工程名
+            List<Map<String, Object>> mapList = new ArrayList<>();
+            Map<String, Object> jgmap = new HashMap<>();
+            DecimalFormat df = new DecimalFormat(".00");
+            DecimalFormat decf = new DecimalFormat("0.##");
+            if (proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())) {
+                int lastRowNum = slSheet.getLastRowNum();
+                slSheet.getRow(lastRowNum).getCell(4).setCellType(CellType.STRING);//检测单元数
+                slSheet.getRow(lastRowNum).getCell(6).setCellType(CellType.STRING);//合格单元
+                slSheet.getRow(lastRowNum).getCell(8).setCellType(CellType.STRING);//合格率
+                jgmap.put("检测单元数", decf.format(Double.valueOf(slSheet.getRow(lastRowNum).getCell(4).getStringCellValue())));
+                jgmap.put("合格单元数", decf.format(Double.valueOf(slSheet.getRow(lastRowNum).getCell(6).getStringCellValue())));
+                jgmap.put("合格率", df.format(Double.valueOf(slSheet.getRow(lastRowNum).getCell(8).getStringCellValue())));
+                mapList.add(jgmap);
+                return mapList;
+
+            }
+            return null;
+        }
     }
 
     @Override

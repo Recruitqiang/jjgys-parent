@@ -11,8 +11,8 @@
 
     </select>
 
-    <select id="selectzh" resultType="java.util.Map" parameterType="java.lang.String">
-        SELECT zh from jjg_fbgc_sdgc_cqhd  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and sdmc=#{sdmc}
+    <select id="selectwz" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT wz from jjg_fbgc_sdgc_cqhd  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and sdmc=#{sdmc}
     </select>
 
 </mapper>

@@ -249,6 +249,7 @@ public class JjgFbgcLjgcPspqhdServiceImpl extends ServiceImpl<JjgFbgcLjgcPspqhdM
     public int gettableNum(int size){
         return size%(29-6) <= (27-6) ? size/(29-6)+1 : size/(29-6)+2;
     }
+
     public void createTable(int tableNum) throws IOException {
         int record = 0;
         record = tableNum;
@@ -278,16 +279,19 @@ public class JjgFbgcLjgcPspqhdServiceImpl extends ServiceImpl<JjgFbgcLjgcPspqhdM
         File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"05路基排水铺砌厚度.xlsx");
         if(!f.exists()){
             return null;
+        }else {
+            Map<String,Object> map = new HashMap<>();
+            map.put("proname",proname);
+            map.put("title",title);
+            map.put("htd",htd);
+            map.put("fbgc",fbgc);
+            map.put("f",f);
+            map.put("sheetname",sheetname);
+            List<Map<String, Object>> mapList = JjgFbgcCommonUtils.getdmcjjcjg(map);
+            return mapList;
+
         }
-        Map<String,Object> map = new HashMap<>();
-        map.put("proname",proname);
-        map.put("title",title);
-        map.put("htd",htd);
-        map.put("fbgc",fbgc);
-        map.put("f",f);
-        map.put("sheetname",sheetname);
-        List<Map<String, Object>> mapList = JjgFbgcCommonUtils.getdmcjjcjg(map);
-        return mapList;
+
     }
 
     @Override

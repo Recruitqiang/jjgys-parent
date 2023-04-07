@@ -18,12 +18,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * <p>
@@ -45,21 +43,15 @@ public class JjgFbgcQlgcQmhpController {
     private String filespath;
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public void downloadExport(HttpServletResponse response, String proname, String htd,String fbgc) throws IOException {
-
+    public void downloadExport(HttpServletRequest request, HttpServletResponse response, String proname, String htd, String fbgc) throws IOException {
         List<Map<String,Object>> qlmclist = jjgFbgcQlgcQmhpService.selectqlmc(proname,htd,fbgc);
-        if (qlmclist.size()>0) {
-            for (Map<String, Object> m : qlmclist) {
-                for (String k : m.keySet()) {
-                    String qlmc = "35桥面横坡-"+m.get(k).toString()+".xlsx";
-                    String p = filespath+ File.separator +proname+File.separator+htd+File.separator+qlmc;
-                    File file =new File(p);
-                    if (file.exists()){
-                        JjgFbgcCommonUtils.download(response,p,qlmc);
-                    }
-                }
-            }
+        List list = new ArrayList<>();
+        for (int i=0;i<qlmclist.size();i++){
+            list.add(qlmclist.get(i).get("qlmc"));
         }
+        String zipName = "35桥面横坡";
+        JjgFbgcCommonUtils.batchDownloadFile(request,response,zipName,list,filespath+File.separator+proname+File.separator+htd);
+
     }
 
     @ApiOperation("生成桥面横坡鉴定表")

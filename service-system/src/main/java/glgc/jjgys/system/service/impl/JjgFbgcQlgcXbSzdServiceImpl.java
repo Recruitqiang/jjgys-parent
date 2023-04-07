@@ -17,12 +17,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,18 +28,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -228,6 +221,8 @@ public class JjgFbgcQlgcXbSzdServiceImpl extends ServiceImpl<JjgFbgcQlgcXbSzdMap
         row.createCell(9).setCellFormula("SUM("
                 +sheet.getRow(3).createCell(9).getReference()+":"
                 +sheet.getRow(sheet.getPhysicalNumberOfRows()-1).createCell(9).getReference()+")");//=SUM(L7:L300)
+        sheet.getRow(2).createCell(10).setCellFormula(sheet.getRow(2).getCell(9).getReference()+"*100/"
+                +sheet.getRow(2).getCell(8).getReference());//合格率
 
     }
 
@@ -368,8 +363,44 @@ public class JjgFbgcQlgcXbSzdServiceImpl extends ServiceImpl<JjgFbgcQlgcXbSzdMap
     }
 
     @Override
-    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) {
-        return null;
+    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String fbgc = commonInfoVo.getFbgc();
+        String title = "墩台竖直度质量鉴定表";
+        String sheetname = "竖直度";
+
+        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        //获取鉴定表文件
+        File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"28桥梁下部墩台垂直度.xlsx");
+        if(!f.exists()){
+            return null;
+        }else {
+            XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+            //读取工作表
+            XSSFSheet slSheet = xwb.getSheet(sheetname);
+            XSSFCell bt = slSheet.getRow(0).getCell(0);
+            XSSFCell xmname = slSheet.getRow(1).getCell(1);//陕西高速
+            XSSFCell htdname = slSheet.getRow(1).getCell(7);//LJ-1
+            XSSFCell hd = slSheet.getRow(2).getCell(1);//涵洞1
+            List<Map<String,Object>> mapList = new ArrayList<>();
+            Map<String,Object> jgmap = new HashMap<>();
+            if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
+                slSheet.getRow(2).getCell(8).setCellType(CellType.STRING);
+                slSheet.getRow(2).getCell(9).setCellType(CellType.STRING);
+                slSheet.getRow(2).getCell(10).setCellType(CellType.STRING);
+
+                jgmap.put("总点数",decf.format(Double.valueOf(slSheet.getRow(2).getCell(8).getStringCellValue())));
+                jgmap.put("合格点数",decf.format(Double.valueOf(slSheet.getRow(2).getCell(9).getStringCellValue())));
+                jgmap.put("合格率",df.format(Double.valueOf(slSheet.getRow(2).getCell(10).getStringCellValue())));
+                mapList.add(jgmap);
+                return mapList;
+            }else {
+                return null;
+            }
+
+        }
     }
 
     @Override

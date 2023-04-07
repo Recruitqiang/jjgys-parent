@@ -10,6 +10,7 @@ import glgc.jjgys.model.project.JjgFbgcSdgcCqhd;
 import glgc.jjgys.model.project.JjgFbgcSdgcCqtqd;
 import glgc.jjgys.model.projectvo.ljgc.CommonInfoVo;
 import glgc.jjgys.system.service.JjgFbgcSdgcCqhdService;
+import glgc.jjgys.system.service.JjgFbgcSdgcSdhpService;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,21 +44,19 @@ public class JjgFbgcSdgcCqhdController {
     @Autowired
     private JjgFbgcSdgcCqhdService jjgFbgcSdgcCqhdService;
 
+
     @Value(value = "${jjgys.path.filepath}")
     private String filespath;
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public Result downloadExport(HttpServletResponse response, String proname, String htd) throws IOException {
-        //暂定
-        String fileName = ".xlsx";
-        String p = filespath+ File.separator +proname+File.separator+htd+File.separator+fileName;
-        File file = new File(p);
-        if (file.exists()){
-            JjgFbgcCommonUtils.download(response,p,fileName);
-            return Result.ok();
-        }else {
-            return Result.fail().message("还未生成鉴定表");
+    public void downloadExport(HttpServletRequest request,HttpServletResponse response, String proname, String htd, String fbgc) throws IOException {
+        List<Map<String,Object>> sdmclist = jjgFbgcSdgcCqhdService.selectsdmc(proname,htd,fbgc);
+        List list = new ArrayList<>();
+        for (int i=0;i<sdmclist.size();i++){
+            list.add(sdmclist.get(i).get("sdmc"));
         }
+        String zipName = "39隧道衬砌厚度";
+        JjgFbgcCommonUtils.batchDownloadFile(request,response,zipName,list,filespath+File.separator+proname+File.separator+htd);
     }
 
     @ApiOperation("生成隧道衬砌厚度鉴定表")

@@ -46,15 +46,13 @@ public class JjgFbgcJtaqssJabzController {
 
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public Result downloadExport(HttpServletResponse response,String proname,String htd) throws IOException {
+    public void downloadExport(HttpServletResponse response,String proname,String htd) throws IOException {
         String fileName = "56交安标志.xlsx";
         String p = filespath+ File.separator+proname+File.separator+htd+File.separator+fileName;
         File file = new File(p);
         if (file.exists()){
             JjgFbgcCommonUtils.download(response,p,fileName);
-            return Result.ok();
-        }else {
-            return Result.fail().message("还未生成鉴定表");
+            //return Result.ok();
         }
     }
 

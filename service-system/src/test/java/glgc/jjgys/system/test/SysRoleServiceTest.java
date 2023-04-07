@@ -131,7 +131,7 @@ public class SysRoleServiceTest {
         CommonInfoVo commonInfoVo = new CommonInfoVo();
         commonInfoVo.setProname("陕西高速");
         commonInfoVo.setHtd("LJ-1");
-        commonInfoVo.setFbgc("路基土石方");
+        commonInfoVo.setFbgc("衬砌");
 
         /*QueryWrapper<JjgFbgcJtaqssJabx> wrapper=new QueryWrapper<>();
         wrapper.like("proname","陕西高速");
@@ -140,9 +140,9 @@ public class SysRoleServiceTest {
         wrapper.orderByDesc("wz","hdscz1");
         List<JjgFbgcJtaqssJabx> data = jjgFbgcJtaqssJabxMapper.selectList(wrapper);
         jjgFbgcJtaqssJabxService.bxnfsxs(data);*/
-        //jjgFbgcLjgcLjtsfysdHtService.generateJdb(commonInfoVo);
+        //jjgFbgcSdgcZtkdService.generateJdb(commonInfoVo);
 
-        List<Map<String, Object>> maps = jjgFbgcLjgcLjtsfysdHtService.lookJdbjg(commonInfoVo);
+        List<Map<String, Object>> maps = jjgFbgcSdgcZtkdService.lookJdbjg(commonInfoVo);
 
         //jjgFbgcLjgcLjcjService.generateJdb(commonInfoVo);
         //List<Map<String, Object>> maps = jjgFbgcLjgcLjcjService.lookJdbjg(commonInfoVo);

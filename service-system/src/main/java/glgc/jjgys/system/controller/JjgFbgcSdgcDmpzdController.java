@@ -45,15 +45,12 @@ public class JjgFbgcSdgcDmpzdController {
     private String filespath;
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public Result downloadExport(HttpServletResponse response, String proname, String htd) throws IOException {
+    public void downloadExport(HttpServletResponse response, String proname, String htd) throws IOException {
         String fileName = "40隧道大面平整度.xlsx";
         String p = filespath+"/"+proname+"/"+htd+"/"+fileName;
         File file = new File(p);
         if (file.exists()){
             JjgFbgcCommonUtils.download(response,p,fileName);
-            return Result.ok();
-        }else {
-            return Result.fail().message("还未生成鉴定表");
         }
     }
 

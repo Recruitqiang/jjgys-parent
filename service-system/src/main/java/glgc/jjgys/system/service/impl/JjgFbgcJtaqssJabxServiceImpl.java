@@ -14,6 +14,7 @@ import glgc.jjgys.system.service.JjgFbgcJtaqssJabxService;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -322,8 +323,59 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
         DecimalFormat df = new DecimalFormat(".00");
         DecimalFormat decf = new DecimalFormat("0.##");
 
+        String fileName1 = "57交安标线厚度";
+        String fileName2 = "57交安标线白线逆反射系数";
+        String fileName3 = "57交安标线黄线逆反射系数";
+        List list = new ArrayList();
+        list.add(fileName1);
+        list.add(fileName2);
+        list.add(fileName3);
+
+        List<Map<String,Object>> mapList = new ArrayList<>();
+
+        for (int i=0;i<list.size();i++) {
+            //获取鉴定表文件
+            File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+list.get(i)+".xlsx");
+            if(!f.exists()){
+                return null;
+            }else {
+                XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+                //读取工作表
+                XSSFSheet slSheet = xwb.getSheet(sheetname);
+                XSSFCell bt = slSheet.getRow(0).getCell(0);
+                XSSFCell xmname = slSheet.getRow(1).getCell(4);//陕西高速
+                XSSFCell htdname = slSheet.getRow(1).getCell(14);//LJ-1
+                XSSFCell hd = slSheet.getRow(2).getCell(14);//涵洞
+                Map<String,Object> jgmap = new HashMap<>();
+                if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())) {
+                    //获取到最后一行
+                    int lastRowNum = slSheet.getLastRowNum();
+                    slSheet.getRow(lastRowNum - 4).getCell(14).setCellType(CellType.STRING);
+                    slSheet.getRow(lastRowNum - 3).getCell(14).setCellType(CellType.STRING);
+                    slSheet.getRow(lastRowNum - 2).getCell(14).setCellType(CellType.STRING);
+                    slSheet.getRow(lastRowNum - 1).getCell(14).setCellType(CellType.STRING);
+                    double zds = Double.valueOf(slSheet.getRow(lastRowNum - 4).getCell(14).getStringCellValue());
+                    double hgds = Double.valueOf(slSheet.getRow(lastRowNum - 3).getCell(14).getStringCellValue());
+                    double bhgds = Double.valueOf(slSheet.getRow(lastRowNum - 2).getCell(14).getStringCellValue());
+                    double hgl = Double.valueOf(slSheet.getRow(lastRowNum - 1).getCell(14).getStringCellValue());
+                    String zdsz = decf.format(zds);
+                    String hgdsz = decf.format(hgds);
+                    String bhgdsz = decf.format(bhgds);
+                    String hglz = df.format(hgl);
+                    jgmap.put("检测项目",list.get(i).toString().substring(2));
+                    jgmap.put("总点数", zdsz);
+                    jgmap.put("合格点数", hgdsz);
+                    jgmap.put("不合格点数", bhgdsz);
+                    jgmap.put("合格率", hglz);
+                    mapList.add(jgmap);
+                }
+
+            }
+        }
+        return mapList;
+
         //获取鉴定表文件
-        File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"57交安标线厚度.xlsx");
+        /*File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"57交安标线厚度.xlsx");
         if(!f.exists()){
             return null;
         }else {
@@ -339,10 +391,10 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
             if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
                 //获取到最后一行
                 int lastRowNum = slSheet.getLastRowNum();
-                slSheet.getRow(lastRowNum-4).getCell(14).setCellType(XSSFCell.CELL_TYPE_STRING);
-                slSheet.getRow(lastRowNum-3).getCell(14).setCellType(XSSFCell.CELL_TYPE_STRING);
-                slSheet.getRow(lastRowNum-2).getCell(14).setCellType(XSSFCell.CELL_TYPE_STRING);
-                slSheet.getRow(lastRowNum-1).getCell(14).setCellType(XSSFCell.CELL_TYPE_STRING);
+                slSheet.getRow(lastRowNum-4).getCell(14).setCellType(CellType.STRING);
+                slSheet.getRow(lastRowNum-3).getCell(14).setCellType(CellType.STRING);
+                slSheet.getRow(lastRowNum-2).getCell(14).setCellType(CellType.STRING);
+                slSheet.getRow(lastRowNum-1).getCell(14).setCellType(CellType.STRING);
                 double zds= Double.valueOf(slSheet.getRow(lastRowNum-4).getCell(14).getStringCellValue());
                 double hgds= Double.valueOf(slSheet.getRow(lastRowNum-3).getCell(14).getStringCellValue());
                 double bhgds= Double.valueOf(slSheet.getRow(lastRowNum-2).getCell(14).getStringCellValue());
@@ -359,7 +411,7 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
                 return mapList;
             }
             return null;
-        }
+        }*/
     }
 
     /**

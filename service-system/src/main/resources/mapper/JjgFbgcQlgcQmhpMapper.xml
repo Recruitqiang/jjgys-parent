@@ -7,7 +7,7 @@
     </select>
 
     <select id="selectzh" resultType="java.util.Map" parameterType="java.lang.String">
-        SELECT zh from jjg_fbgc_qlgc_qmhp  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and qlmc=#{qlmc}
+        SELECT zh,lmlx from jjg_fbgc_qlgc_qmhp  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and qlmc=#{qlmc}
     </select>
 
 </mapper>
