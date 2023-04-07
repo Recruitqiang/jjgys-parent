@@ -59,7 +59,7 @@ public class JjgFbgcJtaqssJabxController {
         list.add(fileName1);
         list.add(fileName2);
         list.add(fileName3);
-        //设置响应头信息
+        //设置响应头信息csc
         response.reset();
         response.setCharacterEncoding("utf-8");
         response.setContentType("multipart/form-data");
