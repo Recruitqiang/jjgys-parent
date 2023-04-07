@@ -24,7 +24,7 @@ public interface JjgFbgcQlgcXbJgccService extends IService<JjgFbgcQlgcXbJgcc> {
 
     void generateJdb(CommonInfoVo commonInfoVo) throws IOException, ParseException;
 
-    List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo);
+    List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException;
 
     void exportqlxbjgcc(HttpServletResponse response);
 

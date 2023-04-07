@@ -387,6 +387,7 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
         return true;
     }
 
+
     private ArrayList<String> gethlgdGDZ(JjgFbgcJtaqssJabxfhl data) {
         ArrayList<String> list = new ArrayList<String>();
         if(data.getWzjlx().contains("两波板")){

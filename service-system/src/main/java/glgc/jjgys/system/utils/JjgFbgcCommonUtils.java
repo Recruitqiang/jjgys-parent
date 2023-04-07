@@ -1,16 +1,19 @@
 package glgc.jjgys.system.utils;
 
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 
+
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.WritableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
@@ -18,8 +21,92 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipOutputStream;
 
 public class JjgFbgcCommonUtils {
+
+
+    /**
+     *
+     * @param response
+     * @param zipName 压缩包的名字
+     * @param list 文件名
+     */
+    public static void batchDownloadFile(HttpServletRequest request, HttpServletResponse response,String zipName,List list,String filepath) {
+        //设置响应头信息
+        response.reset();
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        //设置压缩包的名字
+        String downloadName = zipName + ".zip";
+        //返回客户端浏览器的版本号、类型
+        String agent = request.getHeader("USER-AGENT");
+        try {
+            //针对IE或者以IE为内核的浏览器：
+            if (agent.contains("MSIE") || agent.contains("Trident")) {
+                downloadName = java.net.URLEncoder.encode(downloadName, "UTF-8");
+            } else {
+                //非IE浏览器的处理：
+                downloadName = new String(downloadName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.setHeader("Content-Disposition", "attachment;fileName=\"" + downloadName + "\"");
+
+        //设置压缩流：直接写入response，实现边压缩边下载
+        ZipOutputStream zipOs = null;
+        //循环将文件写入压缩流
+        DataOutputStream os = null;
+        //文件
+        File file;
+        try {
+            zipOs = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+            //设置压缩方法
+            zipOs.setMethod(ZipOutputStream.DEFLATED);
+            //遍历文件信息（主要获取文件名/文件路径等）
+            for (int i=0;i<list.size();i++) {
+                String name = zipName+"-"+list.get(i)+".xlsx";
+                String path = filepath+File.separator+name;
+                file = new File(path);
+                if (!file.exists()) {
+                    break;
+                }
+                //添加ZipEntry，并将ZipEntry写入文件流
+                zipOs.putNextEntry(new ZipEntry(name));
+                os = new DataOutputStream(zipOs);
+                FileInputStream fs = new FileInputStream(file);
+                byte[] b = new byte[100];
+                int length;
+                //读入需要下载的文件的内容，打包到zip文件
+                while ((length = fs.read(b)) != -1) {
+                    os.write(b, 0, length);
+                }
+                //关闭流
+                fs.close();
+                zipOs.closeEntry();
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //关闭流
+            try {
+                if (os != null) {
+                    os.flush();
+                    os.close();
+                }
+                if (zipOs != null) {
+                    zipOs.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
 
     public static void download(HttpServletResponse response, String p, String fileName) throws IOException {
         final Path path = Paths.get(p);
@@ -218,9 +305,9 @@ public class JjgFbgcCommonUtils {
         XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(map.get("f").toString()));
         //读取工作表
         XSSFSheet slSheet = xwb.getSheet(map.get("sheetname").toString());
-        slSheet.getRow(2).getCell(34).setCellType(XSSFCell.CELL_TYPE_STRING);
-        slSheet.getRow(2).getCell(35).setCellType(XSSFCell.CELL_TYPE_STRING);
-        slSheet.getRow(2).getCell(36).setCellType(XSSFCell.CELL_TYPE_STRING);
+        slSheet.getRow(2).getCell(34).setCellType(CellType.STRING);
+        slSheet.getRow(2).getCell(35).setCellType(CellType.STRING);
+        slSheet.getRow(2).getCell(36).setCellType(CellType.STRING);
         String bt = slSheet.getRow(0).getCell(0).getStringCellValue();//混凝土强度质量鉴定表（回弹法）
         //String bt1 = bt.getStringCellValue();
         String xmname = slSheet.getRow(1).getCell(2).getStringCellValue();//陕西高速
@@ -273,9 +360,9 @@ public class JjgFbgcCommonUtils {
             if(map.get("proname").toString().equals(xmname.toString()) && map.get("title").toString().equals(bt.toString()) && map.get("htd").toString().equals(htdname.toString()) && map.get("fbgc").toString().equals(hd.toString())){
                 //获取到最后一行
                 int lastRowNum = slSheet.getLastRowNum();
-                slSheet.getRow(lastRowNum-1).getCell(1).setCellType(XSSFCell.CELL_TYPE_STRING);
-                slSheet.getRow(lastRowNum-1).getCell(3).setCellType(XSSFCell.CELL_TYPE_STRING);
-                slSheet.getRow(lastRowNum-1).getCell(6).setCellType(XSSFCell.CELL_TYPE_STRING);
+                slSheet.getRow(lastRowNum-1).getCell(1).setCellType(CellType.STRING);
+                slSheet.getRow(lastRowNum-1).getCell(3).setCellType(CellType.STRING);
+                slSheet.getRow(lastRowNum-1).getCell(6).setCellType(CellType.STRING);
                 double zds= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(1).getStringCellValue());
                 double hgds= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(3).getStringCellValue());
                 double hgl= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(6).getStringCellValue());

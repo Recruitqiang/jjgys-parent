@@ -16,10 +16,8 @@ import glgc.jjgys.system.service.JjgFbgcQlgcQmhpService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,18 +25,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -369,8 +362,86 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
 
 
     @Override
-    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) {
-        return null;
+    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
+        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String fbgc = commonInfoVo.getFbgc();
+        List<Map<String, Object>> selectqlmc = selectqlmc(proname, htd, fbgc);
+
+        List<Map<String, Object>> mapList = new ArrayList<>();
+
+        for (int i=0;i<selectqlmc.size();i++){
+            String qlmc = selectqlmc.get(i).get("qlmc").toString();
+            File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "35桥面横坡-"+qlmc+".xlsx");
+            if (!f.exists()) {
+                return null;
+            } else {
+                List<Map<String,Object>> zhlist = jjgFbgcQlgcQmhpMapper.selectzh(proname,htd,fbgc,qlmc);
+                String zh = zhlist.get(0).get("zh").toString();
+                String lx = zhlist.get(0).get("lmlx").toString().substring(0,2);
+                String lxname;
+                if (lx.equals("水泥")){
+                    lxname="混凝土桥面";
+                }else {
+                    lxname="沥青桥面";
+
+                }
+                String substring = zh.substring(0, 1);
+                XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+
+                if (substring.equals("Z") || substring.equals("Y")){
+                    String sheetnameleft = lxname+"左幅";
+                    String sheetnameright = lxname+"右幅";
+                    XSSFSheet sheetleft = xwb.getSheet(sheetnameleft);
+                    XSSFSheet sheetright = xwb.getSheet(sheetnameright);
+                    XSSFCell xmnameleft = sheetleft.getRow(1).getCell(2);//项目名
+                    XSSFCell htdnameleft = sheetleft.getRow(1).getCell(8);//合同段名
+                    if (proname.equals(xmnameleft.toString()) && htd.equals(htdnameleft.toString())) {
+                        sheetleft.getRow(0).getCell(14).setCellType(CellType.STRING);//总点数
+                        sheetleft.getRow(0).getCell(16).setCellType(CellType.STRING);//合格点数
+                        sheetleft.getRow(0).getCell(18).setCellType(CellType.STRING);//合格率
+
+                        sheetright.getRow(0).getCell(14).setCellType(CellType.STRING);//总点数
+                        sheetright.getRow(0).getCell(16).setCellType(CellType.STRING);//合格点数
+                        sheetright.getRow(0).getCell(18).setCellType(CellType.STRING);//合格率
+
+                        Map<String, Object> jgmap = new HashMap<>();
+                        jgmap.put("检测项目",qlmc+sheetnameleft);
+                        jgmap.put("总点数", decf.format(Double.valueOf(sheetleft.getRow(0).getCell(14).getStringCellValue())));
+                        jgmap.put("合格点数", decf.format(Double.valueOf(sheetleft.getRow(0).getCell(16).getStringCellValue())));
+                        jgmap.put("合格率", df.format(Double.valueOf(sheetleft.getRow(0).getCell(18).getStringCellValue())));
+
+                        Map<String, Object> jgmapright = new HashMap<>();
+                        jgmapright.put("检测项目",qlmc+sheetnameright);
+                        jgmapright.put("总点数", decf.format(Double.valueOf(sheetright.getRow(0).getCell(14).getStringCellValue())));
+                        jgmapright.put("合格点数", decf.format(Double.valueOf(sheetright.getRow(0).getCell(16).getStringCellValue())));
+                        jgmapright.put("合格率", df.format(Double.valueOf(sheetright.getRow(0).getCell(18).getStringCellValue())));
+                        mapList.add(jgmap);
+                        mapList.add(jgmapright);
+                    }
+                }else {
+                    String sheetname = lxname+"左幅";
+                    XSSFSheet sheetl = xwb.getSheet(sheetname);
+                    XSSFCell xmnameleft = sheetl.getRow(1).getCell(2);//项目名
+                    XSSFCell htdnameleft = sheetl.getRow(1).getCell(8);//合同段名
+                    if (proname.equals(xmnameleft.toString()) && htd.equals(htdnameleft.toString())) {
+                        sheetl.getRow(0).getCell(14).setCellType(CellType.STRING);//总点数
+                        sheetl.getRow(0).getCell(16).setCellType(CellType.STRING);//合格点数
+                        sheetl.getRow(0).getCell(18).setCellType(CellType.STRING);//合格率
+                        Map<String, Object> jgmap = new HashMap<>();
+                        jgmap.put("检测项目",qlmc+lxname);
+                        jgmap.put("总点数", decf.format(Double.valueOf(sheetl.getRow(0).getCell(14).getStringCellValue())));
+                        jgmap.put("合格点数", decf.format(Double.valueOf(sheetl.getRow(0).getCell(16).getStringCellValue())));
+                        jgmap.put("合格率", df.format(Double.valueOf(sheetl.getRow(0).getCell(18).getStringCellValue())));
+                        mapList.add(jgmap);
+                    }
+                }
+            }
+
+        }
+        return mapList;
     }
 
     @Override

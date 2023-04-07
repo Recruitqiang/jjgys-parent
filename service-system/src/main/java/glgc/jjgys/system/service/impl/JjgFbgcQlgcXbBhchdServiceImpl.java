@@ -16,10 +16,8 @@ import glgc.jjgys.system.service.JjgFbgcQlgcXbBhchdService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
-import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,18 +25,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -158,11 +151,6 @@ public class JjgFbgcQlgcXbBhchdServiceImpl extends ServiceImpl<JjgFbgcQlgcXbBhch
                 designValue = Double.valueOf(row.getCell(3).toString());
                 avgValue = Double.valueOf(e.evaluate(row.getCell(7+7)).getNumberValue()+0.5).intValue();
 
-                System.out.println(row.getCell(7+7).getReference());
-                System.out.println(e.evaluate(row.getCell(7+7)).getNumberValue());
-                System.out.println(Double.valueOf(e.evaluate(row.getCell(7+7)).getNumberValue()).intValue());
-
-                System.out.print("设计值："+designValue+"; 平均值："+avgValue+"; 允许偏差："+jjgFbgcQlgcSbBhchdService.analysisOffset(row.getCell(8+7).toString())[1] + "; ");
                 if(Math.abs(designValue-avgValue)<= Double.valueOf(jjgFbgcQlgcSbBhchdService.analysisOffset(row.getCell(8+7).toString())[1]).intValue()){
                     row.getCell(9+7).setCellValue("√");
                     System.out.println("√");
@@ -236,12 +224,15 @@ public class JjgFbgcQlgcXbBhchdServiceImpl extends ServiceImpl<JjgFbgcQlgcXbBhch
         start.clear();
         end.clear();
         row = sheet.getRow(2);
+
         row.createCell(11+7).setCellFormula("SUM("
                 +sheet.getRow(3).createCell(11+7).getReference()+":"
                 +sheet.getRow(sheet.getPhysicalNumberOfRows()-1).createCell(11+7).getReference()+")/2");//=SUM(L7:L300)
         row.createCell(12+7).setCellFormula("SUM("
                 +sheet.getRow(3).createCell(12+7).getReference()+":"
                 +sheet.getRow(sheet.getPhysicalNumberOfRows()-1).createCell(12+7).getReference()+")/2");//=SUM(L7:L300)
+        sheet.getRow(2).createCell(13+7).setCellFormula(sheet.getRow(2).getCell(12+7).getReference()+"*100/"
+                +sheet.getRow(2).getCell(11+7).getReference());//合格率
 
     }
 
@@ -264,7 +255,7 @@ public class JjgFbgcQlgcXbBhchdServiceImpl extends ServiceImpl<JjgFbgcQlgcXbBhch
         String testtime = simpleDateFormat.format(data.get(0).getJcsj());;
         int index = 0;
         int tableNum = 0;
-        fillTitleCellData(sheet, tableNum,data.get(0).getHtd(), name);
+        fillTitleCellData(sheet, tableNum,data.get(0).getHtd(), data.get(0).getProname());
         sheet.getRow(tableNum*36 + 6 + index).getCell(0).setCellValue(name);
         for(JjgFbgcQlgcXbBhchd row:data){
             if(name.equals(row.getQlmc())){
@@ -282,7 +273,7 @@ public class JjgFbgcQlgcXbBhchdServiceImpl extends ServiceImpl<JjgFbgcQlgcXbBhch
                     sheet.getRow(tableNum*36+2).getCell(8+7).setCellValue(testtime);
                     testtime = simpleDateFormat.format(row.getJcsj());
                     tableNum ++;
-                    fillTitleCellData(sheet, tableNum,row.getHtd(), name);
+                    fillTitleCellData(sheet, tableNum,row.getHtd(), row.getProname());
                     index = 0;
                 }
                 fillCommonCellData(sheet, tableNum, index+6, row);
@@ -296,7 +287,7 @@ public class JjgFbgcQlgcXbBhchdServiceImpl extends ServiceImpl<JjgFbgcQlgcXbBhch
                 testtime = JjgFbgcCommonUtils.getLastDate(testtime, simpleDateFormat.format(row.getJcsj()));
                 testtime = simpleDateFormat.format(row.getJcsj());
                 tableNum ++;
-                fillTitleCellData(sheet, tableNum, row.getHtd(), name);
+                fillTitleCellData(sheet, tableNum, row.getHtd(), row.getProname());
                 sheet.getRow(tableNum*36 + 6 + index).getCell(0).setCellValue(name);
                 fillCommonCellData(sheet, tableNum, index+6, row);
                 index +=1;
@@ -390,8 +381,44 @@ public class JjgFbgcQlgcXbBhchdServiceImpl extends ServiceImpl<JjgFbgcQlgcXbBhch
     }
 
     @Override
-    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) {
-        return null;
+    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String fbgc = commonInfoVo.getFbgc();
+        String title = "钢筋保护层厚度质量鉴定表";
+        String sheetname = "保护层";
+
+        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        //获取鉴定表文件
+        File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"27桥梁下部保护层厚度.xlsx");
+        if(!f.exists()){
+            return null;
+        }else {
+            XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+            //读取工作表
+            XSSFSheet slSheet = xwb.getSheet(sheetname);
+            XSSFCell bt = slSheet.getRow(0).getCell(0);
+            XSSFCell xmname = slSheet.getRow(1).getCell(2);//陕西高速
+            XSSFCell htdname = slSheet.getRow(1).getCell(15);//LJ-1
+            XSSFCell hd = slSheet.getRow(2).getCell(2);//涵洞1
+            List<Map<String,Object>> mapList = new ArrayList<>();
+            Map<String,Object> jgmap = new HashMap<>();
+            if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
+                slSheet.getRow(2).getCell(18).setCellType(CellType.STRING);
+                slSheet.getRow(2).getCell(19).setCellType(CellType.STRING);
+                slSheet.getRow(2).getCell(20).setCellType(CellType.STRING);
+
+                jgmap.put("总点数",decf.format(Double.valueOf(slSheet.getRow(2).getCell(18).getStringCellValue())));
+                jgmap.put("合格点数",decf.format(Double.valueOf(slSheet.getRow(2).getCell(19).getStringCellValue())));
+                jgmap.put("合格率",df.format(Double.valueOf(slSheet.getRow(2).getCell(20).getStringCellValue())));
+                mapList.add(jgmap);
+                return mapList;
+            }else {
+                return null;
+            }
+
+        }
     }
 
     @Override

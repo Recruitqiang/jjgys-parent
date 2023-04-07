@@ -18,12 +18,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipOutputStream;
 
 /**
  * <p>
@@ -46,28 +50,86 @@ public class JjgFbgcJtaqssJabxController {
 
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public Result downloadExport(HttpServletResponse response,String proname,String htd) throws IOException {
+    public void downloadExport(HttpServletRequest request, HttpServletResponse response, String proname, String htd) throws IOException {
+        String fpath= filespath+File.separator+proname+File.separator+htd;
         String fileName1 = "57交安标线厚度.xlsx";
         String fileName2 = "57交安标线白线逆反射系数.xlsx";
         String fileName3 = "57交安标线黄线逆反射系数.xlsx";
-        String p = filespath+File.separator+proname+File.separator+htd+File.separator+fileName1;
-        String bx = filespath+File.separator+proname+File.separator+htd+File.separator+fileName2;
-        String hx = filespath+File.separator+proname+File.separator+htd+File.separator+fileName3;
-        File hdfile = new File(p);
-        File hf = new File(bx);
-        File hxf = new File(hx);
-        if (hdfile.exists()){
-            JjgFbgcCommonUtils.download(response,p,fileName1);
-            if (hf.exists()){
-                JjgFbgcCommonUtils.download(response,bx,fileName2);
+        List list = new ArrayList();
+        list.add(fileName1);
+        list.add(fileName2);
+        list.add(fileName3);
+        //设置响应头信息
+        response.reset();
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        //设置压缩包的名字
+        String zipName = "57交安标线";
+        String downloadName = zipName + ".zip";
+        //返回客户端浏览器的版本号、类型
+        String agent = request.getHeader("USER-AGENT");
+        try {
+            //针对IE或者以IE为内核的浏览器：
+            if (agent.contains("MSIE") || agent.contains("Trident")) {
+                downloadName = java.net.URLEncoder.encode(downloadName, "UTF-8");
+            } else {
+                //非IE浏览器的处理：
+                downloadName = new String(downloadName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
             }
-            if (hxf.exists()){
-                JjgFbgcCommonUtils.download(response,hx,fileName3);
-            }
-            return Result.ok();
-        }else {
-            return Result.fail().message("还未生成鉴定表");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        response.setHeader("Content-Disposition", "attachment;fileName=\"" + downloadName + "\"");
+        //设置压缩流：直接写入response，实现边压缩边下载
+        ZipOutputStream zipOs = null;
+        //循环将文件写入压缩流
+        DataOutputStream os = null;
+        //文件
+        File file;
+        try {
+            zipOs = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+            //设置压缩方法
+            zipOs.setMethod(ZipOutputStream.DEFLATED);
+            //遍历文件信息（主要获取文件名/文件路径等）
+            for (int i=0;i<list.size();i++) {
+                String name = list.get(i).toString();
+                String path = fpath+File.separator+name;
+                file = new File(path);
+                if (!file.exists()) {
+                    break;
+                }
+                //添加ZipEntry，并将ZipEntry写入文件流
+                zipOs.putNextEntry(new ZipEntry(name));
+                os = new DataOutputStream(zipOs);
+                FileInputStream fs = new FileInputStream(file);
+                byte[] b = new byte[100];
+                int length;
+                //读入需要下载的文件的内容，打包到zip文件
+                while ((length = fs.read(b)) != -1) {
+                    os.write(b, 0, length);
+                }
+                //关闭流
+                fs.close();
+                zipOs.closeEntry();
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //关闭流
+            try {
+                if (os != null) {
+                    os.flush();
+                    os.close();
+                }
+                if (zipOs != null) {
+                    zipOs.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @ApiOperation("生成交安标线鉴定表")

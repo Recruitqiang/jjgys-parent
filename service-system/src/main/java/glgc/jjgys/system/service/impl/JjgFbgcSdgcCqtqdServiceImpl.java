@@ -35,6 +35,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -227,8 +228,27 @@ public class JjgFbgcSdgcCqtqdServiceImpl extends ServiceImpl<JjgFbgcSdgcCqtqdMap
     }
 
     @Override
-    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) {
-        return null;
+    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String fbgc = commonInfoVo.getFbgc();
+        String title = "混凝土强度质量鉴定表（回弹法）";
+        String sheetname = "原始数据";
+        //获取鉴定表文件
+        File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"38隧道衬砌砼强度.xlsx");
+        if(!f.exists()){
+            return null;
+        }else {
+            Map<String,Object> map = new HashMap<>();
+            map.put("proname",proname);
+            map.put("title",title);
+            map.put("htd",htd);
+            map.put("fbgc",fbgc);
+            map.put("f",f);
+            map.put("sheetname",sheetname);
+            List<Map<String, Object>> mapList = JjgFbgcCommonUtils.gettqdjcjg(map);
+            return mapList;
+        }
     }
 
     @Override
