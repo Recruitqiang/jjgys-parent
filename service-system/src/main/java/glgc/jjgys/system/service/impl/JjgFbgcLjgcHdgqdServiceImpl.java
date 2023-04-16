@@ -170,7 +170,6 @@ public class JjgFbgcLjgcHdgqdServiceImpl extends ServiceImpl<JjgFbgcLjgcHdgqdMap
             if(DBtoExcel(data,proname,htd,fbgc)){
                 //设置公式,计算合格点数
                 calculateSheet(wb.getSheet("原始数据"));
-                System.out.println(wb.getNumberOfSheets());
                 for (int j = 0; j < wb.getNumberOfSheets(); j++) {
                     JjgFbgcCommonUtils.updateFormula(wb, wb.getSheetAt(j));
                 }

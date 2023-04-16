@@ -123,6 +123,9 @@ public class SysRoleServiceTest {
     @Autowired
     private JjgFbgcSdgcCqhdService jjgFbgcSdgcCqhdService;
 
+    @Autowired
+    private JjgFbgcLmgcLqlmysdService jjgFbgcLmgcLqlmysdService;
+
 
 
 
@@ -131,7 +134,7 @@ public class SysRoleServiceTest {
         CommonInfoVo commonInfoVo = new CommonInfoVo();
         commonInfoVo.setProname("陕西高速");
         commonInfoVo.setHtd("LJ-1");
-        commonInfoVo.setFbgc("衬砌");
+        commonInfoVo.setFbgc("路面工程");
 
         /*QueryWrapper<JjgFbgcJtaqssJabx> wrapper=new QueryWrapper<>();
         wrapper.like("proname","陕西高速");
@@ -140,13 +143,13 @@ public class SysRoleServiceTest {
         wrapper.orderByDesc("wz","hdscz1");
         List<JjgFbgcJtaqssJabx> data = jjgFbgcJtaqssJabxMapper.selectList(wrapper);
         jjgFbgcJtaqssJabxService.bxnfsxs(data);*/
-        //jjgFbgcSdgcZtkdService.generateJdb(commonInfoVo);
+        jjgFbgcLmgcLqlmysdService.generateJdb(commonInfoVo);
 
-        List<Map<String, Object>> maps = jjgFbgcSdgcZtkdService.lookJdbjg(commonInfoVo);
+        //List<Map<String, Object>> maps = jjgFbgcSdgcZtkdService.lookJdbjg(commonInfoVo);
 
         //jjgFbgcLjgcLjcjService.generateJdb(commonInfoVo);
         //List<Map<String, Object>> maps = jjgFbgcLjgcLjcjService.lookJdbjg(commonInfoVo);
-        System.out.println(maps);
+        //System.out.println(maps);
     }
 
 }

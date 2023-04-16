@@ -33,27 +33,13 @@ public class JjgFbgcCommonUtils {
      * @param zipName 压缩包的名字
      * @param list 文件名
      */
-    public static void batchDownloadFile(HttpServletRequest request, HttpServletResponse response,String zipName,List list,String filepath) {
-        //设置响应头信息
-        response.reset();
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("multipart/form-data");
+    public static void batchDownloadFile(HttpServletRequest request, HttpServletResponse response,String zipName,List list,String filepath) throws UnsupportedEncodingException {
         //设置压缩包的名字
-        String downloadName = zipName + ".zip";
-        //返回客户端浏览器的版本号、类型
-        String agent = request.getHeader("USER-AGENT");
-        try {
-            //针对IE或者以IE为内核的浏览器：
-            if (agent.contains("MSIE") || agent.contains("Trident")) {
-                downloadName = java.net.URLEncoder.encode(downloadName, "UTF-8");
-            } else {
-                //非IE浏览器的处理：
-                downloadName = new String(downloadName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        response.setHeader("Content-Disposition", "attachment;fileName=\"" + downloadName + "\"");
+        String downloadName = URLEncoder.encode(zipName+".zip", "UTF-8");
+        response.reset();
+        response.setHeader("Content-disposition", "attachment; filename=" + downloadName);
+        response.setContentType("application/zip;charset=utf-8");
+        response.setCharacterEncoding("utf-8");
 
         //设置压缩流：直接写入response，实现边压缩边下载
         ZipOutputStream zipOs = null;
@@ -160,7 +146,6 @@ public class JjgFbgcCommonUtils {
 
         for (int i = 0; i < wb.getNumberOfSheets(); i++) {
             if(wb.getSheetAt(i).getSheetName().contains("温度修正")){
-                System.out.println("  wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName()+" continue");
                 continue;
             }
             if(wb.getSheetAt(i).getRow(0)!=null&&wb.getSheetAt(i).getRow(0).getCell(0).getStringCellValue().contains("构造深度质量鉴定表")
@@ -170,8 +155,6 @@ public class JjgFbgcCommonUtils {
 
                 if(wb.getSheetAt(i).getRow(6).getCell(0)!=null&&wb.getSheetAt(i).getRow(6).getCell(0).getStringCellValue().equals(""))
                 {
-                    System.out.println(wb.getSheetAt(i).getRow(6).getCell(0).getStringCellValue());
-                    System.out.println("  wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName());
                     delsheets.add(wb.getSheetAt(i).getSheetName());
                     continue;
                 }
@@ -181,7 +164,6 @@ public class JjgFbgcCommonUtils {
                 if(wb.getSheetAt(i).getRow(1).getCell(2).getStringCellValue()==null
                         ||"".equals(wb.getSheetAt(i).getRow(1).getCell(2).getStringCellValue())
                 ){
-                    System.out.println(" 构造深度   wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName());
                     delsheets.add(wb.getSheetAt(i).getSheetName());
                     continue;
                 }
@@ -205,22 +187,14 @@ public class JjgFbgcCommonUtils {
             if(wb.getSheetAt(i).getRow(0)!=null&&wb.getSheetAt(i).getRow(0).getCell(0).getStringCellValue().contains("桥面系摩擦系数")){  //桥面系构造深度
                 if(wb.getSheetAt(i).getRow(6).getCell(3)==null&&wb.getSheetAt(i).getRow(6).getCell(4)==null)
                 {
-                    System.out.println(wb.getSheetAt(i).getRow(6).getCell(0).getStringCellValue());
-                    System.out.println("  wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName());
                     delsheets.add(wb.getSheetAt(i).getSheetName());
                     continue;
                 }else if(wb.getSheetAt(i).getRow(6).getCell(3)!=null&&wb.getSheetAt(i).getRow(6).getCell(3).getCellType()!=1&&wb.getSheetAt(i).getRow(6).getCell(3).getNumericCellValue()==0&&
                         wb.getSheetAt(i).getRow(6).getCell(4)!=null&&wb.getSheetAt(i).getRow(6).getCell(4).getCellType()!=1&&wb.getSheetAt(i).getRow(6).getCell(4).getNumericCellValue()==0) {
-                    System.out.println(wb.getSheetAt(i).getRow(6).getCell(3).getCellType());
-                    System.out.println(wb.getSheetAt(i).getRow(6).getCell(3).getNumericCellValue());
-                    System.out.println("  wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName());
                     delsheets.add(wb.getSheetAt(i).getSheetName());
                     continue;
                 }else if(wb.getSheetAt(i).getRow(6).getCell(3)!=null&&wb.getSheetAt(i).getRow(6).getCell(3).getCellType()==1&&wb.getSheetAt(i).getRow(6).getCell(3).getStringCellValue().equals("")&&
                         wb.getSheetAt(i).getRow(6).getCell(4)!=null&&wb.getSheetAt(i).getRow(6).getCell(4).getCellType()==1&&wb.getSheetAt(i).getRow(6).getCell(4).getStringCellValue().equals("")) {
-                    System.out.println(wb.getSheetAt(i).getRow(6).getCell(3).getCellType());
-                    System.out.println(wb.getSheetAt(i).getRow(6).getCell(3).getStringCellValue());
-                    System.out.println("  wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName());
                     delsheets.add(wb.getSheetAt(i).getSheetName());
                     continue;
                 }
@@ -229,7 +203,6 @@ public class JjgFbgcCommonUtils {
             {
                 if(wb.getSheetAt(i).getRow(1).getCell(2).getStringCellValue()==null
                         ||"".equals(wb.getSheetAt(i).getRow(1).getCell(2).getStringCellValue())){
-                    System.out.println("  wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName());
                     delsheets.add(wb.getSheetAt(i).getSheetName());
                     continue;
                 }
@@ -239,7 +212,6 @@ public class JjgFbgcCommonUtils {
                         ||
                         (wb.getSheetAt(i).getRow(6).getCell(1).getCellType()==1&&wb.getSheetAt(i).getRow(6).getCell(1).getStringCellValue().equals("")))
                 {
-                    System.out.println("  wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName());
                     delsheets.add(wb.getSheetAt(i).getSheetName());
                     continue;
                 }
@@ -248,13 +220,11 @@ public class JjgFbgcCommonUtils {
             {
                 if(wb.getSheetAt(i).getRow(1).getCell(2)==null
                         ||"".equals(wb.getSheetAt(i).getRow(1).getCell(2).getStringCellValue())){
-                    System.out.println("路面横坡 1  wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName());
                     delsheets.add(wb.getSheetAt(i).getSheetName());
                     continue;
                 }
                 if(wb.getSheetAt(i).getRow(6).getCell(0)==null||
                         wb.getSheetAt(i).getRow(6).getCell(0).getStringCellValue().equals("")){
-                    System.out.println("路面横坡 2  wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName());
                     delsheets.add(wb.getSheetAt(i).getSheetName());
                     continue;
                 }
@@ -263,7 +233,6 @@ public class JjgFbgcCommonUtils {
             {
                 if(wb.getSheetAt(i).getRow(1).getCell(1)==null
                         ||"".equals(wb.getSheetAt(i).getRow(1).getCell(1).getStringCellValue())){
-                    System.out.println("钻芯法  wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName());
                     delsheets.add(wb.getSheetAt(i).getSheetName());
                     continue;
                 }
@@ -272,7 +241,6 @@ public class JjgFbgcCommonUtils {
             {
                 if(wb.getSheetAt(i).getRow(6).getCell(0)==null
                         ||"".equals(wb.getSheetAt(i).getRow(6).getCell(0).getStringCellValue())){
-                    System.out.println("渗水系数  wb.getSheetAt(i).getSheetName()  "+wb.getSheetAt(i).getSheetName());
                     delsheets.add(wb.getSheetAt(i).getSheetName());
                     continue;
                 }
@@ -281,7 +249,6 @@ public class JjgFbgcCommonUtils {
                 continue;
             }
             if(!printSheets.contains(wb.getSheetAt(i).getSheetName())){
-                System.out.println("删除 "+wb.getSheetAt(i).getSheetName());
                 delsheets.add(wb.getSheetAt(i).getSheetName());
             }
         }

@@ -18,13 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
 
 /**
  * <p>
@@ -57,14 +58,18 @@ public class JjgFbgcJtaqssJabxController {
         list.add(fileName2);
         list.add(fileName3);
         //设置响应头信息csc
-        response.reset();
+        /*response.reset();
         response.setCharacterEncoding("utf-8");
-        response.setContentType("multipart/form-data");
+        response.setContentType("multipart/form-data");*/
         //设置压缩包的名字
-        String zipName = "57交安标线";
-        String downloadName = zipName + ".zip";
+        String downloadName = URLEncoder.encode("57交安标线.zip", "UTF-8");
+        //String userAgent = request.getHeader("User-Agent");
+        response.reset();
+        response.setHeader("Content-disposition", "attachment; filename=" + downloadName);
+        response.setContentType("application/zip;charset=utf-8");
+        response.setCharacterEncoding("utf-8");
         //返回客户端浏览器的版本号、类型
-        String agent = request.getHeader("USER-AGENT");
+        /*String agent = request.getHeader("USER-AGENT");
         try {
             //针对IE或者以IE为内核的浏览器：
             if (agent.contains("MSIE") || agent.contains("Trident")) {
@@ -73,10 +78,12 @@ public class JjgFbgcJtaqssJabxController {
                 //非IE浏览器的处理：
                 downloadName = new String(downloadName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
             }
+            System.out.println(downloadName);
+            System.out.println("111");
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        response.setHeader("Content-Disposition", "attachment;fileName=\"" + downloadName + "\"");
+        }*/
+        //response.setHeader("Content-Disposition", "attachment;fileName=\"" + downloadName + "\"");
         //设置压缩流：直接写入response，实现边压缩边下载
         ZipOutputStream zipOs = null;
         //循环将文件写入压缩流

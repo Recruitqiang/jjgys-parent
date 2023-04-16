@@ -281,7 +281,7 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("src/main/resources");
+            File directory = new File("service-system/src/main/resources");
             String reportPath = directory.getCanonicalPath();
             String path = reportPath + "/static/交安标线逆反射系数新.xlsx";
             Files.copy(Paths.get(path), new FileOutputStream(f));

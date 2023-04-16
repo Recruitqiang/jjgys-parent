@@ -53,8 +53,6 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
     @Value(value = "${jjgys.path.filepath}")
     private String filepath;
 
-    //private static XSSFWorkbook wb = null;
-
 
     @Override
     public void generateJdb(CommonInfoVo commonInfoVo) throws IOException {
