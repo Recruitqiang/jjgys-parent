@@ -88,8 +88,8 @@ public class JjgFbgcJtaqssJabzServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabzM
 
     @Override
     public void exportjabz(HttpServletResponse response) {
-        String fileName = "交安标志实测数据";
-        String sheetName = "交安标志实测数据";
+        String fileName = "01交安标志实测数据";
+        String sheetName = "实测数据";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new JjgFbgcJtaqssJabzVo()).finish();
 
     }

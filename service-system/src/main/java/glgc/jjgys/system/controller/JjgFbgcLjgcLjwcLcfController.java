@@ -5,18 +5,26 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import glgc.jjgys.common.result.Result;
+import glgc.jjgys.common.utils.IpUtil;
+import glgc.jjgys.common.utils.JwtHelper;
 import glgc.jjgys.model.project.JjgFbgcLjgcLjwc;
 import glgc.jjgys.model.project.JjgFbgcLjgcLjwcLcf;
 import glgc.jjgys.model.projectvo.ljgc.CommonInfoVo;
+import glgc.jjgys.model.system.SysOperLog;
 import glgc.jjgys.system.service.JjgFbgcLjgcLjwcLcfService;
+import glgc.jjgys.system.service.OperLogService;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +47,9 @@ public class JjgFbgcLjgcLjwcLcfController {
 
     @Autowired
     private JjgFbgcLjgcLjwcLcfService jjgFbgcLjgcLjwcLcfService;
+    @Autowired
+    private OperLogService operLogService;
+
 
     @Value(value = "${jjgys.path.filepath}")
     private String filespath;
@@ -125,8 +136,22 @@ public class JjgFbgcLjgcLjwcLcfController {
     @ApiOperation("修改路基弯沉落锤法数据")
     @PostMapping("update")
     public Result update(@RequestBody JjgFbgcLjgcLjwcLcf user) {
+        RequestAttributes ra = RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes sra = (ServletRequestAttributes) ra;
+        HttpServletRequest request = sra.getRequest();
+
         boolean is_Success = jjgFbgcLjgcLjwcLcfService.updateById(user);
         if(is_Success) {
+            SysOperLog sysOperLog = new SysOperLog();
+            sysOperLog.setProname(user.getProname());
+            sysOperLog.setHtd(user.getHtd());
+            sysOperLog.setFbgc(user.getFbgc());
+            sysOperLog.setTitle("路基弯沉落锤法数据");
+            sysOperLog.setBusinessType("修改");
+            sysOperLog.setOperName(JwtHelper.getUsername(request.getHeader("token")));
+            sysOperLog.setOperIp(IpUtil.getIpAddress(request));
+            sysOperLog.setOperTime(new Date());
+            operLogService.saveSysLog(sysOperLog);
             return Result.ok();
         } else {
             return Result.fail();

@@ -5,14 +5,23 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import glgc.jjgys.common.result.Result;
+import glgc.jjgys.common.utils.IpUtil;
+import glgc.jjgys.common.utils.JwtHelper;
 import glgc.jjgys.model.project.JjgFbgcJtaqssJabx;
 import glgc.jjgys.model.projectvo.ljgc.CommonInfoVo;
+import glgc.jjgys.model.system.SysOperLog;
+import glgc.jjgys.system.annotation.Log;
+import glgc.jjgys.system.enums.BusinessType;
 import glgc.jjgys.system.service.JjgFbgcJtaqssJabxService;
+import glgc.jjgys.system.service.OperLogService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,11 +46,13 @@ import java.util.zip.ZipOutputStream;
  */
 @RestController
 @RequestMapping("/jjg/fbgc/jtaqss/jabx")
-@CrossOrigin
 public class JjgFbgcJtaqssJabxController {
 
     @Autowired
     private JjgFbgcJtaqssJabxService jjgFbgcJtaqssJabxService;
+
+    @Autowired
+    private OperLogService operLogService;
 
     @Value(value = "${jjgys.path.filepath}")
     private String filespath;
@@ -207,11 +218,25 @@ public class JjgFbgcJtaqssJabxController {
         return Result.ok(user);
     }
 
+    //@Log(title = "交安标线数据",businessType = BusinessType.UPDATE)
     @ApiOperation("修改交安标线数据")
     @PostMapping("update")
     public Result update(@RequestBody JjgFbgcJtaqssJabx user) {
+        RequestAttributes ra = RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes sra = (ServletRequestAttributes) ra;
+        HttpServletRequest request = sra.getRequest();
         boolean is_Success = jjgFbgcJtaqssJabxService.updateById(user);
         if(is_Success) {
+            SysOperLog sysOperLog = new SysOperLog();
+            sysOperLog.setProname(user.getProname());
+            sysOperLog.setHtd(user.getHtd());
+            sysOperLog.setFbgc(user.getFbgc());
+            sysOperLog.setTitle("交安标线数据");
+            sysOperLog.setBusinessType("修改");
+            sysOperLog.setOperName(JwtHelper.getUsername(request.getHeader("token")));
+            sysOperLog.setOperIp(IpUtil.getIpAddress(request));
+            sysOperLog.setOperTime(new Date());
+            operLogService.saveSysLog(sysOperLog);
             return Result.ok();
         } else {
             return Result.fail();

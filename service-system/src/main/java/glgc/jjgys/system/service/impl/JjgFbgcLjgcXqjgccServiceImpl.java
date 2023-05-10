@@ -135,8 +135,8 @@ public class JjgFbgcLjgcXqjgccServiceImpl extends ServiceImpl<JjgFbgcLjgcXqjgccM
 
     @Override
     public void exportxqjgcc(HttpServletResponse response) {
-        String fileName = "小桥结构尺寸实测数据";
-        String sheetName = "小桥结构尺寸实测数据";
+        String fileName = "07小桥结构尺寸实测数据";
+        String sheetName = "实测数据";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new JjgFbgcLjgcXqjgccVo()).finish();
 
     }

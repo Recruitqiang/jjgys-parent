@@ -39,87 +39,101 @@ public class JjgFbgcQlgcQmgzsdVo extends BaseRowModel {
     private Date jcsj;
 
     /**
+     * 桥梁名称
+     */
+    @ColumnWidth(23)
+    @ExcelProperty(value = "桥梁名称" ,index = 1)
+    private String qlmc;
+
+    /**
      * 结构名称
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "结构名称" ,index = 1)
+    @ExcelProperty(value = "结构名称" ,index = 2)
     private String jgmc;
 
     /**
      * ABM
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "ABM" ,index = 2)
+    @ExcelProperty(value = "ABM" ,index = 3)
     private String abm;
+
+    /**
+     * ZY
+     */
+    @ColumnWidth(23)
+    @ExcelProperty(value = "ZY" ,index = 4)
+    private String zy;
 
     /**
      * 桩号
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "桩号" ,index = 3)
+    @ExcelProperty(value = "桩号" ,index = 5)
     private String zh;
 
     /**
      * 车道
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "车道" ,index = 4)
+    @ExcelProperty(value = "车道" ,index = 6)
     private String cd;
 
     /**
      * 设计最小值
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "设计最小值" ,index = 5)
+    @ExcelProperty(value = "设计最小值" ,index = 7)
     private String sjzxz;
 
     /**
      * 设计最大值
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "设计最大值" ,index = 6)
+    @ExcelProperty(value = "设计最大值" ,index = 8)
     private String sjzdz;
 
     /**
      * 测点1D1(㎜)
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "测点1D1(㎜)" ,index = 7)
+    @ExcelProperty(value = "测点1D1(㎜)" ,index = 9)
     private String cd1d1;
 
     /**
      * 测点1D2(㎜)
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "测点1D2(㎜)" ,index = 8)
+    @ExcelProperty(value = "测点1D2(㎜)" ,index = 10)
     private String cd1d2;
 
     /**
      * 测点2D1(㎜)
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "测点2D1(㎜)" ,index = 9)
+    @ExcelProperty(value = "测点2D1(㎜)" ,index = 11)
     private String cd2d1;
 
     /**
      * 测点2D2(㎜)
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "测点2D2(㎜)" ,index = 10)
+    @ExcelProperty(value = "测点2D2(㎜)" ,index = 12)
     private String cd2d2;
 
     /**
      * 测点3D1(㎜)
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "测点3D1(㎜)" ,index = 11)
+    @ExcelProperty(value = "测点3D1(㎜)" ,index = 13)
     private String cd3d1;
 
     /**
      * 测点3D2(㎜)
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "测点3D2(㎜)" ,index = 12)
+    @ExcelProperty(value = "测点3D2(㎜)" ,index = 14)
     private String cd3d2;
 
 

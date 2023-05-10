@@ -389,8 +389,8 @@ public class JjgFbgcLjgcZddmccServiceImpl extends ServiceImpl<JjgFbgcLjgcZddmccM
 
     @Override
     public void exportzddmcc(HttpServletResponse response) {
-        String fileName = "支挡断面尺寸实测数据";
-        String sheetName = "支挡断面尺寸实测数据";
+        String fileName = "11支挡断面尺寸实测数据";
+        String sheetName = "实测数据";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new JjgFbgcLjgcZddmccVo()).finish();
 
     }

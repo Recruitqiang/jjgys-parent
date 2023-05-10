@@ -50,9 +50,6 @@ public class JjgFbgcLjgcLjwcLcfServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcLc
     @Value(value = "${jjgys.path.filepath}")
     private String filepath;
 
-
-
-
     @Override
     public void generateJdb(CommonInfoVo commonInfoVo) throws IOException {
         XSSFWorkbook wb = null;
@@ -91,7 +88,7 @@ public class JjgFbgcLjgcLjwcLcfServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcLc
                 //创建“评定单元”sheet
                 createEvaluateTable(totalref,wb);
                 //引用数据，然后计算
-                completeTotleTable(wb.getSheet("评定单元"), totalref, time,wb,proname,htd);
+                completeTotleTable(wb.getSheet("评定单元"), totalref, time,wb,proname,htd,fbgc);
 
                 for (int j = 0; j < wb.getNumberOfSheets(); j++) {   //表内公式  计算 显示结果
                     JjgFbgcCommonUtils.updateFormula(wb, wb.getSheetAt(j));
@@ -153,6 +150,16 @@ public class JjgFbgcLjgcLjwcLcfServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcLc
         }
     }
 
+    /**
+     *
+     * @param evaluator
+     * @param sheet
+     * @param start_row
+     * @param end_row
+     * @param left_top
+     * @param right_bottom
+     * @param xwb
+     */
     public void fillTempDate(XSSFFormulaEvaluator evaluator, XSSFSheet sheet, int start_row, int end_row, String left_top, String right_bottom,XSSFWorkbook xwb) {
         int tables = (end_row - start_row)/34;
         XSSFRow row2, row3, row4, row5, row6, row7;
@@ -319,7 +326,7 @@ public class JjgFbgcLjgcLjwcLcfServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcLc
      * @param sheet
      * @param ref
      */
-    public void completeTotleTable(XSSFSheet sheet, ArrayList<String> ref, String time,XSSFWorkbook xwb,String proname,String htd) {
+    public void completeTotleTable(XSSFSheet sheet, ArrayList<String> ref, String time,XSSFWorkbook xwb,String proname,String htd,String fbgc) {
         XSSFCellStyle cellstyle = xwb.createCellStyle();
         XSSFFont font=xwb.createFont();
         font.setFontHeightInPoints((short)11);
@@ -356,7 +363,7 @@ public class JjgFbgcLjgcLjwcLcfServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcLc
         System.out.println(proname+htd+time);
         sheet.getRow(1).getCell(2).setCellValue(proname);
         sheet.getRow(1).getCell(7).setCellValue(htd);
-        sheet.getRow(2).getCell(2).setCellValue("路基土石方");
+        sheet.getRow(2).getCell(2).setCellValue(fbgc);
         sheet.getRow(2).getCell(7).setCellValue(time);
         double value = 0.0;
         for (int i = rowstart; i <= sheet.getPhysicalNumberOfRows(); i++) {
@@ -510,7 +517,7 @@ public class JjgFbgcLjgcLjwcLcfServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcLc
         sheet.getRow(tableNum*34+2).getCell(9).setCellValue(simpleDateFormat.format(row.getJcsj()));//检测日期
         sheet.getRow(tableNum*34+3).getCell(1).setCellValue(position);//工程部位
 
-        sheet.getRow(tableNum*34+3).getCell(9).setCellType(Cell.CELL_TYPE_NUMERIC);
+        sheet.getRow(tableNum*34+3).getCell(9).setCellType(CellType.NUMERIC);
         sheet.getRow(tableNum*34+3).getCell(9).setCellValue(Double.parseDouble(row.getSjwcz()));//(nf2.format(Double.parseDouble(row[7])));//验收弯沉值
 
         sheet.getRow(tableNum*34+4).getCell(1).setCellValue(row.getJgcc());//结构层次
@@ -671,8 +678,8 @@ public class JjgFbgcLjgcLjwcLcfServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcLc
      */
     @Override
     public void exportljwclcf(HttpServletResponse response) {
-        String fileName = "路基弯沉（落锤法）实测数据";
-        String sheetName = "路基弯沉（落锤法）实测数据";
+        String fileName = "02路基弯沉(落锤法)实测数据";
+        String sheetName = "实测数据";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new JjgFbgcLjgcLjwcLcfVo()).finish();
 
     }

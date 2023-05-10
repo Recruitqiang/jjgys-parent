@@ -87,8 +87,8 @@ public class JjgFbgcJtaqssJathlqdServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
 
     @Override
     public void exportjathlqd(HttpServletResponse response) {
-        String fileName = "交安砼护栏强度实测数据";
-        String sheetName = "交安砼护栏强度实测数据";
+        String fileName = "04交安砼护栏强度实测数据";
+        String sheetName = "实测数据";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new JjgFbgcJtaqssJathlqdVo()).finish();
 
     }

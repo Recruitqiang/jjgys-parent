@@ -240,6 +240,11 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
     }
 
 
+    /**
+     *
+     * @param tableNum
+     * @throws IOException
+     */
     public void createTable(int tableNum) throws IOException {
         for(int i = 1; i < tableNum; i++){
             //System.out.println("正在生成表格 -> "+i);
@@ -312,8 +317,8 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
 
     @Override
     public void exportljcj(HttpServletResponse response) {
-        String fileName = "路基沉降实测数据";
-        String sheetName = "路基沉降实测数据";
+        String fileName = "01路基压实度沉降实测数据";
+        String sheetName = "实测数据";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new JjgFbgcLjgcLjcjVo()).finish();
 
     }

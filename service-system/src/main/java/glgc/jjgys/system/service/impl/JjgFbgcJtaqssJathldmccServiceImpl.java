@@ -103,6 +103,11 @@ public class JjgFbgcJtaqssJathldmccServiceImpl extends ServiceImpl<JjgFbgcJtaqss
 
     }
 
+    /**
+     *
+     * @param sheet
+     * @param wb
+     */
     private void calculateSheet(XSSFSheet sheet,XSSFWorkbook wb) {
         XSSFRow row = null;
         XSSFRow rowstart = null;
@@ -171,6 +176,15 @@ public class JjgFbgcJtaqssJathldmccServiceImpl extends ServiceImpl<JjgFbgcJtaqss
         }
     }
 
+    /**
+     *
+     * @param data
+     * @param proname
+     * @param htd
+     * @param fbgc
+     * @param wb
+     * @return
+     */
     private boolean DBtoExcel(List<JjgFbgcJtaqssJathldmcc> data, String proname, String htd, String fbgc,XSSFWorkbook wb) {
         XSSFCellStyle cellstyle = JjgFbgcCommonUtils.dBtoExcelUtils(wb);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
@@ -274,6 +288,12 @@ public class JjgFbgcJtaqssJathldmccServiceImpl extends ServiceImpl<JjgFbgcJtaqss
         return true;
     }
 
+    /**
+     *
+     * @param sheet
+     * @param index
+     * @param row
+     */
     public void fillCommonCellData(XSSFSheet sheet, int index, JjgFbgcJtaqssJathldmcc row) {
         sheet.getRow(index+5).getCell(0).setCellValue(row.getZh());//桩号
         sheet.getRow(index+5).getCell(1).setCellValue(row.getBw());//部位
@@ -294,6 +314,11 @@ public class JjgFbgcJtaqssJathldmccServiceImpl extends ServiceImpl<JjgFbgcJtaqss
 
     }
 
+    /**
+     *
+     * @param tableNum
+     * @param wb
+     */
     private void createTable(int tableNum,XSSFWorkbook wb) {
         int record = 0;
         record = tableNum;
@@ -313,6 +338,11 @@ public class JjgFbgcJtaqssJathldmccServiceImpl extends ServiceImpl<JjgFbgcJtaqss
 
     }
 
+    /**
+     *
+     * @param size
+     * @return
+     */
     private int gettableNum(int size) {
         return size%29 <= 27 ? size/29+1 : size/29+2;
     }
@@ -344,8 +374,8 @@ public class JjgFbgcJtaqssJathldmccServiceImpl extends ServiceImpl<JjgFbgcJtaqss
 
     @Override
     public void exportjathldmcc(HttpServletResponse response) {
-        String fileName = "交安砼护栏断面尺寸实测数据";
-        String sheetName = "交安砼护栏断面尺寸实测数据";
+        String fileName = "05交安砼护栏断面尺寸实测数据";
+        String sheetName = "实测数据";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new JjgFbgcJtaqssJathldmccVo()).finish();
 
     }

@@ -95,16 +95,14 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
             createTable(num,wb);
             if(DBtoExcel(data,wb)){
                 calculateTempDate(wb.getSheet("路基弯沉"),wb);
-
                 ArrayList<String> totalref = getTotalMark(wb.getSheet("路基弯沉"));
-                System.out.println(totalref);
                 String time = getLastTime(wb.getSheet("路基弯沉"));
 
                 //创建“评定单元”sheet
                 createEvaluateTable(totalref,wb);
 
                 //引用数据，然后计算
-                completeTotleTable(wb.getSheet("评定单元"), totalref, time,wb,proname,htd);
+                completeTotleTable(wb.getSheet("评定单元"), totalref, time,wb,proname,htd,fbgc);
 
                 for (int j = 0; j < wb.getNumberOfSheets(); j++) {   //表内公式  计算 显示结果
                     JjgFbgcCommonUtils.updateFormula(wb, wb.getSheetAt(j));
@@ -127,7 +125,7 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
      * @param sheet
      * @param ref
      */
-    public void completeTotleTable(XSSFSheet sheet, ArrayList<String> ref, String time,XSSFWorkbook xwb,String proname,String htd) {
+    public void completeTotleTable(XSSFSheet sheet, ArrayList<String> ref, String time,XSSFWorkbook xwb,String proname,String htd,String fbgc) {
         XSSFCellStyle cellstyle = xwb.createCellStyle();
         XSSFFont font=xwb.createFont();
         font.setFontHeightInPoints((short)11);
@@ -163,7 +161,7 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
          */
         sheet.getRow(1).getCell(2).setCellValue(proname);
         sheet.getRow(1).getCell(7).setCellValue(htd);
-        sheet.getRow(2).getCell(2).setCellValue("路基土石方");
+        sheet.getRow(2).getCell(2).setCellValue(fbgc);
         sheet.getRow(2).getCell(7).setCellValue(time);
         double value = 0.0;
         for (int i = rowstart; i <= sheet.getPhysicalNumberOfRows(); i++) {
@@ -767,47 +765,6 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
                 index += 1;
             }
         }
-        /*for(JjgFbgcLjgcLjwc row:data){
-            if(xuhao.equals(row.getXh())){
-                if(index == 50){//每页50条数据
-                    tableNum ++;
-                    fillTitleCellData(sheet, tableNum, data.get(0), row.getZh());
-                    index = 0;
-                }
-                fillCommonCellData(sheet, tableNum, index, row, cellstyle);
-                index ++;
-                *//*if(index > 24){
-                    if(index > 47){
-                        tableNum ++;
-                        fillTitleCellData(sheet, tableNum, row, row.getZh());
-                        index = 0;
-                    }else if(index < 25){
-                        index = 25;
-                    }
-                }*//*
-            } else{
-                zh=row.getZh();
-                xuhao = row.getXh();
-                if(index == 50){//每页50条数据
-                    tableNum ++;
-                    fillTitleCellData(sheet, tableNum, data.get(0), zh);
-                    index = 0;
-                }
-                fillTitleCellData(sheet, tableNum, row,map.get(Integer.valueOf(xuhao)));
-                fillCommonCellData(sheet, tableNum, index, row, cellstyle);
-                index ++;
-                *//*if(index > 24){
-                    if(index > 47){
-                        tableNum ++;
-                        fillTitleCellData(sheet, tableNum, row,zh);
-                        index = 0;
-                    }else if(index < 25){
-                        index = 25;
-                    }
-                }*//*
-            }
-        }*/
-
         return true;
     }
 
@@ -820,7 +777,6 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
      * @param cellstyle
      */
     public void fillCommonCellData(XSSFSheet sheet, int tableNum, int index, JjgFbgcLjgcLjwc row,XSSFCellStyle cellstyle) {
-
         sheet.getRow(tableNum*35+9+index%25).getCell(1+7*(index/25)).setCellValue(row.getCd());
         sheet.getRow(tableNum*35+9+index%25).getCell(2+7*(index/25)).setCellValue(Double.valueOf(row.getZz()).intValue());
         sheet.getRow(tableNum*35+9+index%25).getCell(3+7*(index/25)).setCellValue(Double.valueOf(row.getYz()).intValue());
@@ -955,8 +911,8 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
 
     @Override
     public void exportljwc(HttpServletResponse response) {
-        String fileName = "路基弯沉实测数据";
-        String sheetName = "路基弯沉实测数据";
+        String fileName = "02路基弯沉(贝克曼梁法)实测数据";
+        String sheetName = "实测数据";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new JjgFbgcLjgcLjwcVo()).finish();
 
     }

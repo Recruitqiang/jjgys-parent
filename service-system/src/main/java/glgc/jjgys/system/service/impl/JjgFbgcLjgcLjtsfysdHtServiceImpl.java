@@ -801,7 +801,6 @@ public class JjgFbgcLjgcLjtsfysdHtServiceImpl extends ServiceImpl<JjgFbgcLjgcLjt
             Map<String,Object> htjgmap = new HashMap<>();
             if (!slsheetHidden && proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
                 int sllastRowNum = slSheet.getLastRowNum();
-
                 slSheet.getRow(sllastRowNum-2).getCell(3).setCellType(CellType.STRING);//平均值
                 slSheet.getRow(sllastRowNum-2).getCell(5).setCellType(CellType.STRING);//标准差
                 slSheet.getRow(sllastRowNum-2).getCell(7).setCellType(CellType.STRING);//代表值
@@ -895,7 +894,7 @@ public class JjgFbgcLjgcLjtsfysdHtServiceImpl extends ServiceImpl<JjgFbgcLjgcLjt
             cell.setCellValue(new XSSFRichTextString(checklist.get(i)));
             cell.setCellStyle(columnHeadStyle);
         }
-        String filename = "路基土石方压实度_灰土实测数据.xls";// 设置下载时客户端Excel的名称
+        String filename = "01路基土石方压实度_灰土实测数据.xls";// 设置下载时客户端Excel的名称
         filename = new String((filename).getBytes("GBK"), "ISO8859_1");
         response.setContentType("application/octet-stream;charset=UTF-8");
         response.addHeader("Content-Disposition", "attachment;filename=" + filename);

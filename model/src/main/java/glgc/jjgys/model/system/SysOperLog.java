@@ -71,4 +71,10 @@ public class SysOperLog extends BaseEntity {
 	@TableField("oper_time")
 	private Date operTime;
 
+	private String proname;
+
+	private String htd;
+
+	private String fbgc;
+
 }

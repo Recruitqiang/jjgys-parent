@@ -39,6 +39,12 @@ public class JjgFbgcQlgcQmgzsd implements Serializable {
     private Date jcsj;
 
     /**
+     * 桥梁名称
+     */
+    @TableField("qlmc")
+    private String qlmc;
+
+    /**
      * 结构名称
      */
     @TableField("jgmc")
@@ -49,6 +55,12 @@ public class JjgFbgcQlgcQmgzsd implements Serializable {
      */
     @TableField("abm")
     private String abm;
+
+    /**
+     * ZY
+     */
+    @TableField("zy")
+    private String zy;
 
     /**
      * 桩号

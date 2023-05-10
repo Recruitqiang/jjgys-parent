@@ -388,6 +388,11 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
     }
 
 
+    /**
+     *
+     * @param data
+     * @return
+     */
     private ArrayList<String> gethlgdGDZ(JjgFbgcJtaqssJabxfhl data) {
         ArrayList<String> list = new ArrayList<String>();
         if(data.getWzjlx().contains("两波板")){
@@ -644,7 +649,7 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
             cell.setCellValue(new XSSFRichTextString(checklist.get(i)));
             cell.setCellStyle(columnHeadStyle);
         }
-        String filename = "交安波形防护栏实测数据.xls";// 设置下载时客户端Excel的名称
+        String filename = "03交安波形防护栏实测数据.xls";// 设置下载时客户端Excel的名称
         filename = new String((filename).getBytes("GBK"), "ISO8859_1");
         response.setContentType("application/octet-stream;charset=UTF-8");
         response.addHeader("Content-Disposition", "attachment;filename=" + filename);

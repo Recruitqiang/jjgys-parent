@@ -22,7 +22,7 @@ public interface JjgFbgcQlgcQmgzsdService extends IService<JjgFbgcQlgcQmgzsd> {
 
     void generateJdb(CommonInfoVo commonInfoVo) throws IOException;
 
-    List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo);
+    List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException;
 
     void exportqmgzsd(HttpServletResponse response);
 

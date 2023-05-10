@@ -102,6 +102,10 @@ public class JjgFbgcLjgcLjbpServiceImpl extends ServiceImpl<JjgFbgcLjgcLjbpMappe
 
     }
 
+    /**
+     *
+     * @param sheet
+     */
     private void calculateSheet(XSSFSheet sheet) {
         XSSFRow row = null;
         XSSFRow rowstart = null;
@@ -152,6 +156,17 @@ public class JjgFbgcLjgcLjbpServiceImpl extends ServiceImpl<JjgFbgcLjgcLjbpMappe
     }
 
 
+    /**
+     *
+     * @param data
+     * @param proname
+     * @param htd
+     * @param fbgc
+     * @param sheetname
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
     public boolean DBtoExcel(List<JjgFbgcLjgcLjbp> data,String proname,String htd,String fbgc,String sheetname) throws IOException, ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
         String time = simpleDateFormat.format(data.get(0).getJcsj());
@@ -190,6 +205,12 @@ public class JjgFbgcLjgcLjbpServiceImpl extends ServiceImpl<JjgFbgcLjgcLjbpMappe
         return true;
     }
 
+    /**
+     *
+     * @param sheet
+     * @param index
+     * @param row
+     */
     public void fillCommonCellData(XSSFSheet sheet,int index,JjgFbgcLjgcLjbp row) {
         sheet.getRow(index+5).getCell(1).setCellValue(row.getWz());
         sheet.getRow(index+5).createCell(10).setCellValue(bizhizhuanxiaoshu(row.getSjz()));//K
@@ -201,13 +222,22 @@ public class JjgFbgcLjgcLjbpServiceImpl extends ServiceImpl<JjgFbgcLjgcLjbpMappe
 
     }
 
-    //比值转小数
+    /**
+     * 比值转小数
+     * @param str
+     * @return
+     */
     private double bizhizhuanxiaoshu(String str){
         double fenzi=Double.parseDouble(str.substring(0, str.indexOf(':')));
         double fenmu=Double.parseDouble(str.substring(str.indexOf(':')+1,str.length()));
         return fenmu;
     }
 
+    /**
+     *
+     * @param tableNum
+     * @throws IOException
+     */
     public void createTable(int tableNum) throws IOException {
         int record = 0;
         record = tableNum;
@@ -280,8 +310,8 @@ public class JjgFbgcLjgcLjbpServiceImpl extends ServiceImpl<JjgFbgcLjgcLjbpMappe
 
     @Override
     public void exportljbp(HttpServletResponse response)  {
-        String fileName = "路基边坡实测数据";
-        String sheetName = "路基边坡实测数据";
+        String fileName = "03路基边坡实测数据";
+        String sheetName = "实测数据";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new JjgFbgcLjgcLjbpVo()).finish();
     }
 

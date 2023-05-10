@@ -237,6 +237,17 @@ public class JjgFbgcCommonUtils {
                     continue;
                 }
             }
+            if(wb.getSheetAt(i).getRow(0)!=null&&wb.getSheetAt(i).getRow(0).getCell(0).getStringCellValue().contains("压实度"))
+            {
+                wb.getSheetAt(i).getRow(6).getCell(0).setCellType(CellType.STRING);
+                if(wb.getSheetAt(i).getRow(6).getCell(0)==null
+                        ||"".equals(wb.getSheetAt(i).getRow(6).getCell(0).getStringCellValue())){
+                    delsheets.add(wb.getSheetAt(i).getSheetName());
+                    continue;
+                }
+                wb.setSheetHidden(wb.getSheetIndex("source"), 0);
+            }
+
             if(wb.getSheetAt(i).getRow(0)!=null&&wb.getSheetAt(i).getRow(0).getCell(0).getStringCellValue().contains("渗水系数"))//&&wb.getSheetAt(i).getSheetName().equals("连接线")
             {
                 if(wb.getSheetAt(i).getRow(6).getCell(0)==null

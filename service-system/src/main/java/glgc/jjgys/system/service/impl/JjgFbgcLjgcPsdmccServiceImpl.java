@@ -103,6 +103,10 @@ public class JjgFbgcLjgcPsdmccServiceImpl extends ServiceImpl<JjgFbgcLjgcPsdmccM
 
     }
 
+    /**
+     *
+     * @param sheet
+     */
     private void calculateSheet(XSSFSheet sheet) {
         XSSFRow row = null;
         XSSFRow rowstart = null;
@@ -156,6 +160,17 @@ public class JjgFbgcLjgcPsdmccServiceImpl extends ServiceImpl<JjgFbgcLjgcPsdmccM
         }
     }
 
+    /**
+     *
+     * @param data
+     * @param proname
+     * @param htd
+     * @param fbgc
+     * @param sheetname
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
     public boolean DBtoExcel(List<JjgFbgcLjgcPsdmcc> data,String proname,String htd,String fbgc,String sheetname) throws IOException, ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
         String time = simpleDateFormat.format(data.get(0).getJcsj());
@@ -232,6 +247,12 @@ public class JjgFbgcLjgcPsdmccServiceImpl extends ServiceImpl<JjgFbgcLjgcPsdmccM
         return true;
     }
 
+    /**
+     *
+     * @param sheet
+     * @param index
+     * @param row
+     */
     public void fillCommonCellData(XSSFSheet sheet, int index, JjgFbgcLjgcPsdmcc row) {
         sheet.getRow(index+5).getCell(2).setCellValue(row.getLb());//类别
         if(row.getSjz()==null || "".equals(row.getSjz()))
@@ -262,6 +283,11 @@ public class JjgFbgcLjgcPsdmccServiceImpl extends ServiceImpl<JjgFbgcLjgcPsdmccM
         return size%29 <= 27 ? size/29+1 : size/29+2;
     }
 
+    /**
+     *
+     * @param tableNum
+     * @throws IOException
+     */
     public void createTable(int tableNum) throws IOException {
         int record = 0;
         record = tableNum;
@@ -308,8 +334,8 @@ public class JjgFbgcLjgcPsdmccServiceImpl extends ServiceImpl<JjgFbgcLjgcPsdmccM
 
     @Override
     public void exportpsdmcc(HttpServletResponse response) {
-        String fileName = "排水断面尺寸实测数据";
-        String sheetName = "排水断面尺寸实测数据";
+        String fileName = "04排水断面尺寸实测数据";
+        String sheetName = "实测数据";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new JjgFbgcLjgcPsdmccVo()).finish();
 
     }

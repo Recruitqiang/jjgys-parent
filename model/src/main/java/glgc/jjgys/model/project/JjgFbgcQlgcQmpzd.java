@@ -45,6 +45,12 @@ public class JjgFbgcQlgcQmpzd implements Serializable {
     private String qm;
 
     /**
+     * 桩号
+     */
+    @TableField("zh")
+    private String zh;
+
+    /**
      * 位置
      */
     @TableField("wz")

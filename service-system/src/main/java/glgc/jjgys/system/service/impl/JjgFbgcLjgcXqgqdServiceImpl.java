@@ -420,8 +420,8 @@ public class JjgFbgcLjgcXqgqdServiceImpl extends ServiceImpl<JjgFbgcLjgcXqgqdMap
 
     @Override
     public void exportxqgqd(HttpServletResponse response) {
-        String fileName = "小桥砼强度实测数据";
-        String sheetName = "小桥砼强度实测数据";
+        String fileName = "06小桥砼强度实测数据";
+        String sheetName = "实测数据";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new JjgFbgcLjgcXqgqdVo()).finish();
 
     }
