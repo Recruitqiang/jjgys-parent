@@ -49,6 +49,7 @@ public class JjgFbgcSdgcZtkdServiceImpl extends ServiceImpl<JjgFbgcSdgcZtkdMappe
     @Autowired
     private JjgFbgcSdgcZtkdMapper jjgFbgcSdgcZtkdMapper;
 
+
     @Value(value = "${jjgys.path.filepath}")
     private String filepath;
 
@@ -102,6 +103,10 @@ public class JjgFbgcSdgcZtkdServiceImpl extends ServiceImpl<JjgFbgcSdgcZtkdMappe
 
     }
 
+    /**
+     *
+     * @param wb
+     */
     private void calculateWidthSheet(XSSFWorkbook wb) {
         XSSFSheet sheet = wb.getSheet("隧道总体宽度");
         XSSFRow row = null;
@@ -201,6 +206,13 @@ public class JjgFbgcSdgcZtkdServiceImpl extends ServiceImpl<JjgFbgcSdgcZtkdMappe
 
     }
 
+    /**
+     *
+     * @param sheet
+     * @param cellstartrow
+     * @param cellstartcol
+     * @return
+     */
     private int getCellEndRow(XSSFSheet sheet, int cellstartrow, int cellstartcol) {
         int sheetmergerCount = sheet.getNumMergedRegions();
         for (int i = 0; i < sheetmergerCount; i++) {
@@ -213,6 +225,20 @@ public class JjgFbgcSdgcZtkdServiceImpl extends ServiceImpl<JjgFbgcSdgcZtkdMappe
         return cellstartrow;
     }
 
+    /**
+     *
+     * @param wb
+     * @param rowrecord
+     * @param start
+     * @param end
+     * @param c1
+     * @param c2
+     * @param c3
+     * @param s1
+     * @param s2
+     * @param s3
+     * @param s4
+     */
     private void setTotalData(XSSFWorkbook wb, XSSFRow rowrecord, ArrayList<XSSFRow> start, ArrayList<XSSFRow> end, int c1, int c2, int c3, int s1, int s2, int s3, int s4) {
         XSSFSheet sheet = wb.getSheet("隧道总体宽度");
         XSSFCellStyle cellstyle = wb.createCellStyle();
@@ -246,6 +272,15 @@ public class JjgFbgcSdgcZtkdServiceImpl extends ServiceImpl<JjgFbgcSdgcZtkdMappe
 
     }
 
+    /**
+     *
+     * @param rowtitle
+     * @param cellstyle
+     * @param s1
+     * @param s2
+     * @param s3
+     * @param s4
+     */
     private void setTotalTitle(XSSFRow rowtitle, XSSFCellStyle cellstyle, int s1, int s2, int s3, int s4) {
         rowtitle.createCell(s1).setCellStyle(cellstyle);
         rowtitle.getCell(s1).setCellValue("总点数");
@@ -257,6 +292,13 @@ public class JjgFbgcSdgcZtkdServiceImpl extends ServiceImpl<JjgFbgcSdgcZtkdMappe
         rowtitle.getCell(s4).setCellValue("合格率");
     }
 
+    /**
+     *
+     * @param data
+     * @param wb
+     * @return
+     * @throws ParseException
+     */
     private boolean DBtoExcel(List<JjgFbgcSdgcZtkd> data, XSSFWorkbook wb) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
         XSSFSheet sheet = wb.getSheet("隧道总体宽度");
@@ -309,6 +351,13 @@ public class JjgFbgcSdgcZtkdServiceImpl extends ServiceImpl<JjgFbgcSdgcZtkdMappe
         return true;
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param index
+     * @param row
+     */
     public void fillCommonCellData(XSSFSheet sheet, int tableNum, int index, JjgFbgcSdgcZtkd row) {
         sheet.getRow(tableNum*35+index).getCell(1).setCellValue(row.getZh());
         sheet.getRow(tableNum*35+index).createCell(7).setCellValue(Double.parseDouble(row.getZbk()));
@@ -320,6 +369,12 @@ public class JjgFbgcSdgcZtkdServiceImpl extends ServiceImpl<JjgFbgcSdgcZtkdMappe
         sheet.getRow(tableNum*35+index).getCell(4).setCellValue("不小于设计值");
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param row
+     */
     private void fillTitleCellData(XSSFSheet sheet, int tableNum, JjgFbgcSdgcZtkd row) {
         sheet.getRow(tableNum*35+1).getCell(1).setCellValue(row.getProname());
         sheet.getRow(tableNum*35+1).getCell(5).setCellValue(row.getHtd());
@@ -327,6 +382,11 @@ public class JjgFbgcSdgcZtkdServiceImpl extends ServiceImpl<JjgFbgcSdgcZtkdMappe
 
     }
 
+    /**
+     *
+     * @param tableNum
+     * @param wb
+     */
     private void createTable(int tableNum, XSSFWorkbook wb) {
         int record = 0;
         record = tableNum;
@@ -337,6 +397,11 @@ public class JjgFbgcSdgcZtkdServiceImpl extends ServiceImpl<JjgFbgcSdgcZtkdMappe
             wb.setPrintArea(wb.getSheetIndex("隧道总体宽度"), 0, 6, 0, record * 35-1);
     }
 
+    /**
+     *
+     * @param size
+     * @return
+     */
     private int gettableNum(int size) {
         return size%20 ==0 ? size/20 : size/20+1;
     }

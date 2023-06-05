@@ -35,6 +35,8 @@ import java.util.*;
  *  服务实现类
  * </p>
  *
+ * 主线
+ * 连接线，互通
  * @author wq
  * @since 2023-03-27
  */
@@ -46,6 +48,7 @@ public class JjgFbgcSdgcSdhpServiceImpl extends ServiceImpl<JjgFbgcSdgcSdhpMappe
 
     @Value(value = "${jjgys.path.filepath}")
     private String filepath;
+
 
     @Override
     public void generateJdb(CommonInfoVo commonInfoVo) throws IOException, ParseException {
@@ -73,6 +76,15 @@ public class JjgFbgcSdgcSdhpServiceImpl extends ServiceImpl<JjgFbgcSdgcSdhpMappe
 
     }
 
+    /**
+     *
+     * @param proname
+     * @param htd
+     * @param fbgc
+     * @param sdmc
+     * @throws IOException
+     * @throws ParseException
+     */
     private void DBtoExcelsd(String proname, String htd, String fbgc, String sdmc) throws IOException, ParseException {
         XSSFWorkbook wb = null;
         QueryWrapper<JjgFbgcSdgcSdhp> wrapper=new QueryWrapper<>();
@@ -129,6 +141,15 @@ public class JjgFbgcSdgcSdhpServiceImpl extends ServiceImpl<JjgFbgcSdgcSdhpMappe
 
     }
 
+    /**
+     *
+     * @param proname
+     * @param htd
+     * @param fbgc
+     * @param sdmc
+     * @throws IOException
+     * @throws ParseException
+     */
     private void DBtoExcelZYsd(String proname, String htd, String fbgc, String sdmc) throws IOException, ParseException {
         XSSFWorkbook wb = null;
         QueryWrapper<JjgFbgcSdgcSdhp> wrapper=new QueryWrapper<>();
@@ -164,7 +185,7 @@ public class JjgFbgcSdgcSdhpServiceImpl extends ServiceImpl<JjgFbgcSdgcSdhpMappe
             //创建文件根目录
             fdir.mkdirs();
         }
-        File directory = new File("src/main/resources/static");
+        File directory = new File("service-system/src/main/resources/static");
         String reportPath = directory.getCanonicalPath();
         String name = "横坡.xlsx";
         String path = reportPath + File.separator + name;
@@ -189,6 +210,11 @@ public class JjgFbgcSdgcSdhpServiceImpl extends ServiceImpl<JjgFbgcSdgcSdhpMappe
         wb.close();
     }
 
+    /**
+     *
+     * @param wb
+     * @param sheetname
+     */
     private void calculateSheet(XSSFWorkbook wb, String sheetname) {
         XSSFSheet sheet = wb.getSheet(sheetname);
         XSSFRow row = null;
@@ -277,6 +303,15 @@ public class JjgFbgcSdgcSdhpServiceImpl extends ServiceImpl<JjgFbgcSdgcSdhpMappe
         endRowList.clear();
     }
 
+    /**
+     *
+     * @param data
+     * @param wb
+     * @param sheetname
+     * @param sdmc
+     * @return
+     * @throws ParseException
+     */
     private boolean DBtoExcel(List<JjgFbgcSdgcSdhp> data, XSSFWorkbook wb,String sheetname,String sdmc) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
         XSSFCellStyle cellstyle = JjgFbgcCommonUtils.dBtoExcelUtils(wb);
@@ -305,10 +340,16 @@ public class JjgFbgcSdgcSdhpServiceImpl extends ServiceImpl<JjgFbgcSdgcSdhpMappe
         }
         sheet.getRow(tableNum*35+3).getCell(8).setCellValue(testtime);
         return true;
-
-
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param index
+     * @param row
+     * @param cellstyle
+     */
     private void fillCommonCellData(XSSFSheet sheet, int tableNum, int index, JjgFbgcSdgcSdhp row, XSSFCellStyle cellstyle) {
         sheet.getRow(tableNum*35+index).getCell(0).setCellValue(row.getZh());
         sheet.getRow(tableNum*35+index).getCell(2).setCellValue(row.getWz());
@@ -319,6 +360,16 @@ public class JjgFbgcSdgcSdhpServiceImpl extends ServiceImpl<JjgFbgcSdgcSdhpMappe
         sheet.getRow(tableNum*35+index).getCell(9).setCellValue(Double.parseDouble(row.getYxps()));
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param proname
+     * @param htd
+     * @param fbgc
+     * @param lmlx
+     * @param sdmc
+     */
     private void fillTitleCellData(XSSFSheet sheet, int tableNum, String proname, String htd, String fbgc,String lmlx,String sdmc) {
         sheet.getRow(tableNum*35+1).getCell(2).setCellValue(proname);
         sheet.getRow(tableNum*35+1).getCell(8).setCellValue(htd);
@@ -328,6 +379,12 @@ public class JjgFbgcSdgcSdhpServiceImpl extends ServiceImpl<JjgFbgcSdgcSdhpMappe
 
     }
 
+    /**
+     *
+     * @param tableNum
+     * @param wb
+     * @param sheetname
+     */
     private void createTable(int tableNum, XSSFWorkbook wb,String sheetname) {
         int record = 0;
         record = tableNum;
@@ -339,6 +396,11 @@ public class JjgFbgcSdgcSdhpServiceImpl extends ServiceImpl<JjgFbgcSdgcSdhpMappe
         }
     }
 
+    /**
+     *
+     * @param size
+     * @return
+     */
     private int gettableNumAll(int size) {
         return size%29 ==0 ? size/29 : size/29+1;
     }

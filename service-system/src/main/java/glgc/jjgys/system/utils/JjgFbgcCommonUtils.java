@@ -13,6 +13,7 @@ import java.net.URLEncoder;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.WritableByteChannel;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -110,6 +111,7 @@ public class JjgFbgcCommonUtils {
 
     }
 
+
     public static ArrayList<String> getNOHiddenSheets(XSSFWorkbook wb){
         ArrayList<String> sheets = new ArrayList<String>();
         /*
@@ -122,6 +124,7 @@ public class JjgFbgcCommonUtils {
         }
         return sheets;
     }
+
 
     public static ArrayList<String> getHasPrintAreaSheets(XSSFWorkbook wb){
         ArrayList<String> shownsheets;
@@ -139,6 +142,50 @@ public class JjgFbgcCommonUtils {
         return printsheets;
     }
 
+    /**
+     *
+     * @param wb
+     */
+    public static void deletezxfEmptySheets(XSSFWorkbook wb){
+        ArrayList<String> delsheets = new ArrayList<String>();;
+        for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+            if(wb.getSheetAt(i).getRow(0)!=null&&wb.getSheetAt(i).getRow(0).getCell(0).getStringCellValue().contains("钻芯法"))//&&wb.getSheetAt(i).getSheetName().equals("连接线")
+            {
+                wb.getSheetAt(i).getRow(6).getCell(0).setCellType(CellType.STRING);
+                if(wb.getSheetAt(i).getRow(6).getCell(0)==null ||"".equals(wb.getSheetAt(i).getRow(6).getCell(0).getStringCellValue())){
+                    delsheets.add(wb.getSheetAt(i).getSheetName());
+                }
+            }
+        }
+        for (int i = 0; i < delsheets.size(); i++) {
+            wb.removeSheetAt(wb.getSheetIndex(delsheets.get(i)));
+        }
+
+    }
+
+
+    public static void deletehpEmptySheets(XSSFWorkbook wb){
+        ArrayList<String> delsheets = new ArrayList<String>();;
+        for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+            if(wb.getSheetAt(i).getRow(0)!=null&&wb.getSheetAt(i).getRow(0).getCell(0).getStringCellValue().contains("路面横坡"))//&&wb.getSheetAt(i).getSheetName().equals("连接线")
+            {
+                wb.getSheetAt(i).getRow(6).getCell(0).setCellType(CellType.STRING);
+                if(wb.getSheetAt(i).getRow(6).getCell(0)==null ||"".equals(wb.getSheetAt(i).getRow(6).getCell(0).getStringCellValue())){
+                    delsheets.add(wb.getSheetAt(i).getSheetName());
+                }
+            }
+        }
+        for (int i = 0; i < delsheets.size(); i++) {
+            wb.setSheetHidden(wb.getSheetIndex(delsheets.get(i)),true);
+        }
+
+    }
+
+
+    /**
+     *
+     * @param wb
+     */
     public static void deleteEmptySheets(XSSFWorkbook wb){
         ArrayList<String> printSheets;
         ArrayList<String> delsheets = new ArrayList<String>();;
@@ -394,6 +441,8 @@ public class JjgFbgcCommonUtils {
         cellstyle.setDataFormat(format.getFormat("C##0"));
         return cellstyle;
     }
+
+
     public static XSSFCellStyle tsfCellStyle(XSSFWorkbook wb){
         XSSFCellStyle cellstyle = wb.createCellStyle();
         XSSFFont font=wb.createFont();
@@ -407,6 +456,7 @@ public class JjgFbgcCommonUtils {
         return cellstyle;
     }
 
+
     public static String getAllowError1(String allowerror){
         if(allowerror.contains("±")){
             return allowerror.replaceAll("[^0-9]", "");
@@ -415,6 +465,8 @@ public class JjgFbgcCommonUtils {
             return allowerror.split(",")[0].replaceAll("[^0-9]", "");
         }
     }
+
+
     public static String getAllowError2(String allowerror){
         if(allowerror.contains("±")){
             return allowerror.replaceAll("[^0-9]", "");
@@ -424,9 +476,11 @@ public class JjgFbgcCommonUtils {
         }
     }
 
+
     public static String getAllowError3(String allowerror){
         return allowerror;
     }
+
 
     public static void updateFormula(XSSFWorkbook wb, XSSFSheet sheet) {
         for(int row = sheet.getFirstRowNum() ; row < sheet.getPhysicalNumberOfRows() ; row++){
@@ -444,6 +498,86 @@ public class JjgFbgcCommonUtils {
                 catch(Exception e){
                     continue;
                 }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param request
+     * @param response
+     * @param zipName
+     * @param list
+     * @param filepath
+     */
+    public static void batchDownloadlmhpFile(HttpServletRequest request, HttpServletResponse response,String zipName,List list,String filepath) throws UnsupportedEncodingException {
+        //设置压缩包的名字
+        String downloadName = URLEncoder.encode(zipName+".zip", "UTF-8");
+        response.reset();
+        response.setHeader("Content-disposition", "attachment; filename=" + downloadName);
+        response.setContentType("application/zip;charset=utf-8");
+        response.setCharacterEncoding("utf-8");
+
+        //设置压缩流：直接写入response，实现边压缩边下载
+        ZipOutputStream zipOs = null;
+        //循环将文件写入压缩流
+        DataOutputStream os = null;
+        //文件
+        File file;
+        try {
+            //ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFileName), Charset.forName("UTF-8"));
+
+            zipOs = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+            zipOs.setEncoding("UTF-8");
+            //zipOs = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()), Charset.forName("UTF-8"));
+
+            //设置压缩方法
+            zipOs.setMethod(ZipOutputStream.DEFLATED);
+            //遍历文件信息（主要获取文件名/文件路径等）
+            for (int i=0;i<list.size();i++) {
+                String name = "";
+                if (list.get(i).equals("主线")){
+                    name = zipName+".xlsx";
+                }else {
+                    name = zipName+"-"+list.get(i)+".xlsx";
+                }
+                System.out.println(name);
+                //String name1 = URLEncoder.encode(name, "UTF-8");
+                String path = filepath+File.separator+name;
+                file = new File(path);
+                if (!file.exists()) {
+                    break;
+                }
+                //添加ZipEntry，并将ZipEntry写入文件流
+                zipOs.putNextEntry(new ZipEntry(name));
+                //zipOs.putNextEntry(new ZipEntry(new String(name.getBytes("UTF-8"), "UTF-8")));
+                os = new DataOutputStream(zipOs);
+                FileInputStream fs = new FileInputStream(file);
+                byte[] b = new byte[100];
+                int length;
+                //读入需要下载的文件的内容，打包到zip文件
+                while ((length = fs.read(b)) != -1) {
+                    os.write(b, 0, length);
+                }
+                //关闭流
+                fs.close();
+                zipOs.closeEntry();
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //关闭流
+            try {
+                if (os != null) {
+                    os.flush();
+                    os.close();
+                }
+                if (zipOs != null) {
+                    zipOs.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

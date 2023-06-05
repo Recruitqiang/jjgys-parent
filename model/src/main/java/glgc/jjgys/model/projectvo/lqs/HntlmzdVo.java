@@ -6,6 +6,7 @@ import com.alibaba.excel.annotation.write.style.HeadFontStyle;
 import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 import com.alibaba.excel.annotation.write.style.HeadStyle;
 import com.alibaba.excel.metadata.BaseRowModel;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 @Data
@@ -23,26 +24,34 @@ public class HntlmzdVo extends BaseRowModel {
     private String htd;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "桩号" ,index = 2)
-    private String zh;
+    @ExcelProperty(value = "路幅" ,index = 2)
+    private String lf;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "路面全长" ,index = 3)
+    @ExcelProperty(value = "桩号起" ,index = 3)
+    private String zhq;
+
+    @ColumnWidth(23)
+    @ExcelProperty(value = "桩号起止" ,index = 4)
+    private String zhz;
+
+    @ColumnWidth(23)
+    @ExcelProperty(value = "路面全长" ,index = 5)
     private String lmqc;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "铺筑类型" ,index = 4)
+    @ExcelProperty(value = "铺筑类型" ,index = 6)
     private String pzlx;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "A/B/M（匝道填字母，主线不填）" ,index = 5)
+    @ExcelProperty(value = "A/B/M（匝道填字母，主线不填）" ,index = 7)
     private String zdlx;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "位置（主线填合同段名称，匝道填互通名称）" ,index = 6)
+    @ExcelProperty(value = "位置（主线填合同段名称，匝道填互通名称）" ,index = 8)
     private String wz;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "互通路面所属合同段" ,index = 7)
+    @ExcelProperty(value = "互通路面所属合同段" ,index = 9)
     private String htlmsshtd;
 }

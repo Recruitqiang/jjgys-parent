@@ -169,6 +169,10 @@ public class JjgFbgcJtaqssJathlqdServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
 
     }
 
+    /**
+     *
+     * @param sheet
+     */
     private void calculatejathlqd(XSSFSheet sheet) {
         XSSFRow row = null;
         XSSFRow rowstart = null;
@@ -328,6 +332,16 @@ public class JjgFbgcJtaqssJathlqdServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
 
     }
 
+    /**
+     *
+     * @param data
+     * @param proname
+     * @param htd
+     * @param fbgc
+     * @param wb
+     * @return
+     * @throws ParseException
+     */
     private boolean DBtoExcel(List<JjgFbgcJtaqssJathlqd> data, String proname, String htd, String fbgc,XSSFWorkbook wb) throws ParseException {
         XSSFCellStyle cellstyle = JjgFbgcCommonUtils.dBtoExcelUtils(wb);
         XSSFSheet sheet = wb.getSheet("原始数据");
@@ -358,6 +372,14 @@ public class JjgFbgcJtaqssJathlqdServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
         return true;
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param index
+     * @param row
+     * @param cellstyle
+     */
     private void fillCommonCellData(XSSFSheet sheet, int tableNum, int index, JjgFbgcJtaqssJathlqd row, XSSFCellStyle cellstyle) {
         sheet.getRow(tableNum*25+index).getCell(0).setCellValue(row.getZh());
         sheet.getRow(tableNum*25+index).getCell(1).setCellValue(row.getBw1());
@@ -409,6 +431,14 @@ public class JjgFbgcJtaqssJathlqdServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
         sheet.getRow(tableNum*25+index).getCell(31).setCellStyle(cellstyle);
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param proname
+     * @param htd
+     * @param fbgc
+     */
     private void fillTitleCellData(XSSFSheet sheet, int tableNum, String proname, String htd, String fbgc) {
         if(sheet.getRow(tableNum*25+1) == null || sheet.getRow(tableNum*25+1).getCell(2) == null){
             return;
@@ -418,6 +448,11 @@ public class JjgFbgcJtaqssJathlqdServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
         sheet.getRow(tableNum*25+2).getCell(2).setCellValue(fbgc);
     }
 
+    /**
+     *
+     * @param tableNum
+     * @param wb
+     */
     private void createTable(int tableNum,XSSFWorkbook wb) {
         int record = 0;
         record = tableNum;
@@ -434,6 +469,11 @@ public class JjgFbgcJtaqssJathlqdServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
             wb.setPrintArea(wb.getSheetIndex("原始数据"), 0, 33, 0, record * 25-1);
     }
 
+    /**
+     *
+     * @param size
+     * @return
+     */
     private int gettableNum(int size){
         return size%20 ==0 ? size/20 : size/20+1;
     }

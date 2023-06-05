@@ -26,9 +26,6 @@ import java.util.Map;
 public interface JjgFbgcLjgcLjtsfysdSlService extends IService<JjgFbgcLjgcLjtsfysdSl> {
     List<JjgFbgcLjgcLjtsfysdSl> getdata(String proname,String htd,String fbgc);
 
-    //void generateJdb(String proname,String htd,String fbgc);
-
-    List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo);
 
     void exportysdsl(HttpServletResponse response) throws IOException;
 

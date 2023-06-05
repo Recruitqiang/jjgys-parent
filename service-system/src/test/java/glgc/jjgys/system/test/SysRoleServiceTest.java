@@ -14,6 +14,7 @@ import glgc.jjgys.system.mapper.JjgFbgcJtaqssJabxMapper;
 import glgc.jjgys.system.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import glgc.jjgys.system.service.impl.JjgFbgcLjgcZdgqdServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,11 +169,24 @@ public class SysRoleServiceTest {
     @Autowired
     private JjgFbgcSdgcSdlqlmysdService jjgFbgcSdgcSdlqlmysdService;
 
+    @Autowired
+    private JjgFbgcSdgcGssdlqlmhdzxfService jjgFbgcSdgcGssdlqlmhdzxfService;
+
+    @Autowired
+    private JjgFbgcLmgcHntlmhdzxfService jjgFbgcLmgcHntlmhdzxfService;
+    @Autowired
+    private JjgFbgcLmgcGslqlmhdzxfService jjgFbgcLmgcGslqlmhdzxfService;
+
+    @Autowired
+    private JjgFbgcSdgcSdhntlmhdzxfService jjgFbgcSdgcSdhntlmhdzxfService;
 
 
 
     @Test
     public void hdgqdsc() throws Exception {
+        /*String s = "YK3+960";
+        double v = Double.parseDouble(s.replaceAll("[^0-9]", ""));
+        System.out.println(v);*/
         CommonInfoVo commonInfoVo = new CommonInfoVo();
         commonInfoVo.setProname("陕西高速");
         commonInfoVo.setHtd("LJ-1");
@@ -185,13 +199,12 @@ public class SysRoleServiceTest {
         wrapper.orderByDesc("wz","hdscz1");
         List<JjgFbgcJtaqssJabx> data = jjgFbgcJtaqssJabxMapper.selectList(wrapper);
         jjgFbgcJtaqssJabxService.bxnfsxs(data);*/
-        jjgFbgcSdgcSdlqlmysdService.generateJdb(commonInfoVo);
-
-        //List<Map<String, Object>> maps = jjgFbgcSdgcTlmxlbgcService.lookJdbjg(commonInfoVo);
+        //jjgFbgcSdgcSdhntlmhdzxfService.generateJdb(commonInfoVo);
+        List<Map<String, Object>> maps = jjgFbgcSdgcSdhntlmhdzxfService.lookJdbjg(commonInfoVo);
 
         //jjgFbgcLjgcLjcjService.generateJdb(commonInfoVo);
         //List<Map<String, Object>> maps = jjgFbgcLjgcLjcjService.lookJdbjg(commonInfoVo);
-        //System.out.println(maps);
+        System.out.println(maps);
     }
 
 }

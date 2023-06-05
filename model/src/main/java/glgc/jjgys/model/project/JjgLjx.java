@@ -28,9 +28,21 @@ public class JjgLjx {
     @TableField("htd")
     private String htd;
 
-    @ApiModelProperty(value = "桩号")
-    @TableField("zh")
-    private String zh;
+    @ApiModelProperty(value = "路幅")
+    @TableField("lf")
+    private String lf;
+
+    @ApiModelProperty(value = "桩号起")
+    @TableField("zhq")
+    private String zhq;
+
+    @ApiModelProperty(value = "桩号止")
+    @TableField("zhz")
+    private String zhz;
+
+    @ApiModelProperty(value = "标志")
+    @TableField("bz")
+    private String bz;
 
     @ApiModelProperty(value = "连接线路面所属合同段")
     @TableField("sshtd")

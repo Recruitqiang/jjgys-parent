@@ -16,12 +16,10 @@ import glgc.jjgys.system.service.JjgFbgcSdgcDmpzdService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,18 +27,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -112,6 +105,10 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
 
     }
 
+    /**
+     *
+     * @param wb
+     */
     private void calculatePZDSheet(XSSFWorkbook wb) {
         String sheetname = "二衬大面平整度";
         XSSFSheet sheet = wb.getSheet(sheetname);
@@ -197,6 +194,13 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
         }
     }
 
+    /**
+     *
+     * @param sheet
+     * @param cellstartrow
+     * @param cellstartcol
+     * @return
+     */
     public int getCellEndRow(XSSFSheet sheet, int cellstartrow, int cellstartcol) {
         int sheetmergerCount = sheet.getNumMergedRegions();
         for (int i = 0; i < sheetmergerCount; i++) {
@@ -209,6 +213,21 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
         return cellstartrow;
     }
 
+    /**
+     *
+     * @param wb
+     * @param sheetname
+     * @param rowrecord
+     * @param start
+     * @param end
+     * @param c1
+     * @param c2
+     * @param c3
+     * @param s1
+     * @param s2
+     * @param s3
+     * @param s4
+     */
     public void setTotalData(XSSFWorkbook wb,String sheetname, XSSFRow rowrecord, ArrayList<XSSFRow> start, ArrayList<XSSFRow> end, int c1, int c2, int c3, int s1, int s2, int s3, int s4) {
         XSSFSheet sheet = wb.getSheet(sheetname);
         XSSFCellStyle cellstyle = wb.createCellStyle();
@@ -239,6 +258,15 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
 
     }
 
+    /**
+     *
+     * @param rowtitle
+     * @param cellstyle
+     * @param s1
+     * @param s2
+     * @param s3
+     * @param s4
+     */
     public void setTotalTitle(XSSFRow rowtitle, XSSFCellStyle cellstyle, int s1, int s2, int s3, int s4) {
         rowtitle.createCell(s1).setCellStyle(cellstyle);
         rowtitle.getCell(s1).setCellValue("总点数");
@@ -251,6 +279,13 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
     }
 
 
+    /**
+     *
+     * @param data
+     * @param wb
+     * @return
+     * @throws ParseException
+     */
     private boolean DBtoExcel(List<JjgFbgcSdgcDmpzd> data, XSSFWorkbook wb) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
         XSSFSheet sheet = wb.getSheet("二衬大面平整度");
@@ -295,6 +330,12 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
 
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param row
+     */
     private void fillTitleCellData(XSSFSheet sheet, int tableNum,JjgFbgcSdgcDmpzd row) {
         System.out.println(tableNum);
         sheet.getRow(tableNum*35+1).getCell(1).setCellValue(row.getProname());
@@ -302,6 +343,15 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
         sheet.getRow(tableNum*35+2).getCell(1).setCellValue(row.getFbgc());
 
     }
+
+
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param index
+     * @param row
+     */
     private void fillCommonCellData(XSSFSheet sheet, int tableNum, int index, JjgFbgcSdgcDmpzd row) {
         if((index+1)%6 == 0){
             sheet.getRow(tableNum*35+index).getCell(1).setCellValue(row.getZh());
@@ -316,6 +366,11 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
     }
 
 
+    /**
+     *
+     * @param tableNum
+     * @param wb
+     */
     private void createTable(int tableNum, XSSFWorkbook wb) {
         int record = 0;
         record = tableNum;
@@ -326,13 +381,54 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
             wb.setPrintArea(wb.getSheetIndex("二衬大面平整度"), 0, 6, 0, record * 35-1);
     }
 
+    /**
+     *
+     * @param size
+     * @return
+     */
     private int gettableNum(int size) {
         return size%30 ==0 ? size/30 : size/30+1;
     }
 
     @Override
-    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) {
-        return null;
+    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String fbgc = commonInfoVo.getFbgc();
+        String sheetname = "二衬大面平整度";
+
+        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        //获取鉴定表文件
+        File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"40隧道大面平整度.xlsx");
+        if(!f.exists()){
+            return null;
+        }else {
+            XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+            //读取工作表
+            XSSFSheet slSheet = xwb.getSheet(sheetname);
+            XSSFCell xmname = slSheet.getRow(1).getCell(1);//陕西高速
+            XSSFCell htdname = slSheet.getRow(1).getCell(5);//LJ-1
+            XSSFCell hd = slSheet.getRow(2).getCell(1);//涵洞
+            List<Map<String,Object>> mapList = new ArrayList<>();
+            Map<String,Object> jgmap = new HashMap<>();
+            if(proname.equals(xmname.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
+                slSheet.getRow(5).getCell(7).setCellType(CellType.STRING);
+                slSheet.getRow(5).getCell(8).setCellType(CellType.STRING);
+                slSheet.getRow(5).getCell(9).setCellType(CellType.STRING);
+                slSheet.getRow(5).getCell(10).setCellType(CellType.STRING);
+
+                jgmap.put("总点数",decf.format(Double.valueOf(slSheet.getRow(5).getCell(7).getStringCellValue())));
+                jgmap.put("合格点数",decf.format(Double.valueOf(slSheet.getRow(5).getCell(8).getStringCellValue())));
+                jgmap.put("不合格点数",decf.format(Double.valueOf(slSheet.getRow(5).getCell(9).getStringCellValue())));
+                jgmap.put("合格率",df.format(Double.valueOf(slSheet.getRow(5).getCell(10).getStringCellValue())));
+                mapList.add(jgmap);
+                return mapList;
+            }else {
+                return null;
+            }
+
+        }
     }
 
     @Override

@@ -98,7 +98,7 @@ public class JjgFbgcQlgcQmpzdServiceImpl extends ServiceImpl<JjgFbgcQlgcQmpzdMap
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("src/main/resources/static");
+            File directory = new File("service-system/src/main/resources/static");
             String reportPath = directory.getCanonicalPath();
             String path = reportPath + File.separator + "平整度3米直尺法.xlsx";
             Files.copy(Paths.get(path), new FileOutputStream(f));
@@ -387,5 +387,11 @@ public class JjgFbgcQlgcQmpzdServiceImpl extends ServiceImpl<JjgFbgcQlgcQmpzdMap
             throw new JjgysException(20001,"解析excel出错，请传入正确格式的excel");
         }
 
+    }
+
+    @Override
+    public List<Map<String, Object>> selectqlmc(String proname, String htd, String fbgc) {
+        List<Map<String,Object>> qlmclist = jjgFbgcQlgcQmpzdMapper.selectqlmc(proname,htd,fbgc);
+        return qlmclist;
     }
 }

@@ -54,8 +54,10 @@ public class JjgFbgcLjgcLjtsfysdHtServiceImpl extends ServiceImpl<JjgFbgcLjgcLjt
 
     @Autowired
     private JjgFbgcLjgcLjtsfysdHtMapper jjgFbgcLjgcLjtsfysdHtMapper;
+
     @Autowired
     private JjgFbgcLjgcLjtsfysdSlService jjgFbgcLjgcLjtsfysdSlService;
+
     @Autowired
     private ProjectService projectService;
 

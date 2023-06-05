@@ -24,23 +24,31 @@ public class SdVo extends BaseRowModel {
     private String htd;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "桩号" ,index = 2)
-    private String zh;
+    @ExcelProperty(value = "路幅" ,index = 2)
+    private String lf;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "隧道全长" ,index = 3)
+    @ExcelProperty(value = "桩号起" ,index = 3)
+    private String zhq;
+
+    @ColumnWidth(23)
+    @ExcelProperty(value = "桩号止" ,index = 4)
+    private String zhz;
+
+    @ColumnWidth(23)
+    @ExcelProperty(value = "隧道全长" ,index = 5)
     private String sdqc;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "铺筑类型" ,index = 4)
+    @ExcelProperty(value = "铺筑类型" ,index = 6)
     private String pzlx;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "A/B/M(匝道桥填匝道标志)" ,index = 5)
+    @ExcelProperty(value = "A/B/M(匝道桥填匝道标志)" ,index = 7)
     private String zdbz;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "位置（填“主线”）" ,index = 6)
+    @ExcelProperty(value = "位置（填“主线”）" ,index = 8)
     private String wz;
 
 

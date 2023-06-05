@@ -153,6 +153,11 @@ public class JjgFbgcJtaqssJabzServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabzM
         return null;
     }
 
+    /**
+     *
+     * @param sheet
+     * @param xwb
+     */
     private void calculateOneSheet(XSSFSheet sheet,XSSFWorkbook xwb) {
         XSSFRow row = null;
         XSSFRow rowstart = null;
@@ -277,6 +282,11 @@ public class JjgFbgcJtaqssJabzServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabzM
         }
     }
 
+    /**
+     *
+     * @param offset
+     * @return
+     */
     private String analysisOffset(String offset) {
         String result = "";
         String operator = offset.substring(0, 1);
@@ -293,6 +303,13 @@ public class JjgFbgcJtaqssJabzServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabzM
         return result;
     }
 
+    /**
+     *
+     * @param data
+     * @param wb
+     * @return
+     * @throws ParseException
+     */
     private boolean DBtoExcel(List<JjgFbgcJtaqssJabz> data,XSSFWorkbook wb) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
         XSSFSheet sheet = wb.getSheet("标志");
@@ -317,6 +334,13 @@ public class JjgFbgcJtaqssJabzServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabzM
         return true;
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param index
+     * @param row
+     */
     private void fillCommonCellData(XSSFSheet sheet, int tableNum, int index, JjgFbgcJtaqssJabz row) {
         sheet.getRow(tableNum*(17+2)+5).getCell(index).setCellValue(row.getWz());
         sheet.getRow(tableNum*(17+2)+6).getCell(index).setCellValue(row.getLzlx());
@@ -625,6 +649,11 @@ public class JjgFbgcJtaqssJabzServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabzM
 
     }
 
+    /**
+     *
+     * @param tableNum
+     * @param wb
+     */
     private void createTable(int tableNum,XSSFWorkbook wb) {
         int record = 0;
         record = tableNum;
@@ -635,6 +664,11 @@ public class JjgFbgcJtaqssJabzServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabzM
             wb.setPrintArea(wb.getSheetIndex("标志"), 0, 14, 0, record * (17+2)+3);
     }
 
+    /**
+     *
+     * @param size
+     * @return
+     */
     private int gettableNum(int size) {
         return size%4==0?size/4:size/4+1;
     }

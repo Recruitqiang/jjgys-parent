@@ -182,6 +182,16 @@ public class JjgFbgcLjgcHdjgccServiceImpl extends ServiceImpl<JjgFbgcLjgcHdjgccM
         wb.setPrintArea(wb.getSheetIndex("涵洞结构尺寸"), 0, 7, 0,(record) * 29 + 4);
     }
 
+    /**
+     *
+     * @param data
+     * @param proname
+     * @param htd
+     * @param fbgc
+     * @param sheetname
+     * @return
+     * @throws Exception
+     */
     public boolean DBtoExcel(List<JjgFbgcLjgcHdjgcc> data,String proname,String htd,String fbgc,String sheetname) throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
         String testtime = simpleDateFormat.format(data.get(0).getJcsj());
@@ -286,6 +296,12 @@ public class JjgFbgcLjgcHdjgccServiceImpl extends ServiceImpl<JjgFbgcLjgcHdjgccM
     }
 
 
+    /**
+     *
+     * @param sheet
+     * @param index
+     * @param row
+     */
     public void fillCommonCellData(XSSFSheet sheet, int index, JjgFbgcLjgcHdjgcc row) {
         sheet.getRow(index+5).getCell(0).setCellValue(row.getZh());//桩号
         sheet.getRow(index+5).getCell(1).setCellValue(row.getBw());//部位
@@ -313,6 +329,10 @@ public class JjgFbgcLjgcHdjgccServiceImpl extends ServiceImpl<JjgFbgcLjgcHdjgccM
         }
     }
 
+    /**
+     *
+     * @param sheet
+     */
     private void calculateSheet(XSSFSheet sheet) {
         XSSFRow row = null;
         XSSFRow rowstart = null;

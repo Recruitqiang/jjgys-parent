@@ -27,4 +27,6 @@ public interface JjgFbgcQlgcQmpzdService extends IService<JjgFbgcQlgcQmpzd> {
     void exportQmpzd(HttpServletResponse response);
 
     void importQmpzd(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    List<Map<String, Object>> selectqlmc(String proname, String htd, String fbgc);
 }

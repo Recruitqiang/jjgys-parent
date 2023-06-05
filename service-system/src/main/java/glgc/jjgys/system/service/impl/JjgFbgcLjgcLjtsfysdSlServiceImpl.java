@@ -45,9 +45,6 @@ public class JjgFbgcLjgcLjtsfysdSlServiceImpl extends ServiceImpl<JjgFbgcLjgcLjt
     @Autowired
     private JjgFbgcLjgcLjtsfysdSlMapper jjgFbgcLjgcLjtsfysdSlMapper;
 
-
-    //private static XSSFWorkbook wb = null;
-
     @Value(value = "${jjgys.path.filepath}")
     private String filepath;
 
@@ -333,12 +330,6 @@ public class JjgFbgcLjgcLjtsfysdSlServiceImpl extends ServiceImpl<JjgFbgcLjgcLjt
         wrapper.orderByAsc("xh","qyzhjwz");
         List<JjgFbgcLjgcLjtsfysdSl> data = jjgFbgcLjgcLjtsfysdSlMapper.selectList(wrapper);
         return data;
-    }
-
-
-    @Override
-    public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) {
-        return null;
     }
 
     /**

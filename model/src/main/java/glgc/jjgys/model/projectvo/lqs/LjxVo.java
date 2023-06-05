@@ -6,6 +6,8 @@ import com.alibaba.excel.annotation.write.style.HeadFontStyle;
 import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 import com.alibaba.excel.annotation.write.style.HeadStyle;
 import com.alibaba.excel.metadata.BaseRowModel;
+import com.baomidou.mybatisplus.annotation.TableField;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
@@ -23,10 +25,22 @@ public class LjxVo extends BaseRowModel {
     private String htd;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "桩号" ,index = 2)
-    private String zh;
+    @ExcelProperty(value = "路幅" ,index = 2)
+    private String lf;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "连接线路面所属合同段" ,index = 3)
+    @ExcelProperty(value = "桩号起" ,index = 3)
+    private String zhq;
+
+    @ColumnWidth(23)
+    @ExcelProperty(value = "桩号止" ,index = 4)
+    private String zhz;
+
+    @ColumnWidth(23)
+    @ExcelProperty(value = "标志" ,index = 5)
+    private String bz;
+
+    @ColumnWidth(23)
+    @ExcelProperty(value = "连接线路面所属合同段" ,index = 6)
     private String ljxlmsshtd;
 }

@@ -104,6 +104,16 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
 
     }
 
+    /**
+     *
+     * @param data
+     * @param proname
+     * @param htd
+     * @param fbgc
+     * @param sheetname
+     * @return
+     * @throws IOException
+     */
     public boolean DBtoExcel(List<JjgFbgcLjgcLjcj> data,String proname,String htd,String fbgc,String sheetname) throws IOException {
         if(data.size() > 0){
             DecimalFormat nf = new DecimalFormat(".00");
@@ -196,6 +206,15 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
         }
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param index
+     * @param row
+     * @param nf
+     * @param cellstyle
+     */
     public void fillCommonCellData(XSSFSheet sheet, int tableNum, int index, JjgFbgcLjgcLjcj row, DecimalFormat nf, XSSFCellStyle cellstyle) {
         sheet.getRow(tableNum*33+8+index%23).getCell(0).setCellValue(row.getJczh());
         sheet.getRow(tableNum*33+8+index%23).getCell(1).setCellValue(Double.valueOf(row.getNyds1()));
@@ -212,6 +231,11 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
                 +Double.valueOf(row.getYxps())+",\"\",\"×\")");
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     */
     public void calculateTotal(XSSFSheet sheet, int tableNum) {
         sheet.getRow(tableNum*33+31).getCell(1).setCellFormula("COUNT("
                 +sheet.getRow(tableNum*33+8).getCell(1).getReference()+":"
@@ -227,6 +251,15 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
         sheet.getRow(tableNum*33+31).createCell(9).setCellFormula(sheet.getRow(tableNum*33+31).getCell(3).getReference());
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param row
+     * @param proname
+     * @param htd
+     * @param position
+     */
     public void fillTitleCellData(XSSFSheet sheet, int tableNum, JjgFbgcLjgcLjcj row,String proname,String htd,String position) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
         sheet.getRow(tableNum * 33 + 2).getCell(1).setCellValue(proname);

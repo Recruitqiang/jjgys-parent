@@ -96,7 +96,7 @@ public class JjgFbgcQlgcQmgzsdServiceImpl extends ServiceImpl<JjgFbgcQlgcQmgzsdM
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("src/main/resources/static");
+            File directory = new File("service-system/src/main/resources/static");
             String reportPath = directory.getCanonicalPath();
             String path = reportPath + File.separator + "构造深度手工铺沙法.xlsx";
             Files.copy(Paths.get(path), new FileOutputStream(f));

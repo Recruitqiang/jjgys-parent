@@ -112,7 +112,7 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("src/main/resources/static");
+            File directory = new File("service-system/src/main/resources/static");
             String reportPath = directory.getCanonicalPath();
             String name = "横坡.xlsx";
             String path = reportPath + File.separator + name;
@@ -138,6 +138,11 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
 
     }
 
+    /**
+     *
+     * @param wb
+     * @param sheetname
+     */
     private void calculateSheet(XSSFWorkbook wb, String sheetname) {
         XSSFSheet sheet = wb.getSheet(sheetname);
         XSSFRow row = null;
@@ -226,6 +231,15 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
         endRowList.clear();
     }
 
+    /**
+     *
+     * @param data
+     * @param wb
+     * @param sheetname
+     * @param qlmc
+     * @return
+     * @throws ParseException
+     */
     private boolean DBtoExcel(List<JjgFbgcQlgcQmhp> data, XSSFWorkbook wb,String sheetname,String qlmc) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
         XSSFCellStyle cellstyle = JjgFbgcCommonUtils.dBtoExcelUtils(wb);
@@ -258,6 +272,14 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
 
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param index
+     * @param row
+     * @param cellstyle
+     */
     private void fillCommonCellData(XSSFSheet sheet, int tableNum, int index, JjgFbgcQlgcQmhp row, XSSFCellStyle cellstyle) {
         sheet.getRow(tableNum*35+index).getCell(0).setCellValue(row.getZh());
         sheet.getRow(tableNum*35+index).getCell(2).setCellValue(row.getWz());
@@ -268,6 +290,16 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
         sheet.getRow(tableNum*35+index).getCell(9).setCellValue(Double.parseDouble(row.getYxps()));
     }
 
+    /**
+     *
+     * @param sheet
+     * @param tableNum
+     * @param proname
+     * @param htd
+     * @param fbgc
+     * @param lmlx
+     * @param qlmc
+     */
     private void fillTitleCellData(XSSFSheet sheet, int tableNum, String proname, String htd, String fbgc,String lmlx,String qlmc) {
         sheet.getRow(tableNum*35+1).getCell(2).setCellValue(proname);
         sheet.getRow(tableNum*35+1).getCell(8).setCellValue(htd);
@@ -277,6 +309,12 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
 
     }
 
+    /**
+     *
+     * @param tableNum
+     * @param wb
+     * @param sheetname
+     */
     private void createTable(int tableNum, XSSFWorkbook wb,String sheetname) {
         int record = 0;
         record = tableNum;
@@ -288,6 +326,11 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
         }
     }
 
+    /**
+     *
+     * @param size
+     * @return
+     */
     private int gettableNumAll(int size) {
         return size%29 ==0 ? size/29 : size/29+1;
     }
