@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgFbgcSdgcSdlqlmysdMapper">
+
+    <select id="selectsdmc" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT sdmc from jjg_fbgc_sdgc_sdlqlmysd  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
+    </select>
+
+    <select id="selectzxzf" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT * FROM jjg_fbgc_sdgc_sdlqlmysd where  proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and
+                                                    (lqs = '路' OR lqs= '桥') AND zh Like 'Z%' AND sdmc = #{sdmc} order by zh
+    </select>
+
+    <select id="selectzxyf" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT * FROM jjg_fbgc_sdgc_sdlqlmysd where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and
+                                                    (lqs = '路' OR lqs= '桥') AND zh Like 'Y%' AND sdmc = #{sdmc} order by zh
+    </select>
+
+    <select id="selectsdzf" resultType="glgc.jjgys.model.project.JjgFbgcSdgcSdlqlmysd" parameterType="java.lang.String">
+        SELECT * FROM jjg_fbgc_sdgc_sdlqlmysd where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and
+                                                    lqs = '隧' AND zh Like 'Z%' AND sdmc = #{sdmc} order by zh
+
+    </select>
+
+    <select id="selectsdyf" resultType="glgc.jjgys.model.project.JjgFbgcSdgcSdlqlmysd" parameterType="java.lang.String">
+        SELECT * FROM jjg_fbgc_sdgc_sdlqlmysd where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
+                                                and  lqs = '隧' AND zh Like 'Y%' AND sdmc = #{sdmc} order by zh
+    </select>
+
+    <select id="selectzd" resultType="glgc.jjgys.model.project.JjgFbgcSdgcSdlqlmysd" parameterType="java.lang.String">
+        SELECT * FROM jjg_fbgc_sdgc_sdlqlmysd
+        WHERE proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
+          and lqs not like '隧' and lqs not like '%连接线%' and left(zh,1) not like 'Z' and left(zh,1) not like 'Y' order by zh
+    </select>
+
+
+    <select id="selectljx" resultType="glgc.jjgys.model.project.JjgFbgcSdgcSdlqlmysd" parameterType="java.lang.String">
+        SELECT * FROM jjg_fbgc_sdgc_sdlqlmysd
+        WHERE proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
+          and lqs like '%连接线%' and lqs not like '隧' order by zh
+    </select>
+
+    <select id="selectljxsd" resultType="glgc.jjgys.model.project.JjgFbgcSdgcSdlqlmysd" parameterType="java.lang.String">
+        SELECT * FROM jjg_fbgc_sdgc_sdlqlmysd
+        WHERE proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
+          and lqs like '%连接线%' and lqs like '隧' order by zh
+    </select>
+
+</mapper>

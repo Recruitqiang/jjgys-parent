@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgFbgcLmgcLmhpMapper">
+
+    <select id="selectlx" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT lxlx from jjg_fbgc_lmgc_lmhp where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
+    </select>
+
+    <select id="selectljx" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT lxlx from jjg_fbgc_lmgc_lmhp where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
+    </select>
+
+    <select id="selectSdZfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT hp.*,sd.name from (SELECT * from jjg_fbgc_lmgc_lmhp where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and wz='左幅' and lxlx='主线' and zh >= #{zhq} and zh &lt;= #{zhz}) hp
+        LEFT JOIN (SELECT * FROM jjg_lqs_sd where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz} and lf = '左幅' and wz='主线') sd
+        ON hp.proname=sd.proname
+    </select>
+
+    <select id="selectSdYfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT hp.*,sd.name from (SELECT * from jjg_fbgc_lmgc_lmhp where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and wz='右幅' and lxlx='主线' and zh >= #{zhq} and zh &lt;= #{zhz}) hp
+        LEFT JOIN (SELECT * FROM jjg_lqs_sd where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz}  and lf = '右幅' and wz='主线') sd
+        ON hp.proname=sd.proname
+    </select>
+
+    <select id="selectQlZfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT hp.*,ql.qlname name from (SELECT * from jjg_fbgc_lmgc_lmhp where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and wz='左幅' and lxlx='主线' and zh >= #{zhq} and zh &lt;= #{zhz}) hp
+        LEFT JOIN (SELECT * FROM jjg_lqs_ql where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz} and lf = '左幅' and wz='主线') ql
+        ON hp.proname=ql.proname
+    </select>
+
+    <select id="selectQlYfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT hp.*,ql.qlname name from (SELECT * from jjg_fbgc_lmgc_lmhp where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and wz='右幅' and lxlx='主线' and zh >= #{zhq} and zh &lt;= #{zhz}) hp
+        LEFT JOIN (SELECT * FROM jjg_lqs_ql where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz}  and lf = '右幅' and wz='主线') ql
+        ON hp.proname=ql.proname
+    </select>
+
+    <select id="selectAllList" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT * from jjg_fbgc_lmgc_lmhp where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and lxlx = '主线'
+    </select>
+
+
+    <select id="selecthpzd" resultType="glgc.jjgys.model.project.JjgFbgcLmgcLmhp" parameterType="java.util.Map">
+        SELECT * from jjg_fbgc_lmgc_lmhp where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and wz=#{df}
+                      and zh >=#{zhq} and zh &lt;= #{zhz} and zy=#{zdlx} and lxlx=#{lxlx} ORDER BY zh
+
+    </select>
+
+    <select id="selecthpzdData" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT ql.qlname name,hp.* FROM
+        (SELECT * FROM jjg_lqs_ql WHERE proname=#{proname} AND bz=#{zy} AND lf=#{wz} AND wz=#{lxlx} and pzlx=#{lq}) ql
+        LEFT JOIN (SELECT * from jjg_fbgc_lmgc_lmhp WHERE proname= #{proname} and htd = #{htd} and fbgc= #{fbgc}
+                                                      AND zh>=#{zhq} AND zh &lt;= #{zhz} AND zy=#{zy} AND wz=#{wz} and lxlx=#{lxlx} and lmlx=#{lq}) hp
+        ON ql.proname=hp.proname
+        ORDER BY hp.zh
+    </select>
+
+    <select id="selecthpzdsdData" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT sd.name,hp.* FROM
+            (SELECT * FROM jjg_lqs_sd WHERE proname=#{proname} AND zdbz=#{zy} AND lf=#{wz} AND wz=#{lxlx} and pzlx=#{lq}) sd
+                LEFT JOIN (SELECT * from jjg_fbgc_lmgc_lmhp WHERE proname= #{proname} and htd = #{htd} and fbgc= #{fbgc}
+                                                              AND zh>=#{zhq} AND zh &lt;= #{zhz} AND zy=#{zy} AND wz=#{wz} and lxlx=#{lxlx} and lmlx=#{lq}) hp
+                          ON sd.proname=hp.proname
+        ORDER BY hp.zh
+    </select>
+
+    <select id="selecthpljx" resultType="glgc.jjgys.model.project.JjgFbgcLmgcLmhp" parameterType="java.util.Map">
+        SELECT * from jjg_fbgc_lmgc_lmhp where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and wz=#{df}
+                                           and zh >=#{zhq} and zh &lt;= #{zhz} and zy=#{bz} and lxlx=#{lxlx} and lmlx=#{lq} ORDER BY zh
+
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgFbgcSdgcTlmxlbgcMapper">
+
+    <select id="selectsdmc" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT sdmc from jjg_fbgc_sdgc_tlmxlbgc  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
+    </select>
+
+</mapper>
