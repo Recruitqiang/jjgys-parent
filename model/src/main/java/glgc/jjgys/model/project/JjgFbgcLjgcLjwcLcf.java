@@ -50,7 +50,6 @@ public class JjgFbgcLjgcLjwcLcf implements Serializable {
     @TableField("jjyxxs")
     private String jjyxxs;
 
-
     @TableField("jglx")
     private String jglx;
 
@@ -59,7 +58,6 @@ public class JjgFbgcLjgcLjwcLcf implements Serializable {
 
     @TableField("sdyxxs")
     private String sdyxxs;
-
 
     @TableField("lcz")
     private String lcz;

@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -50,10 +51,15 @@ public class JjgFbgcQlgcQmgzsdController {
     private String filespath;
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public void downloadExport(HttpServletResponse response, String proname, String htd) throws IOException {
-        String fileName = "37桥面构造深度手工铺沙法.xlsx";
-        String p = filespath+ File.separator+proname+File.separator+htd+File.separator+fileName;
-        JjgFbgcCommonUtils.download(response,p,fileName);
+    public void downloadExport(HttpServletRequest request, HttpServletResponse response, String proname, String htd, String fbgc) throws IOException {
+        List<Map<String,Object>> qlmclist = jjgFbgcQlgcQmgzsdService.selectqlmc(proname,htd,fbgc);
+        List list = new ArrayList<>();
+        for (int i=0;i<qlmclist.size();i++){
+            list.add(qlmclist.get(i).get("qlmc"));
+        }
+        String zipName = "37桥面构造深度手工铺沙法";
+        JjgFbgcCommonUtils.batchDownloadFile(request,response,zipName,list,filespath+File.separator+proname+File.separator+htd);
+
     }
 
     @ApiOperation("生成桥面构造深度鉴定表")

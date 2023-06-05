@@ -875,7 +875,7 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
         String fbgc = commonInfoVo.getFbgc();
-        String title = "路面弯沉质量鉴定结果汇总表";
+        String title = "弯沉质量鉴定结果汇总表";
         String sheetname = "评定单元";
         //获取鉴定表文件
         File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "02路基弯沉(贝克曼梁法).xlsx");
@@ -888,12 +888,11 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
             XSSFCell bt = slSheet.getRow(0).getCell(0);//标题
             XSSFCell xmname = slSheet.getRow(1).getCell(2);//项目名
             XSSFCell htdname = slSheet.getRow(1).getCell(7);//合同段名
-            XSSFCell hd = slSheet.getRow(2).getCell(2);//分布工程名
             List<Map<String, Object>> mapList = new ArrayList<>();
             Map<String, Object> jgmap = new HashMap<>();
             DecimalFormat df = new DecimalFormat(".00");
             DecimalFormat decf = new DecimalFormat("0.##");
-            if (proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())) {
+            if (proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString())) {
                 int lastRowNum = slSheet.getLastRowNum();
                 slSheet.getRow(lastRowNum).getCell(4).setCellType(CellType.STRING);//检测单元数
                 slSheet.getRow(lastRowNum).getCell(6).setCellType(CellType.STRING);//合格单元
@@ -903,7 +902,6 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
                 jgmap.put("合格率", df.format(Double.valueOf(slSheet.getRow(lastRowNum).getCell(8).getStringCellValue())));
                 mapList.add(jgmap);
                 return mapList;
-
             }
             return null;
         }

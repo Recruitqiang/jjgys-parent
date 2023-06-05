@@ -60,7 +60,7 @@ public class JjgFbgcQlgcQmpzdController {
         List<Map<String,Object>> qlmclist = jjgFbgcQlgcQmpzdService.selectqlmc(proname,htd,fbgc);
         List list = new ArrayList<>();
         for (int i=0;i<qlmclist.size();i++){
-            list.add(qlmclist.get(i).get("qlmc"));
+            list.add(qlmclist.get(i).get("qm"));
         }
         String zipName = "34桥面平整度3米直尺法";
         JjgFbgcCommonUtils.batchDownloadFile(request,response,zipName,list,filespath+File.separator+proname+File.separator+htd);

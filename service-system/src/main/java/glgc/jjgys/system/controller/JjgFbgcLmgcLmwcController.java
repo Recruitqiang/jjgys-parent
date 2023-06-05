@@ -75,6 +75,7 @@ public class JjgFbgcLmgcLmwcController {
     @PostMapping("lookJdbjg")
     public Result lookJdbjg(@RequestBody CommonInfoVo commonInfoVo) throws IOException {
         List<Map<String,Object>> jdjg = jjgFbgcLmgcLmwcService.lookJdbjg(commonInfoVo);
+        System.out.println(jdjg);
         return Result.ok(jdjg);
 
     }

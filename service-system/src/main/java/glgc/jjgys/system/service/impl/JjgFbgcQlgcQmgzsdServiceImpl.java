@@ -391,4 +391,10 @@ public class JjgFbgcQlgcQmgzsdServiceImpl extends ServiceImpl<JjgFbgcQlgcQmgzsdM
         }
 
     }
+
+    @Override
+    public List<Map<String, Object>> selectqlmc(String proname, String htd, String fbgc) {
+        List<Map<String,Object>> qlmclist = jjgFbgcQlgcQmgzsdMapper.selectqlmc(proname,htd,fbgc);
+        return qlmclist;
+    }
 }
