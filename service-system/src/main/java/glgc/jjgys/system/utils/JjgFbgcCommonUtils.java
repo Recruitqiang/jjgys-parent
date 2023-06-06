@@ -56,6 +56,8 @@ public class JjgFbgcCommonUtils {
             for (int i=0;i<list.size();i++) {
                 String name = zipName+"-"+list.get(i)+".xlsx";
                 String path = filepath+File.separator+name;
+                System.out.println(path);
+
                 file = new File(path);
                 if (!file.exists()) {
                     break;

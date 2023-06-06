@@ -690,7 +690,7 @@ public class JjgFbgcSdgcSdlqlmysdServiceImpl extends ServiceImpl<JjgFbgcSdgcSdlq
      * @throws IOException
      */
     private List<Map<String, Object>> looksdjdb(String proname, String htd, String sdmc, String title) throws IOException {
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "43隧道沥青路面压实度-"+sdmc+".xlsx");
         if (!f.exists()) {

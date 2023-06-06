@@ -57,7 +57,7 @@ public class JjgFbgcQlgcQmgzsdController {
         for (int i=0;i<qlmclist.size();i++){
             list.add(qlmclist.get(i).get("qlmc"));
         }
-        String zipName = "37桥面构造深度手工铺沙法";
+        String zipName = "37构造深度手工铺沙法";
         JjgFbgcCommonUtils.batchDownloadFile(request,response,zipName,list,filespath+File.separator+proname+File.separator+htd);
 
     }

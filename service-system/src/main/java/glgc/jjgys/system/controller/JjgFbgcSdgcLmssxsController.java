@@ -42,7 +42,7 @@ import java.util.Map;
  * @since 2023-05-04
  */
 @RestController
-@RequestMapping("/system/jjg-fbgc-sdgc-lmssxs")
+@RequestMapping("/jjg/fbgc/sdgc/lmssxs")
 public class JjgFbgcSdgcLmssxsController {
 
     @Autowired
