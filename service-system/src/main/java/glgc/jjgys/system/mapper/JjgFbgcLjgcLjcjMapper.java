@@ -20,4 +20,6 @@ import java.util.List;
 public interface JjgFbgcLjgcLjcjMapper extends BaseMapper<JjgFbgcLjgcLjcj> {
 
     List<String> selectNums(String proname, String htd, String fbgc);
+
+    List<String> selectyxps(String proname, String htd);
 }

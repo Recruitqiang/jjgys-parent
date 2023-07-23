@@ -28,4 +28,6 @@ public interface JjgFbgcLjgcXqjgccService extends IService<JjgFbgcLjgcXqjgcc> {
     void exportxqjgcc(HttpServletResponse response);
 
     void importxqjgcc(MultipartFile file,CommonInfoVo commonInfoVo);
+
+    List<Map<String, Object>> selectyxps(String proname, String htd);
 }

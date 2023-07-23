@@ -6,6 +6,10 @@
         SELECT DISTINCT sdmc from jjg_fbgc_sdgc_sdlqlmysd  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
     </select>
 
+    <select id="selectsdmc2" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT sdmc from jjg_fbgc_sdgc_sdlqlmysd  where proname = #{proname} and htd = #{htd}
+    </select>
+
     <select id="selectzxzf" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT * FROM jjg_fbgc_sdgc_sdlqlmysd where  proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and
                                                     (lqs = '路' OR lqs= '桥') AND zh Like 'Z%' AND sdmc = #{sdmc} order by zh

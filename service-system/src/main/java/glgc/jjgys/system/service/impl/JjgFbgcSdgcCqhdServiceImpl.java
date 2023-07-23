@@ -16,6 +16,7 @@ import glgc.jjgys.system.service.JjgFbgcSdgcCqhdService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -388,13 +389,12 @@ public class JjgFbgcSdgcCqhdServiceImpl extends ServiceImpl<JjgFbgcSdgcCqhdMappe
 
     @Override
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
         List<Map<String,Object>> mapList = new ArrayList<>();
-        List<Map<String, Object>> selectsdmc = selectsdmc(proname, htd, fbgc);
+        List<Map<String, Object>> selectsdmc = selectsdmc2(proname, htd);
         for (int i=0;i<selectsdmc.size();i++) {
             String sdmc = selectsdmc.get(i).get("sdmc").toString();
             String cdnum = "";
@@ -403,7 +403,7 @@ public class JjgFbgcSdgcCqhdServiceImpl extends ServiceImpl<JjgFbgcSdgcCqhdMappe
             if (!f.exists()) {
                 return null;
             } else {
-                List<Map<String,Object>> cd = jjgFbgcSdgcCqhdMapper.selectcd(proname,htd,fbgc,sdmc);
+                List<Map<String,Object>> cd = jjgFbgcSdgcCqhdMapper.selectcd2(proname,htd,sdmc);
                 if (cd.get(0).get("zgy1") != null && !"".equals(cd.get(0).get("zgy1")) && cd.get(0).get("zgy2") !=null && !"".equals(cd.get(0).get("zgy2")) && cd.get(0).get("zgy3") !=null && !"".equals(cd.get(0).get("zgy3"))){
                     cdnum = "4车道";
                 }else if (cd.get(0).get("zgy1") != null && !"".equals(cd.get(0).get("zgy1")) && cd.get(0).get("zgy2") !=null && !"".equals(cd.get(0).get("zgy2"))){
@@ -411,7 +411,7 @@ public class JjgFbgcSdgcCqhdServiceImpl extends ServiceImpl<JjgFbgcSdgcCqhdMappe
                 }else if (cd.get(0).get("zgy1") != null && !"".equals(cd.get(0).get("zgy1"))){
                     cdnum = "2车道";
                 }
-                List<Map<String,Object>> wz = jjgFbgcSdgcCqhdMapper.selectwz(proname,htd,fbgc,sdmc);
+                List<Map<String,Object>> wz = jjgFbgcSdgcCqhdMapper.selectwz2(proname,htd,sdmc);
                 String wzname = wz.get(0).get("wz").toString();
                 String sheetname = cdnum+wzname;
                 XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
@@ -489,6 +489,131 @@ public class JjgFbgcSdgcCqhdServiceImpl extends ServiceImpl<JjgFbgcSdgcCqhdMappe
     @Override
     public List<Map<String, Object>> selectsdmc(String proname, String htd, String fbgc) {
         List<Map<String,Object>> sdmclist = jjgFbgcSdgcCqhdMapper.selectsdmc(proname,htd,fbgc);
+        return sdmclist;
+    }
+
+    @Override
+    public List<Map<String, Object>> selectsjhd(CommonInfoVo commonInfoVo,String s) {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        List<Map<String, Object>> list = jjgFbgcSdgcCqhdMapper.selectsjhd(proname,htd,s);
+        return list;
+
+    }
+
+    @Override
+    public List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo, String value) throws IOException {
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        List<Map<String,Object>> mapList = new ArrayList<>();
+        List<Map<String, Object>> selectsdmc = selectsdmc2(proname, htd);
+        //for (int i=0;i<selectsdmc.size();i++) {
+            String sdmc = StringUtils.substringBetween(value, "-", ".");
+            String cdnum = "";
+            Map<String,Object> jgmap = new HashMap<>();
+            File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + value);
+            if (!f.exists()) {
+                return null;
+            } else {
+                List<Map<String,Object>> cd = jjgFbgcSdgcCqhdMapper.selectcd2(proname,htd,sdmc);
+                if (cd.get(0).get("zgy1") != null && !"".equals(cd.get(0).get("zgy1")) && cd.get(0).get("zgy2") !=null && !"".equals(cd.get(0).get("zgy2")) && cd.get(0).get("zgy3") !=null && !"".equals(cd.get(0).get("zgy3"))){
+                    cdnum = "4车道";
+                }else if (cd.get(0).get("zgy1") != null && !"".equals(cd.get(0).get("zgy1")) && cd.get(0).get("zgy2") !=null && !"".equals(cd.get(0).get("zgy2"))){
+                    cdnum = "3车道";
+                }else if (cd.get(0).get("zgy1") != null && !"".equals(cd.get(0).get("zgy1"))){
+                    cdnum = "2车道";
+                }
+                List<Map<String,Object>> wz = jjgFbgcSdgcCqhdMapper.selectwz2(proname,htd,sdmc);
+                String wzname = wz.get(0).get("wz").toString();
+                String sheetname = cdnum+wzname;
+                XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+                XSSFSheet sheet = xwb.getSheet(sheetname);
+                XSSFCell xmname = sheet.getRow(1).getCell(0);//项目名
+                XSSFCell htdname = sheet.getRow(1).getCell(8);//合同段名
+                String name = "项目名称："+proname;
+                String he = "合同段："+htd;
+                if (name.equals(xmname.toString()) && he.equals(htdname.toString())) {
+                    if (cdnum.equals("2车道")){
+                        int lastRowNum = sheet.getLastRowNum();
+                        sheet.getRow(lastRowNum).getCell(3).setCellType(CellType.STRING);
+                        sheet.getRow(lastRowNum).getCell(7).setCellType(CellType.STRING);
+                        sheet.getRow(lastRowNum).getCell(10).setCellType(CellType.STRING);
+                        jgmap.put("检测项目",sdmc);
+                        jgmap.put("检测总点数",decf.format(Double.valueOf(sheet.getRow(lastRowNum).getCell(3).getStringCellValue())));
+                        jgmap.put("合格点数",decf.format(Double.valueOf(sheet.getRow(lastRowNum).getCell(7).getStringCellValue())));
+                        jgmap.put("合格率",df.format(Double.valueOf(sheet.getRow(lastRowNum).getCell(10).getStringCellValue())));
+                    }else if(cdnum.equals("3车道") || cdnum.equals("4车道") ) {
+                        int lastRowNum = sheet.getLastRowNum();
+                        sheet.getRow(lastRowNum).getCell(4).setCellType(CellType.STRING);
+                        sheet.getRow(lastRowNum).getCell(10).setCellType(CellType.STRING);
+                        sheet.getRow(lastRowNum).getCell(15).setCellType(CellType.STRING);
+                        jgmap.put("检测项目", sdmc);
+                        jgmap.put("检测总点数", decf.format(Double.valueOf(sheet.getRow(lastRowNum).getCell(4).getStringCellValue())));
+                        jgmap.put("合格点数", decf.format(Double.valueOf(sheet.getRow(lastRowNum).getCell(10).getStringCellValue())));
+                        jgmap.put("合格率", df.format(Double.valueOf(sheet.getRow(lastRowNum).getCell(15).getStringCellValue())));
+                    }
+                    mapList.add(jgmap);
+                }
+            }
+        //}
+        return mapList;
+    }
+
+    @Override
+    public int getds(CommonInfoVo commonInfoVo, String sdmc) {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        List<Map<String,Object>> list = jjgFbgcSdgcCqhdMapper.getds(proname,htd,sdmc);
+        System.out.println(list);
+        int num=0;
+        for (Map<String, Object> map : list) {
+            double sjhd = Double.valueOf(map.get("sjhd").toString());
+            if (!map.get("zgy1").toString().equals("") && map.get("zgy1")!=null){
+                double zgy = Double.valueOf(map.get("zgy1").toString());
+                if (zgy < sjhd/2){
+                    num += 1;
+                }
+            }
+            if (map.get("zgy2")!=null && !map.get("zgy2").toString().equals("")){
+                double zgy = Double.valueOf(map.get("zgy2").toString());
+                if (zgy < sjhd/2){
+                    num += 1;
+                }
+            }
+            if (map.get("zgy3")!=null){
+                double zgy = Double.valueOf(map.get("zgy3").toString());
+                if (zgy < sjhd/2){
+                    num += 1;
+                }
+            }
+
+            if (map.get("ygy1")!=null){
+                double zgy = Double.valueOf(map.get("ygy1").toString());
+                if (zgy < sjhd/2){
+                    num += 1;
+                }
+            }
+            if (map.get("ygy2")!=null){
+                double zgy = Double.valueOf(map.get("ygy2").toString());
+                if (zgy < sjhd/2){
+                    num += 1;
+                }
+            }
+            if (map.get("ygy3")!=null){
+                double zgy = Double.valueOf(map.get("ygy3").toString());
+                if (zgy < sjhd/2){
+                    num += 1;
+                }
+            }
+        }
+        return num;
+
+    }
+
+    public List<Map<String, Object>> selectsdmc2(String proname, String htd) {
+        List<Map<String,Object>> sdmclist = jjgFbgcSdgcCqhdMapper.selectsdmc2(proname,htd);
         return sdmclist;
     }
 }

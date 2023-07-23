@@ -31,4 +31,6 @@ public interface JjgFbgcSdgcSdhpService extends IService<JjgFbgcSdgcSdhp> {
     void importsdhp(MultipartFile file, CommonInfoVo commonInfoVo);
 
     List<Map<String, Object>> selectsdmc(String proname, String htd, String fbgc);
+
+    List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo, String value) throws IOException;
 }

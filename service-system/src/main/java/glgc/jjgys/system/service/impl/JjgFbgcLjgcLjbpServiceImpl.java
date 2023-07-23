@@ -77,7 +77,7 @@ public class JjgFbgcLjgcLjbpServiceImpl extends ServiceImpl<JjgFbgcLjgcLjbpMappe
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("service-system/src/main/resources/static");
+            File directory = new File("src/main/resources/static");
             String reportPath = directory.getCanonicalPath();
             String path =reportPath + "/路基边坡.xlsx";
             Files.copy(Paths.get(path), new FileOutputStream(f));
@@ -266,10 +266,9 @@ public class JjgFbgcLjgcLjbpServiceImpl extends ServiceImpl<JjgFbgcLjgcLjbpMappe
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
-        String title = "路基边坡质量检测鉴定表";
+
         String sheetname = "路基边坡";
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         //获取鉴定表文件
         File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"03路基边坡.xlsx");
@@ -285,7 +284,6 @@ public class JjgFbgcLjgcLjbpServiceImpl extends ServiceImpl<JjgFbgcLjgcLjbpMappe
             XSSFCell hd = slSheet.getRow(2).getCell(1);
             List<Map<String,Object>> mapList = new ArrayList<>();
             Map<String,Object> jgmap = new HashMap<>();
-            if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
                 //获取到最后一行
                 int lastRowNum = slSheet.getLastRowNum();
                 slSheet.getRow(lastRowNum).getCell(1).setCellType(XSSFCell.CELL_TYPE_STRING);
@@ -302,8 +300,6 @@ public class JjgFbgcLjgcLjbpServiceImpl extends ServiceImpl<JjgFbgcLjgcLjbpMappe
                 jgmap.put("合格率",hglz);
                 mapList.add(jgmap);
                 return mapList;
-            }
-            return null;
         }
 
     }
@@ -414,5 +410,11 @@ public class JjgFbgcLjgcLjbpServiceImpl extends ServiceImpl<JjgFbgcLjgcLjbpMappe
             throw new JjgysException(20001,"解析excel出错，请传入正确格式的excel");
         }
 
+    }
+
+    @Override
+    public List<String> selectyxps(String proname, String htd) {
+        List<String> yxps = jjgFbgcLjgcLjbpMapper.selectyxps(proname,htd);
+        return yxps;
     }
 }

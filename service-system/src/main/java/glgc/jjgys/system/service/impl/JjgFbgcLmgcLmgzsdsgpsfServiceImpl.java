@@ -293,7 +293,7 @@ public class JjgFbgcLmgcLmgzsdsgpsfServiceImpl extends ServiceImpl<JjgFbgcLmgcLm
 
     @Override
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
@@ -306,35 +306,52 @@ public class JjgFbgcLmgcLmgzsdsgpsfServiceImpl extends ServiceImpl<JjgFbgcLmgcLm
             return null;
         } else {
             XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(f));
-            XSSFSheet slSheet = wb.getSheet(sheetname);
-            XSSFCell bt = slSheet.getRow(0).getCell(0);//标题
-            XSSFCell xmname = slSheet.getRow(1).getCell(1);//项目名
-            XSSFCell htdname = slSheet.getRow(1).getCell(9);//合同段名
+            //XSSFSheet slSheet = wb.getSheet(sheetname);
+
             List<Map<String, Object>> mapList = new ArrayList<>();
             Map<String, Object> jgmap = new HashMap<>();
+            for (int j = 0; j < wb.getNumberOfSheets(); j++) {
+                if (!wb.isSheetHidden(wb.getSheetIndex(wb.getSheetAt(j)))) {
+                    XSSFSheet slSheet = wb.getSheetAt(j);
+                    XSSFCell bt = slSheet.getRow(0).getCell(0);//标题
+                    XSSFCell xmname = slSheet.getRow(1).getCell(1);//项目名
+                    XSSFCell htdname = slSheet.getRow(1).getCell(9);//合同段名
 
-            if (proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString())) {
-                //获取到最后一行
-                int lastRowNum = slSheet.getLastRowNum();
-                slSheet.getRow(lastRowNum).getCell(1).setCellType(CellType.STRING);//总点数
-                slSheet.getRow(lastRowNum).getCell(4).setCellType(CellType.STRING);//合格点数
-                slSheet.getRow(lastRowNum).getCell(7).setCellType(CellType.STRING);//合格率
-                double zds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(1).getStringCellValue());
-                double hgds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(4).getStringCellValue());
-                double hgl = Double.valueOf(slSheet.getRow(lastRowNum).getCell(7).getStringCellValue());
-                String zdsz1 = decf.format(zds);
-                String hgdsz1 = decf.format(hgds);
-                String hglz1 = df.format(hgl);
-                jgmap.put("检测点数", zdsz1);
-                jgmap.put("合格点数", hgdsz1);
-                jgmap.put("合格率", hglz1);
-                mapList.add(jgmap);
-            }else {
+                    if (proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString())) {
+                        //获取到最后一行
+                        int lastRowNum = slSheet.getLastRowNum();
+                        slSheet.getRow(lastRowNum).getCell(1).setCellType(CellType.STRING);//总点数
+                        slSheet.getRow(lastRowNum).getCell(4).setCellType(CellType.STRING);//合格点数
+                        slSheet.getRow(lastRowNum).getCell(7).setCellType(CellType.STRING);//合格率
+                        slSheet.getRow(3).getCell(1).setCellType(CellType.STRING);//合格率
+
+                        slSheet.getRow(lastRowNum).getCell(10).setCellType(CellType.STRING);
+                        slSheet.getRow(lastRowNum).getCell(13).setCellType(CellType.STRING);
+
+                        double zds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(1).getStringCellValue());
+                        double hgds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(4).getStringCellValue());
+                        double hgl = Double.valueOf(slSheet.getRow(lastRowNum).getCell(7).getStringCellValue());
+                        String zdsz1 = decf.format(zds);
+                        String hgdsz1 = decf.format(hgds);
+                        String hglz1 = df.format(hgl);
+                        jgmap.put("检测点数", zdsz1);
+                        jgmap.put("路面类型", wb.getSheetName(j));
+                        jgmap.put("规定值", slSheet.getRow(3).getCell(1).getStringCellValue());
+                        jgmap.put("合格点数", hgdsz1);
+                        jgmap.put("合格率", hglz1);
+                        jgmap.put("Min", slSheet.getRow(lastRowNum).getCell(13).getStringCellValue());
+                        jgmap.put("Max", slSheet.getRow(lastRowNum).getCell(10).getStringCellValue());
+                        mapList.add(jgmap);
+                    }
+                }
+            }
+            /*else {
                 jgmap.put("检测点数", 0);
                 jgmap.put("合格点数", 0);
+                jgmap.put("规定值", 0);
                 jgmap.put("合格率", 0);
                 mapList.add(jgmap);
-            }
+            }*/
             return mapList;
 
         }

@@ -74,7 +74,7 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
         String htd = commonInfoVo.getHtd();
         String fbgc = commonInfoVo.getFbgc();
         //先查询需要生成几个鉴定表 根据lmlx
-        List<Map<String,String>> lmlx = jjgFbgcLmgcLmhpMapper.selectlx(proname,htd,fbgc); //[{lxlx=主线}, {lxlx=岳口枢纽立交}, {lxlx=延壶路小桥连接线}, {lxlx=延长互通式立交}]
+        List<Map<String,String>> lmlx = jjgFbgcLmgcLmhpMapper.selectlx(proname,htd); //[{lxlx=主线}, {lxlx=岳口枢纽立交}, {lxlx=延壶路小桥连接线}, {lxlx=延长互通式立交}]
         if (lmlx.size()>0){
             for (Map<String, String> map : lmlx) {
                 String lxlx = map.get("lxlx");
@@ -115,7 +115,7 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("service-system/src/main/resources/static");
+            File directory = new File("src/main/resources/static");
             String reportPath = directory.getCanonicalPath();
             String path = reportPath + File.separator + "横坡.xlsx";
             Files.copy(Paths.get(path), new FileOutputStream(f));
@@ -154,8 +154,8 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
             List<Map<String,String>> hpsdzfdata = new ArrayList<>();
             if (jjgLqsSdzf.size()>0){
                 for (JjgLqsSd jjgLqsSd : jjgLqsSdzf) {
-                    hpsdzfdata.addAll(jjgFbgcLmgcLmhpMapper.selectSdZfData(proname,htd,fbgc,jjgLqsSd.getZhq(),jjgLqsSd.getZhz()));
-                    allData.addAll(jjgFbgcLmgcLmhpMapper.selectSdZfData(proname,htd,fbgc,jjgLqsSd.getZhq(),jjgLqsSd.getZhz()));
+                    hpsdzfdata.addAll(jjgFbgcLmgcLmhpMapper.selectSdZfData(proname,htd,fbgc,String.valueOf(jjgLqsSd.getZhq()),String.valueOf(jjgLqsSd.getZhz())));
+                    allData.addAll(jjgFbgcLmgcLmhpMapper.selectSdZfData(proname,htd,fbgc,String.valueOf(jjgLqsSd.getZhq()),String.valueOf(jjgLqsSd.getZhz())));
                 }
             }
 
@@ -163,8 +163,8 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
             List<Map<String,String>> hpsdyfdata = new ArrayList<>();
             if (jjgLqsSdyf.size()>0){
                 for (JjgLqsSd jjgLqsSd : jjgLqsSdyf) {
-                    hpsdyfdata.addAll(jjgFbgcLmgcLmhpMapper.selectSdYfData(proname,htd,fbgc,jjgLqsSd.getZhq(),jjgLqsSd.getZhz()));
-                    allData.addAll(jjgFbgcLmgcLmhpMapper.selectSdYfData(proname,htd,fbgc,jjgLqsSd.getZhq(),jjgLqsSd.getZhz()));
+                    hpsdyfdata.addAll(jjgFbgcLmgcLmhpMapper.selectSdYfData(proname,htd,fbgc,String.valueOf(jjgLqsSd.getZhq()),String.valueOf(jjgLqsSd.getZhz())));
+                    allData.addAll(jjgFbgcLmgcLmhpMapper.selectSdYfData(proname,htd,fbgc,String.valueOf(jjgLqsSd.getZhq()),String.valueOf(jjgLqsSd.getZhz())));
                 }
             }
 
@@ -172,8 +172,8 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
             List<Map<String,String>> hpqlzfdata = new ArrayList<>();
             if (jjgLqsQlzf.size()>0){
                 for (JjgLqsQl jjgLqsQl : jjgLqsQlzf) {
-                    hpqlzfdata.addAll(jjgFbgcLmgcLmhpMapper.selectQlZfData(proname,htd,fbgc,jjgLqsQl.getZhq(),jjgLqsQl.getZhz()));
-                    allData.addAll(jjgFbgcLmgcLmhpMapper.selectQlZfData(proname,htd,fbgc,jjgLqsQl.getZhq(),jjgLqsQl.getZhz()));
+                    hpqlzfdata.addAll(jjgFbgcLmgcLmhpMapper.selectQlZfData(proname,htd,fbgc,String.valueOf(jjgLqsQl.getZhq()),String.valueOf(jjgLqsQl.getZhz())));
+                    allData.addAll(jjgFbgcLmgcLmhpMapper.selectQlZfData(proname,htd,fbgc,String.valueOf(jjgLqsQl.getZhq()),String.valueOf(jjgLqsQl.getZhz())));
                 }
             }
 
@@ -181,8 +181,8 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
             List<Map<String,String>> hpqlyfdata = new ArrayList<>();
             if (jjgLqsQlyf.size()>0){
                 for (JjgLqsQl jjgLqsQl : jjgLqsQlyf) {
-                    hpqlyfdata.addAll(jjgFbgcLmgcLmhpMapper.selectQlYfData(proname,htd,fbgc,jjgLqsQl.getZhq(),jjgLqsQl.getZhz()));
-                    allData.addAll(jjgFbgcLmgcLmhpMapper.selectQlYfData(proname,htd,fbgc,jjgLqsQl.getZhq(),jjgLqsQl.getZhz()));
+                    hpqlyfdata.addAll(jjgFbgcLmgcLmhpMapper.selectQlYfData(proname,htd,fbgc,String.valueOf(jjgLqsQl.getZhq()),String.valueOf(jjgLqsQl.getZhz())));
+                    allData.addAll(jjgFbgcLmgcLmhpMapper.selectQlYfData(proname,htd,fbgc,String.valueOf(jjgLqsQl.getZhq()),String.valueOf(jjgLqsQl.getZhz())));
                 }
             }
 
@@ -385,7 +385,7 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
             //创建文件根目录
             fdir.mkdirs();
         }
-        File directory = new File("service-system/src/main/resources/static");
+        File directory = new File("src/main/resources/static");
         String reportPath = directory.getCanonicalPath();
         String path = reportPath + File.separator + "横坡.xlsx";
         Files.copy(Paths.get(path), new FileOutputStream(f));
@@ -652,8 +652,8 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
                             mapljx.put("proname", data.get(0).getProname());
                             mapljx.put("htd", data.get(0).getHtd());
                             mapljx.put("fbgc", data.get(0).getFbgc());
-                            mapljx.put("zhq", qlzfzhdata.get(0).getZhq());
-                            mapljx.put("zhz", qlzfzhdata.get(0).getZhz());
+                            mapljx.put("zhq", String.valueOf(qlzfzhdata.get(0).getZhq()));
+                            mapljx.put("zhz", String.valueOf(qlzfzhdata.get(0).getZhz()));
                             mapljx.put("zy", qlzfzhdata.get(0).getBz());
                             mapljx.put("wz", df);
                             mapljx.put("lxlx", lxlx);
@@ -676,8 +676,8 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
                             mapzdql.put("proname", data.get(0).getProname());
                             mapzdql.put("htd", data.get(0).getHtd());
                             mapzdql.put("fbgc", data.get(0).getFbgc());
-                            mapzdql.put("zhq", sdzfzhdata.get(0).getZhq());
-                            mapzdql.put("zhz", sdzfzhdata.get(0).getZhz());
+                            mapzdql.put("zhq", String.valueOf(sdzfzhdata.get(0).getZhq()));
+                            mapzdql.put("zhz", String.valueOf(sdzfzhdata.get(0).getZhz()));
                             mapzdql.put("zy", sdzfzhdata.get(0).getZdbz());
                             mapzdql.put("wz", df);
                             mapzdql.put("lxlx", lxlx);
@@ -745,8 +745,8 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
                             mapzd.put("proname", data.get(0).getProname());
                             mapzd.put("htd", data.get(0).getHtd());
                             mapzd.put("fbgc", data.get(0).getFbgc());
-                            mapzd.put("zhq", qlzfzhdata.get(0).getZhq());
-                            mapzd.put("zhz", qlzfzhdata.get(0).getZhz());
+                            mapzd.put("zhq", String.valueOf(qlzfzhdata.get(0).getZhq()));
+                            mapzd.put("zhz", String.valueOf(qlzfzhdata.get(0).getZhz()));
                             mapzd.put("zy", qlzfzhdata.get(0).getBz());
                             mapzd.put("wz", df);
                             mapzd.put("lxlx", lxlx);
@@ -771,8 +771,8 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
                             mapzdql.put("proname", data.get(0).getProname());
                             mapzdql.put("htd", data.get(0).getHtd());
                             mapzdql.put("fbgc", data.get(0).getFbgc());
-                            mapzdql.put("zhq", sdzfzhdata.get(0).getZhq());
-                            mapzdql.put("zhz", sdzfzhdata.get(0).getZhz());
+                            mapzdql.put("zhq", String.valueOf(sdzfzhdata.get(0).getZhq()));
+                            mapzdql.put("zhz", String.valueOf(sdzfzhdata.get(0).getZhz()));
                             mapzdql.put("zy", sdzfzhdata.get(0).getZdbz());
                             mapzdql.put("wz", df);
                             mapzdql.put("lx", lq);
@@ -792,9 +792,6 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
             List<Map<String, String>> maps = convertListToMapList(data);
             List<Map<String, String>> diffql = diff(maps, queryqldata);
             diff.addAll(diff(diffql, querysddata));
-            System.out.println(maps);
-            System.out.println(queryqldata);
-            System.out.println(diff(diffql, querysddata));
             return new MultipleLists(queryqldata,querysddata,diff);
         }
     }
@@ -1163,9 +1160,8 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
     public List<Map<String, String>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
         List<Map<String, String>> mapList = new ArrayList<>();
-        List<Map<String,String>> mclist = jjgFbgcLmgcLmhpMapper.selectlx(proname,htd,fbgc);
+        List<Map<String,String>> mclist = jjgFbgcLmgcLmhpMapper.selectlx(proname,htd);
         if (mclist.size()>0){
             for (Map<String, String> m : mclist) {
                 for (String k : m.keySet()){
@@ -1189,7 +1185,7 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
      * @throws IOException
      */
     private List<Map<String, String>> looksdjdb(String proname, String htd, String mc) throws IOException {
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         File f;
         if (mc.equals("主线")){
@@ -1214,6 +1210,7 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
                         slSheet.getRow(0).getCell(14).setCellType(CellType.STRING);//总点数
                         slSheet.getRow(0).getCell(16).setCellType(CellType.STRING);//合格点数
                         slSheet.getRow(0).getCell(18).setCellType(CellType.STRING);//合格率
+                        slSheet.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率
                         double zds = Double.valueOf(slSheet.getRow(0).getCell(14).getStringCellValue());
                         double hgds = Double.valueOf(slSheet.getRow(0).getCell(16).getStringCellValue());
                         double hgl = Double.valueOf(slSheet.getRow(0).getCell(18).getStringCellValue());
@@ -1221,6 +1218,7 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
                         String hgdsz1 = decf.format(hgds);
                         String hglz1 = df.format(hgl);
                         map.put("检测项目", mc);
+                        map.put("允许偏差", slSheet.getRow(6).getCell(9).getStringCellValue());
                         map.put("路面类型", wb.getSheetName(j));
                         map.put("检测点数", zdsz1);
                         map.put("合格点数", hgdsz1);
@@ -1276,7 +1274,7 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
 
     @Override
     public List<Map<String, String>> selectmc(String proname, String htd, String fbgc) {
-        List<Map<String,String>> sdmclist = jjgFbgcLmgcLmhpMapper.selectlx(proname,htd,fbgc);
+        List<Map<String,String>> sdmclist = jjgFbgcLmgcLmhpMapper.selectlx(proname,htd);
         return sdmclist;
     }
 }

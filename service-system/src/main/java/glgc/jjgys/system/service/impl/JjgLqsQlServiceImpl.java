@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -72,5 +73,11 @@ public class JjgLqsQlServiceImpl extends ServiceImpl<JjgLqsQlMapper, JjgLqsQl> i
         String fileName = proname+"桥梁清单";
         String sheetName = "桥梁清单";
         ExcelUtil.writeExcelWithSheets(response, null, fileName, sheetName, new QlVo()).finish();
+    }
+
+    @Override
+    public List<JjgLqsQl> getqlName(String proname, String htd) {
+        List<JjgLqsQl> list = jjgLqsQlMapper.getqlName(proname,htd);
+        return list;
     }
 }

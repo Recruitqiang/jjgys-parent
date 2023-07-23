@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -180,6 +181,21 @@ public class SysRoleServiceTest {
     @Autowired
     private JjgFbgcSdgcSdhntlmhdzxfService jjgFbgcSdgcSdhntlmhdzxfService;
 
+    @Autowired
+    private JjgZdhMcxsService jjgZdhMcxsService;
+
+    @Autowired
+    private JjgZdhGzsdService jjgZdhGzsdService;
+
+    @Autowired
+    private JjgZdhPzdService jjgZdhPzdService;
+
+    @Autowired
+    private JjgZdhLdhdService jjgZdhLdhdService;
+
+    @Autowired
+    private JjgFbgcGenerateTablelService jjgFbgcGenerateTablelService;
+
 
 
     @Test
@@ -190,7 +206,15 @@ public class SysRoleServiceTest {
         CommonInfoVo commonInfoVo = new CommonInfoVo();
         commonInfoVo.setProname("陕西高速");
         commonInfoVo.setHtd("LJ-1");
-        commonInfoVo.setFbgc("隧道工程");
+        commonInfoVo.setSjz("22");
+        commonInfoVo.setFbgc("路基土石方");
+        /*commonInfoVo.setSjz("22");
+        /*commonInfoVo.setSjz("22");
+        commonInfoVo.setQlsjz("10");
+        commonInfoVo.setSdsjz("10");
+        commonInfoVo.setFhlmsjz("10");*/
+        //commonInfoVo.setFbgc("路面工程");
+
 
         /*QueryWrapper<JjgFbgcJtaqssJabx> wrapper=new QueryWrapper<>();
         wrapper.like("proname","陕西高速");
@@ -199,12 +223,17 @@ public class SysRoleServiceTest {
         wrapper.orderByDesc("wz","hdscz1");
         List<JjgFbgcJtaqssJabx> data = jjgFbgcJtaqssJabxMapper.selectList(wrapper);
         jjgFbgcJtaqssJabxService.bxnfsxs(data);*/
-        //jjgFbgcSdgcSdhntlmhdzxfService.generateJdb(commonInfoVo);
-        List<Map<String, Object>> maps = jjgFbgcSdgcLmssxsService.lookJdbjg(commonInfoVo);
+        //jjgFbgcSdgcGssdlqlmhdzxfService.generateJdb(commonInfoVo);
 
+        jjgFbgcGenerateTablelService.generateBGZBG("陕西高速");
+
+
+        //List<Map<String, Object>> maps = jjgFbgcSdgcGssdlqlmhdzxfService.lookJdbjg(commonInfoVo);
+        //jjgFbgcSdgcZtkdService.generateJdb(commonInfoVo);
         //jjgFbgcLjgcLjcjService.generateJdb(commonInfoVo);
-        //List<Map<String, Object>> maps = jjgFbgcLjgcLjcjService.lookJdbjg(commonInfoVo);
-        System.out.println(maps);
+        //List<Map<String, Object>> maps = jjgFbgcLjgcLjtsfysdHtService.lookJdbjg(commonInfoVo);
+        //System.out.println(maps);
     }
+
 
 }

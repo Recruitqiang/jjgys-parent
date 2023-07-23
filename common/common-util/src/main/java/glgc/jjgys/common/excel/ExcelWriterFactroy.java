@@ -19,8 +19,7 @@ public class ExcelWriterFactroy extends ExcelWriter {
         this.outputStream = outputStream;
     }
 
-    public ExcelWriterFactroy write(List<? extends BaseRowModel> list, String sheetName,
-                                    BaseRowModel object) {
+    public ExcelWriterFactroy write(List<? extends BaseRowModel> list, String sheetName, BaseRowModel object) {
         this.sheetNo++;
         try {
             Sheet sheet = new Sheet(sheetNo, 0, object.getClass());

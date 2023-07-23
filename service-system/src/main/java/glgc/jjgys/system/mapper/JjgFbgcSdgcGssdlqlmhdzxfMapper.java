@@ -34,4 +34,6 @@ public interface JjgFbgcSdgcGssdlqlmhdzxfMapper extends BaseMapper<JjgFbgcSdgcGs
     List<JjgFbgcSdgcGssdlqlmhdzxf> selectqlyf(String proname, String htd, String fbgc, String sdmc);
 
     List<JjgFbgcSdgcGssdlqlmhdzxf> selectzd(String proname, String htd, String fbgc, String sdmc);
+
+    List<Map<String, Object>> selectsdmc1(String proname, String htd);
 }

@@ -27,4 +27,6 @@ public interface JjgFbgcLjgcLjcjService extends IService<JjgFbgcLjgcLjcj> {
     void exportljcj(HttpServletResponse response);
 
     void importljcj(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    List<String> selectyxps(String proname, String htd);
 }

@@ -5,6 +5,8 @@ import glgc.jjgys.model.project.JjgFbgcLjgcHdjgcc;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -17,4 +19,5 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface JjgFbgcLjgcHdjgccMapper extends BaseMapper<JjgFbgcLjgcHdjgcc> {
 
+    List<String> selectyxps(String proname, String htd);
 }

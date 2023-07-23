@@ -27,4 +27,6 @@ public interface JjgFbgcJtaqssJathldmccService extends IService<JjgFbgcJtaqssJat
     void exportjathldmcc(HttpServletResponse response);
 
     void importjathldmcc(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    List<Map<String, Object>> selectyxpc(String proname, String htd);
 }

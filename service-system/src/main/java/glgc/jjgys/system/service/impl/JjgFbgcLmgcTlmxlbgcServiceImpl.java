@@ -317,11 +317,10 @@ public class JjgFbgcLmgcTlmxlbgcServiceImpl extends ServiceImpl<JjgFbgcLmgcTlmxl
 
     @Override
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
         String title = "混凝土路面相邻板高差质量鉴定表";
         String sheetname = "相邻板高差";
 
@@ -338,12 +337,15 @@ public class JjgFbgcLmgcTlmxlbgcServiceImpl extends ServiceImpl<JjgFbgcLmgcTlmxl
             List<Map<String, Object>> mapList = new ArrayList<>();
             Map<String, Object> jgmap = new HashMap<>();
 
-            if (proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())) {
+            if (proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString())) {
                 //获取到最后一行
                 int lastRowNum = slSheet.getLastRowNum();
                 slSheet.getRow(lastRowNum).getCell(3).setCellType(CellType.STRING);//总点数
                 slSheet.getRow(lastRowNum).getCell(5).setCellType(CellType.STRING);//合格点数
                 slSheet.getRow(lastRowNum).getCell(7).setCellType(CellType.STRING);//合格率
+                slSheet.getRow(3).getCell(2).setCellType(CellType.STRING);//合格率
+                slSheet.getRow(lastRowNum).getCell(8).setCellType(CellType.STRING);
+                slSheet.getRow(lastRowNum).getCell(9).setCellType(CellType.STRING);
                 double zds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(3).getStringCellValue());
                 double hgds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(5).getStringCellValue());
                 double hgl = Double.valueOf(slSheet.getRow(lastRowNum).getCell(7).getStringCellValue());
@@ -351,15 +353,19 @@ public class JjgFbgcLmgcTlmxlbgcServiceImpl extends ServiceImpl<JjgFbgcLmgcTlmxl
                 String hgdsz1 = decf.format(hgds);
                 String hglz1 = df.format(hgl);
                 jgmap.put("总点数", zdsz1);
+                jgmap.put("规定值", slSheet.getRow(3).getCell(2).getStringCellValue());
                 jgmap.put("合格点数", hgdsz1);
                 jgmap.put("合格率", hglz1);
+                jgmap.put("max", slSheet.getRow(lastRowNum).getCell(8).getStringCellValue());
+                jgmap.put("min", slSheet.getRow(lastRowNum).getCell(9).getStringCellValue());
                 mapList.add(jgmap);
-            }else {
+            }/*else {
                 jgmap.put("总点数", 0);
+                jgmap.put("规定值", 0);
                 jgmap.put("合格点数", 0);
                 jgmap.put("合格率", 0);
                 mapList.add(jgmap);
-            }
+            }*/
             return mapList;
 
         }

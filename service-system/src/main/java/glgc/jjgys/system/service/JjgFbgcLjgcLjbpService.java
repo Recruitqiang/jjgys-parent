@@ -31,4 +31,6 @@ public interface JjgFbgcLjgcLjbpService extends IService<JjgFbgcLjgcLjbp> {
     void exportljbp(HttpServletResponse response) throws IOException;
 
     void importljbp(MultipartFile file, CommonInfoVo commonInfoVo) throws IOException, ParseException;
+
+    List<String> selectyxps(String proname, String htd);
 }

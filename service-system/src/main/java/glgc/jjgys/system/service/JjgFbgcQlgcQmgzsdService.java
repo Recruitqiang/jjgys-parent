@@ -6,6 +6,7 @@ import glgc.jjgys.model.projectvo.ljgc.CommonInfoVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -29,4 +30,6 @@ public interface JjgFbgcQlgcQmgzsdService extends IService<JjgFbgcQlgcQmgzsd> {
     void importqmgzsd(MultipartFile file, CommonInfoVo commonInfoVo);
 
     List<Map<String, Object>> selectqlmc(String proname, String htd, String fbgc);
+
+    List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo, String value) throws IOException;
 }

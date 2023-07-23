@@ -31,4 +31,6 @@ public interface JjgFbgcQlgcQmhpService extends IService<JjgFbgcQlgcQmhp> {
     void importqmhp(MultipartFile file, CommonInfoVo commonInfoVo);
 
     List<Map<String, Object>> selectqlmc(String proname, String htd, String fbgc);
+
+    List<Map<String, Object>> lookJdb(CommonInfoVo commonInfoVo, String value) throws IOException;
 }

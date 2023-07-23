@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.ManagedBean;
+import java.util.List;
 
 /**
  * <p>
@@ -19,4 +20,5 @@ import javax.annotation.ManagedBean;
 @Mapper
 public interface JjgFbgcLjgcLjbpMapper extends BaseMapper<JjgFbgcLjgcLjbp> {
 
+    List<String> selectyxps(String proname, String htd);
 }

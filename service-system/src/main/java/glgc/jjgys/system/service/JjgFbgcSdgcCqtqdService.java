@@ -28,4 +28,8 @@ public interface JjgFbgcSdgcCqtqdService extends IService<JjgFbgcSdgcCqtqd> {
     void exportsdcqtqd(HttpServletResponse response);
 
     void importsdcqtsd(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo);
+
+    List<Map<String, Object>> getsdnum(String proname, String htd);
 }

@@ -5,6 +5,8 @@ import glgc.jjgys.model.project.JjgFbgcJtaqssJabz;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 /**
  * <p>
  *  Mapper 接口
@@ -17,4 +19,5 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface JjgFbgcJtaqssJabzMapper extends BaseMapper<JjgFbgcJtaqssJabz> {
 
+    Map<String, Object> selectchs(String proname, String htd);
 }

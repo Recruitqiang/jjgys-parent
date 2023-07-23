@@ -22,4 +22,7 @@ public interface JjgFbgcQlgcQmhpMapper extends BaseMapper<JjgFbgcQlgcQmhp> {
 
     List<Map<String,Object>> selectzh(String proname, String htd, String fbgc,String qlmc);
 
+    List<Map<String, Object>> selectqlmc2(String proname, String htd);
+
+    List<Map<String, Object>> selectzh2(String proname, String htd, String qlmc);
 }

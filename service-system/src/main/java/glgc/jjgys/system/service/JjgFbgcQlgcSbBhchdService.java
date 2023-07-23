@@ -46,5 +46,5 @@ public interface JjgFbgcQlgcSbBhchdService extends IService<JjgFbgcQlgcSbBhchd> 
     String[] analysisOffset(String offset);
 
 
-
+    List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo);
 }

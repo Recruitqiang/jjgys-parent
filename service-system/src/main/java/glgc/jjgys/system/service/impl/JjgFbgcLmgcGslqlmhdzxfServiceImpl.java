@@ -885,7 +885,7 @@ public class JjgFbgcLmgcGslqlmhdzxfServiceImpl extends ServiceImpl<JjgFbgcLmgcGs
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
 
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "22沥青路面厚度-钻芯法.xlsx");
         if (!f.exists()) {
@@ -911,6 +911,18 @@ public class JjgFbgcLmgcGslqlmhdzxfServiceImpl extends ServiceImpl<JjgFbgcLmgcGs
                         slSheet.getRow(lastRowNum).getCell(16).setCellType(CellType.STRING);//合格点数
                         slSheet.getRow(lastRowNum).getCell(18).setCellType(CellType.STRING);//合格率
 
+                        slSheet.getRow(6).getCell(7).setCellType(CellType.STRING);
+                        slSheet.getRow(6).getCell(16).setCellType(CellType.STRING);
+
+                        slSheet.getRow(lastRowNum-1).getCell(7).setCellType(CellType.STRING);
+                        slSheet.getRow(lastRowNum-1).getCell(16).setCellType(CellType.STRING);
+
+                        slSheet.getRow(lastRowNum-1).getCell(23).setCellType(CellType.STRING);
+                        slSheet.getRow(lastRowNum-1).getCell(24).setCellType(CellType.STRING);
+                        slSheet.getRow(lastRowNum-1).getCell(25).setCellType(CellType.STRING);
+                        slSheet.getRow(lastRowNum-1).getCell(26).setCellType(CellType.STRING);
+
+
                         double zds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(5).getStringCellValue());
                         double hgds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(7).getStringCellValue());
                         double hgl = Double.valueOf(slSheet.getRow(lastRowNum).getCell(9).getStringCellValue());
@@ -925,9 +937,20 @@ public class JjgFbgcLmgcGslqlmhdzxfServiceImpl extends ServiceImpl<JjgFbgcLmgcGs
                         map.put("上面层厚度检测点数", zdsz1);
                         map.put("上面层厚度合格点数", hgdsz1);
                         map.put("上面层厚度合格率", hglz1);
+                        map.put("上面层设计值", slSheet.getRow(6).getCell(7).getStringCellValue());
+                        map.put("上面层代表值", slSheet.getRow(lastRowNum-1).getCell(7).getStringCellValue());
+
+                        map.put("上面层平均值最大值", slSheet.getRow(lastRowNum-1).getCell(23).getStringCellValue());
+                        map.put("上面层平均值最小值", slSheet.getRow(lastRowNum-1).getCell(24).getStringCellValue());
+
                         map.put("总厚度检测点数", decf.format(zds1));
                         map.put("总厚度合格点数", decf.format(hgds1));
                         map.put("总厚度合格率", df.format(hgl1));
+                        map.put("总厚度设计值", slSheet.getRow(6).getCell(16).getStringCellValue());
+                        map.put("总厚度代表值", slSheet.getRow(lastRowNum-1).getCell(16).getStringCellValue());
+
+                        map.put("总厚度平均值最大值", slSheet.getRow(lastRowNum-1).getCell(25).getStringCellValue());
+                        map.put("总厚度平均值最小值", slSheet.getRow(lastRowNum-1).getCell(26).getStringCellValue());
                     }
                     jgmap.add(map);
 

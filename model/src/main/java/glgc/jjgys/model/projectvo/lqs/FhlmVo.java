@@ -23,8 +23,16 @@ public class FhlmVo extends BaseRowModel {
     private String htd;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "桩号" ,index = 2)
-    private String zh;
+    @ExcelProperty(value = "路幅" ,index = 2)
+    private String lf;
+
+    @ColumnWidth(23)
+    @ExcelProperty(value = "桩号起" ,index = 3)
+    private String zhq;
+
+    @ColumnWidth(23)
+    @ExcelProperty(value = "桩号止" ,index = 4)
+    private String zhz;
 
     @ColumnWidth(23)
     @ExcelProperty(value = "路面全长（m）" ,index = 3)

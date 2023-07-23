@@ -6,4 +6,8 @@
         SELECT COUNT(*) num from jjg_fbgc_qlgc_sb_tqd where proname = #{proname} and htd = #{htd} and fbgc = #{fbgc} GROUP BY qlmc
     </select>
 
+    <select id="getqlName" resultType="java.util.Map" parameterType="java.lang.String">
+        select DISTINCT(qlmc) qlmc FROM jjg_fbgc_qlgc_sb_tqd where proname = #{proname} and htd = #{htd}
+    </select>
+
 </mapper>

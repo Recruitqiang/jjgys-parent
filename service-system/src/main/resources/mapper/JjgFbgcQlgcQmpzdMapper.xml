@@ -6,4 +6,8 @@
         SELECT DISTINCT qm from jjg_fbgc_qlgc_qmpzd  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
     </select>
 
+    <select id="selectqlmc2" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT qm from jjg_fbgc_qlgc_qmpzd  where proname = #{proname} and htd = #{htd}
+    </select>
+
 </mapper>

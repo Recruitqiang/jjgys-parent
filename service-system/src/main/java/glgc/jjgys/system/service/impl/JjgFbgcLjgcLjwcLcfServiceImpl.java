@@ -723,7 +723,6 @@ public class JjgFbgcLjgcLjwcLcfServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcLc
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
         String title = "弯沉质量鉴定结果汇总表";
         String sheetname = "评定单元";
         //获取鉴定表文件
@@ -740,16 +739,18 @@ public class JjgFbgcLjgcLjwcLcfServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcLc
             XSSFCell hd = slSheet.getRow(2).getCell(2);//分布工程名
             List<Map<String, Object>> mapList = new ArrayList<>();
             Map<String, Object> jgmap = new HashMap<>();
-            DecimalFormat df = new DecimalFormat(".00");
+            DecimalFormat df = new DecimalFormat("0.00");
             DecimalFormat decf = new DecimalFormat("0.##");
-            if (proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())) {
+            if (proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString())) {
                 int lastRowNum = slSheet.getLastRowNum();
                 slSheet.getRow(lastRowNum).getCell(4).setCellType(CellType.STRING);//检测单元数
                 slSheet.getRow(lastRowNum).getCell(6).setCellType(CellType.STRING);//合格单元
                 slSheet.getRow(lastRowNum).getCell(8).setCellType(CellType.STRING);//合格率
+                slSheet.getRow(5).getCell(5).setCellType(CellType.STRING);//合格率
                 jgmap.put("检测单元数", decf.format(Double.valueOf(slSheet.getRow(lastRowNum).getCell(4).getStringCellValue())));
                 jgmap.put("合格单元数", decf.format(Double.valueOf(slSheet.getRow(lastRowNum).getCell(6).getStringCellValue())));
                 jgmap.put("合格率", df.format(Double.valueOf(slSheet.getRow(lastRowNum).getCell(8).getStringCellValue())));
+                jgmap.put("规定值", slSheet.getRow(5).getCell(5).getStringCellValue());
                 mapList.add(jgmap);
                 return mapList;
 

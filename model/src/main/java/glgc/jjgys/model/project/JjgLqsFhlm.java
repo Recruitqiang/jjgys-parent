@@ -28,9 +28,17 @@ public class JjgLqsFhlm {
     @TableField("htd")
     private String htd;
 
-    @ApiModelProperty(value = "桩号")
-    @TableField("zh")
-    private String zh;
+    @ApiModelProperty(value = "路幅")
+    @TableField("lf")
+    private String lf;
+
+    @ApiModelProperty(value = "桩号起")
+    @TableField("zhq")
+    private Double zhq;
+
+    @ApiModelProperty(value = "桩号止")
+    @TableField("zhz")
+    private Double zhz;
 
     @ApiModelProperty(value = "路面全长")
     @TableField("lmqc")

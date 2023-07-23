@@ -31,4 +31,6 @@ public interface JjgFbgcJtaqssJabxService extends IService<JjgFbgcJtaqssJabx> {
     void bxnfsxs(List<JjgFbgcJtaqssJabx> data) throws IOException, ParseException;
 
     List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException;
+
+    Map<String, Object> selectchs(String proname, String htd);
 }

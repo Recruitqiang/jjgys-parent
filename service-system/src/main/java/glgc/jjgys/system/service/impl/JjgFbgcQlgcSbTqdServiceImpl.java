@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import glgc.jjgys.common.excel.ExcelUtil;
 import glgc.jjgys.model.project.JjgFbgcLjgcHdgqd;
 import glgc.jjgys.model.project.JjgFbgcQlgcSbTqd;
+import glgc.jjgys.model.project.JjgLqsQl;
 import glgc.jjgys.model.projectvo.ljgc.CommonInfoVo;
 import glgc.jjgys.model.projectvo.ljgc.JjgFbgcLjgcHdgqdVo;
 import glgc.jjgys.model.projectvo.qlgc.JjgFbgcQlgcSbTqdVo;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -517,7 +519,11 @@ public class JjgFbgcQlgcSbTqdServiceImpl extends ServiceImpl<JjgFbgcQlgcSbTqdMap
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        List<Map<String,Object>> mapList = new ArrayList<>();
+        Map<String,Object> jgmap = new HashMap<>();
+        //String fbgc = commonInfoVo.getFbgc();
         String title = "混凝土强度质量鉴定表（回弹法）";
         String sheetname = "原始数据";
         //获取鉴定表文件
@@ -525,14 +531,27 @@ public class JjgFbgcQlgcSbTqdServiceImpl extends ServiceImpl<JjgFbgcQlgcSbTqdMap
         if(!f.exists()){
             return null;
         }else {
-            Map<String,Object> map = new HashMap<>();
-            map.put("proname",proname);
-            map.put("title",title);
-            map.put("htd",htd);
-            map.put("fbgc",fbgc);
-            map.put("f",f);
-            map.put("sheetname",sheetname);
-            List<Map<String, Object>> mapList = JjgFbgcCommonUtils.gettqdjcjg(map);
+            //创建工作簿
+            XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(f));
+            XSSFSheet slSheet = wb.getSheet(sheetname);
+            slSheet.getRow(2).getCell(34).setCellType(CellType.STRING);
+            slSheet.getRow(2).getCell(35).setCellType(CellType.STRING);
+            slSheet.getRow(2).getCell(36).setCellType(CellType.STRING);
+            String bt = slSheet.getRow(0).getCell(0).getStringCellValue();//混凝土强度质量鉴定表（回弹法）
+            String xmname = slSheet.getRow(1).getCell(2).getStringCellValue();//陕西高速
+            String htdname = slSheet.getRow(1).getCell(29).getStringCellValue();//LJ-1
+            if (proname.equals(xmname) && htd.equals(htdname)) {
+                double zds= Double.valueOf(slSheet.getRow(2).getCell(34).getStringCellValue());
+                double hgds= Double.valueOf(slSheet.getRow(2).getCell(35).getStringCellValue());
+                double hgl= Double.valueOf(slSheet.getRow(2).getCell(36).getStringCellValue());
+                String zdsz = decf.format(zds);
+                String hgdsz = decf.format(hgds);
+                String hglz = df.format(hgl);
+                jgmap.put("总点数",zdsz);
+                jgmap.put("合格点数",hgdsz);
+                jgmap.put("合格率",hglz);
+                mapList.add(jgmap);
+            }
             return mapList;
         }
     }
@@ -574,5 +593,67 @@ public class JjgFbgcQlgcSbTqdServiceImpl extends ServiceImpl<JjgFbgcQlgcSbTqdMap
         }
 
 
+    }
+
+    @Override
+    public List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo) {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String sheetname = "原始数据";
+        DecimalFormat decf = new DecimalFormat("0.##");
+        //获取鉴定表文件
+        File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "29桥梁上部砼强度.xlsx");
+        if (!f.exists()) {
+            return null;
+        }else {
+            List<Map<String, Object>> data = new ArrayList<>();
+
+            try (FileInputStream fis = new FileInputStream(f)) {
+                Workbook workbook = WorkbookFactory.create(fis);
+                Sheet sheet = workbook.getSheet(sheetname); // 假设数据在第一个工作表中
+
+                Iterator<Row> rowIterator = sheet.iterator();
+                int rowNum = 0;
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
+                    rowNum++;
+                    if (rowNum > 4 && row !=null) {
+                        Cell cell0 = row.getCell(0);
+                        Cell cell34 = row.getCell(34);
+                        Cell cell35 = row.getCell(35);
+                        Cell cell31 = row.getCell(31);
+
+                        if (cell0 != null && cell34 != null) {
+                            String cellValue0 = cell0.getStringCellValue();
+                            cell31.setCellType(CellType.STRING);
+                            String cellValue31 = cell31.getStringCellValue();
+                            String cellValue34 = String.valueOf(decf.format(cell34.getNumericCellValue()));
+                            String cellValue35 = String.valueOf(decf.format(cell35.getNumericCellValue()));
+
+                            if (!cellValue0.isEmpty() && !cellValue34.isEmpty()) {
+                                Map map = new HashMap();
+                                map.put("qlmc",cellValue0);
+                                map.put("zds",cellValue34);
+                                map.put("hgds",cellValue35);
+                                map.put("sjqd",cellValue31);
+
+                                data.add(map);
+                            }
+
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return data;
+
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> getqlname(String proname, String htd) {
+        List<Map<String, Object>> list = jjgFbgcQlgcSbTqdMapper.getqlName(proname,htd);
+        return list;
     }
 }

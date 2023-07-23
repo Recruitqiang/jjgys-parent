@@ -1098,7 +1098,7 @@ public class JjgFbgcLmgcLqlmysdServiceImpl extends ServiceImpl<JjgFbgcLmgcLqlmys
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "12沥青路面压实度.xlsx");
         if (!f.exists()) {
@@ -1118,16 +1118,26 @@ public class JjgFbgcLmgcLqlmysdServiceImpl extends ServiceImpl<JjgFbgcLmgcLqlmys
                         slSheet.getRow(lastRowNum-2).getCell(6).setCellType(CellType.STRING);//总点数
                         slSheet.getRow(lastRowNum-1).getCell(6).setCellType(CellType.STRING);//合格点数
                         slSheet.getRow(lastRowNum).getCell(6).setCellType(CellType.STRING);//合格率
+                        slSheet.getRow(lastRowNum-1).getCell(2).setCellType(CellType.STRING);//合格率
+                        slSheet.getRow(lastRowNum-2).getCell(16).setCellType(CellType.STRING);
+                        slSheet.getRow(lastRowNum-1).getCell(16).setCellType(CellType.STRING);
+                        slSheet.getRow(lastRowNum).getCell(4).setCellType(CellType.STRING);
                         double zds = Double.valueOf(slSheet.getRow(lastRowNum-2).getCell(6).getStringCellValue());
                         double hgds = Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(6).getStringCellValue());
                         double hgl = Double.valueOf(slSheet.getRow(lastRowNum).getCell(6).getStringCellValue());
+                        double gdz = Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(2).getStringCellValue());
                         String zdsz1 = decf.format(zds);
                         String hgdsz1 = decf.format(hgds);
                         String hglz1 = df.format(hgl);
+                        String gdz1 = df.format(gdz);
                         map.put("路面类型", wb.getSheetName(j));
+                        map.put("规定值", gdz1);
                         map.put("检测点数", zdsz1);
                         map.put("合格点数", hgdsz1);
                         map.put("合格率", hglz1);
+                        map.put("最大值", slSheet.getRow(lastRowNum-2).getCell(16).getStringCellValue());
+                        map.put("最小值", slSheet.getRow(lastRowNum-1).getCell(16).getStringCellValue());
+                        map.put("代表值", slSheet.getRow(lastRowNum).getCell(4).getStringCellValue());
                     }
                     jgmap.add(map);
 

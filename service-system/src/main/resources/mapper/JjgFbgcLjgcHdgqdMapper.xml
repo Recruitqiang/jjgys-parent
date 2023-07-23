@@ -5,4 +5,12 @@
         select DISTINCT(zh) FROM jjg_fbgc_ljgc_hdgqd where proname = #{proname} and htd = #{htd}
     </select>
 
+    <select id="selectsjqd" resultType="java.lang.String" parameterType="java.lang.String">
+        select DISTINCT(sjqd) FROM jjg_fbgc_ljgc_hdgqd where proname = #{proname} and htd = #{htd}
+    </select>
+
+    <select id="selectchs" resultType="java.util.Map" parameterType="java.lang.String">
+        select COUNT(DISTINCT(zh)) ccs FROM jjg_fbgc_ljgc_hdgqd where proname = #{proname} and htd = #{htd}
+    </select>
+
 </mapper>

@@ -34,4 +34,8 @@ public interface JjgFbgcLjgcHdgqdService extends IService<JjgFbgcLjgcHdgqd> {
     List<Map<String,Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException;
 
     void calculateSheet(XSSFSheet sheet);
+
+    List<String> selectsjqd(String proname, String htd);
+
+    Map<String, Object> selectchs(String proname, String htd);
 }

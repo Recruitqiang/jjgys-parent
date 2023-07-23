@@ -16,6 +16,7 @@ import glgc.jjgys.system.service.JjgFbgcSdgcLmssxsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -368,13 +369,13 @@ public class JjgFbgcSdgcLmssxsServiceImpl extends ServiceImpl<JjgFbgcSdgcLmssxsM
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
+        //String fbgc = commonInfoVo.getFbgc();
         String title = "路面渗水系数质量鉴定表";
         //String sheetname = "隧道路面";
 
         List<Map<String, Object>> mapList = new ArrayList<>();
 
-        List<Map<String,Object>> sdmclist = jjgFbgcSdgcLmssxsMapper.selectsdmc(proname,htd,fbgc);
+        List<Map<String,Object>> sdmclist = jjgFbgcSdgcLmssxsMapper.selectsdmc1(proname,htd);
         if (sdmclist.size()>0){
             for (Map<String, Object> m : sdmclist) {
                 for (String k : m.keySet()){
@@ -484,4 +485,49 @@ public class JjgFbgcSdgcLmssxsServiceImpl extends ServiceImpl<JjgFbgcSdgcLmssxsM
         List<Map<String,Object>> sdmclist = jjgFbgcSdgcLmssxsMapper.selectsdmc(proname,htd,fbgc);
         return sdmclist;
     }
+
+    @Override
+    public List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo,String value) throws IOException {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + value);
+        if (!f.exists()) {
+            return null;
+        } else {
+            XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(f));
+            List<Map<String, Object> > jgmap = new ArrayList<>();
+            for (int j = 0; j < wb.getNumberOfSheets(); j++) {
+                if (!wb.isSheetHidden(wb.getSheetIndex(wb.getSheetAt(j)))) {
+                    XSSFSheet slSheet = wb.getSheetAt(j);
+                    XSSFCell bt = slSheet.getRow(0).getCell(0);//标题
+                    XSSFCell xmname = slSheet.getRow(1).getCell(2);//项目名
+                    XSSFCell htdname = slSheet.getRow(1).getCell(8);//合同段名
+                    Map map = new HashMap();
+                    if (proname.equals(xmname.toString()) && htd.equals(htdname.toString())) {
+                        //获取到最后一行
+                        int lastRowNum = slSheet.getLastRowNum();
+                        slSheet.getRow(lastRowNum).getCell(4).setCellType(CellType.STRING);//总点数
+                        slSheet.getRow(lastRowNum).getCell(8).setCellType(CellType.STRING);//合格点数
+                        slSheet.getRow(lastRowNum).getCell(10).setCellType(CellType.STRING);//合格率
+                        slSheet.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率
+                        double zds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(4).getStringCellValue());
+                        double hgds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(8).getStringCellValue());
+                        double hgl = Double.valueOf(slSheet.getRow(lastRowNum).getCell(10).getStringCellValue());
+                        String zdsz1 = decf.format(zds);
+                        String hgdsz1 = decf.format(hgds);
+                        String hglz1 = df.format(hgl);
+                        map.put("检测项目", StringUtils.substringBetween(value, "-", "."));
+                        map.put("路面类型", wb.getSheetName(j));
+                        map.put("检测点数", zdsz1);
+                        map.put("合格点数", hgdsz1);
+                        map.put("合格率", hglz1);
+                        map.put("规定值", slSheet.getRow(6).getCell(9).getStringCellValue());
+                    }
+                    jgmap.add(map);
+                }
+            }
+            return jgmap;
+        }    }
 }

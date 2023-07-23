@@ -29,4 +29,6 @@ public interface JjgFbgcQlgcXbBhchdService extends IService<JjgFbgcQlgcXbBhchd> 
     void export(HttpServletResponse response);
 
     void importbhchd(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo);
 }

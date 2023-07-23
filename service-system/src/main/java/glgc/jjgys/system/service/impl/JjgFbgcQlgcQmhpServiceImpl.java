@@ -16,6 +16,7 @@ import glgc.jjgys.system.service.JjgFbgcQlgcQmhpService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
@@ -406,12 +407,12 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
 
     @Override
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
-        List<Map<String, Object>> selectqlmc = selectqlmc(proname, htd, fbgc);
+        // fbgc = commonInfoVo.getFbgc();
+        List<Map<String, Object>> selectqlmc = selectqlmc2(proname, htd);
 
         List<Map<String, Object>> mapList = new ArrayList<>();
 
@@ -419,9 +420,9 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
             String qlmc = selectqlmc.get(i).get("qlmc").toString();
             File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "35桥面横坡-"+qlmc+".xlsx");
             if (!f.exists()) {
-                return null;
+                continue;
             } else {
-                List<Map<String,Object>> zhlist = jjgFbgcQlgcQmhpMapper.selectzh(proname,htd,fbgc,qlmc);
+                List<Map<String,Object>> zhlist = jjgFbgcQlgcQmhpMapper.selectzh2(proname,htd,qlmc);
                 String zh = zhlist.get(0).get("zh").toString();
                 String lx = zhlist.get(0).get("lmlx").toString().substring(0,2);
                 String lxname;
@@ -445,19 +446,25 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
                         sheetleft.getRow(0).getCell(14).setCellType(CellType.STRING);//总点数
                         sheetleft.getRow(0).getCell(16).setCellType(CellType.STRING);//合格点数
                         sheetleft.getRow(0).getCell(18).setCellType(CellType.STRING);//合格率
+                        sheetleft.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率
 
                         sheetright.getRow(0).getCell(14).setCellType(CellType.STRING);//总点数
                         sheetright.getRow(0).getCell(16).setCellType(CellType.STRING);//合格点数
                         sheetright.getRow(0).getCell(18).setCellType(CellType.STRING);//合格率
+                        sheetright.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率
 
                         Map<String, Object> jgmap = new HashMap<>();
-                        jgmap.put("检测项目",qlmc+sheetnameleft);
+                        jgmap.put("检测项目",qlmc);
+                        jgmap.put("zyf",sheetnameleft);
+                        jgmap.put("yxpc",sheetleft.getRow(6).getCell(9).getStringCellValue());
                         jgmap.put("总点数", decf.format(Double.valueOf(sheetleft.getRow(0).getCell(14).getStringCellValue())));
                         jgmap.put("合格点数", decf.format(Double.valueOf(sheetleft.getRow(0).getCell(16).getStringCellValue())));
                         jgmap.put("合格率", df.format(Double.valueOf(sheetleft.getRow(0).getCell(18).getStringCellValue())));
 
                         Map<String, Object> jgmapright = new HashMap<>();
-                        jgmapright.put("检测项目",qlmc+sheetnameright);
+                        jgmapright.put("检测项目",qlmc);
+                        jgmapright.put("zyf",sheetnameright);
+                        jgmapright.put("yxpc",sheetright.getRow(6).getCell(9).getStringCellValue());
                         jgmapright.put("总点数", decf.format(Double.valueOf(sheetright.getRow(0).getCell(14).getStringCellValue())));
                         jgmapright.put("合格点数", decf.format(Double.valueOf(sheetright.getRow(0).getCell(16).getStringCellValue())));
                         jgmapright.put("合格率", df.format(Double.valueOf(sheetright.getRow(0).getCell(18).getStringCellValue())));
@@ -473,8 +480,11 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
                         sheetl.getRow(0).getCell(14).setCellType(CellType.STRING);//总点数
                         sheetl.getRow(0).getCell(16).setCellType(CellType.STRING);//合格点数
                         sheetl.getRow(0).getCell(18).setCellType(CellType.STRING);//合格率
+                        sheetl.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率
                         Map<String, Object> jgmap = new HashMap<>();
-                        jgmap.put("检测项目",qlmc+lxname);
+                        jgmap.put("检测项目",qlmc);
+                        jgmap.put("zyf",lxname);
+                        jgmap.put("yxpc",sheetl.getRow(6).getCell(9).getStringCellValue());
                         jgmap.put("总点数", decf.format(Double.valueOf(sheetl.getRow(0).getCell(14).getStringCellValue())));
                         jgmap.put("合格点数", decf.format(Double.valueOf(sheetl.getRow(0).getCell(16).getStringCellValue())));
                         jgmap.put("合格率", df.format(Double.valueOf(sheetl.getRow(0).getCell(18).getStringCellValue())));
@@ -527,6 +537,103 @@ public class JjgFbgcQlgcQmhpServiceImpl extends ServiceImpl<JjgFbgcQlgcQmhpMappe
     @Override
     public List<Map<String, Object>> selectqlmc(String proname, String htd, String fbgc) {
         List<Map<String,Object>> qlmclist = jjgFbgcQlgcQmhpMapper.selectqlmc(proname,htd,fbgc);
+        return qlmclist;
+    }
+
+    @Override
+    public List<Map<String, Object>> lookJdb(CommonInfoVo commonInfoVo, String value) throws IOException {
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        //List<Map<String, Object>> selectqlmc = selectqlmc2(proname, htd);
+
+        List<Map<String, Object>> mapList = new ArrayList<>();
+
+        //for (int i=0;i<selectqlmc.size();i++){
+            String qlmc = StringUtils.substringBetween(value, "-", ".");
+            File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + value);
+            if (!f.exists()) {
+                return new ArrayList<>();
+            } else {
+                List<Map<String,Object>> zhlist = jjgFbgcQlgcQmhpMapper.selectzh2(proname,htd,qlmc);
+                String zh = zhlist.get(0).get("zh").toString();
+                String lx = zhlist.get(0).get("lmlx").toString().substring(0,2);
+                String lxname;
+                if (lx.equals("水泥")){
+                    lxname="混凝土桥面";
+                }else {
+                    lxname="沥青桥面";
+
+                }
+                String substring = zh.substring(0, 1);
+                XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+
+                if (substring.equals("Z") || substring.equals("Y")){
+                    String sheetnameleft = lxname+"左幅";
+                    String sheetnameright = lxname+"右幅";
+                    XSSFSheet sheetleft = xwb.getSheet(sheetnameleft);
+                    XSSFSheet sheetright = xwb.getSheet(sheetnameright);
+                    XSSFCell xmnameleft = sheetleft.getRow(1).getCell(2);//项目名
+                    XSSFCell htdnameleft = sheetleft.getRow(1).getCell(8);//合同段名
+                    if (proname.equals(xmnameleft.toString()) && htd.equals(htdnameleft.toString())) {
+                        sheetleft.getRow(0).getCell(14).setCellType(CellType.STRING);//总点数
+                        sheetleft.getRow(0).getCell(16).setCellType(CellType.STRING);//合格点数
+                        sheetleft.getRow(0).getCell(18).setCellType(CellType.STRING);//合格率
+                        sheetleft.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率
+
+                        sheetright.getRow(0).getCell(14).setCellType(CellType.STRING);//总点数
+                        sheetright.getRow(0).getCell(16).setCellType(CellType.STRING);//合格点数
+                        sheetright.getRow(0).getCell(18).setCellType(CellType.STRING);//合格率
+                        sheetright.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率
+
+                        Map<String, Object> jgmap = new HashMap<>();
+                        jgmap.put("检测项目",qlmc);
+                        jgmap.put("zyf",sheetnameleft);
+                        jgmap.put("yxpc",sheetleft.getRow(6).getCell(9).getStringCellValue());
+                        jgmap.put("总点数", decf.format(Double.valueOf(sheetleft.getRow(0).getCell(14).getStringCellValue())));
+                        jgmap.put("合格点数", decf.format(Double.valueOf(sheetleft.getRow(0).getCell(16).getStringCellValue())));
+                        jgmap.put("合格率", df.format(Double.valueOf(sheetleft.getRow(0).getCell(18).getStringCellValue())));
+
+                        Map<String, Object> jgmapright = new HashMap<>();
+                        jgmapright.put("检测项目",qlmc);
+                        jgmapright.put("zyf",sheetnameright);
+                        jgmapright.put("yxpc",sheetright.getRow(6).getCell(9).getStringCellValue());
+                        jgmapright.put("总点数", decf.format(Double.valueOf(sheetright.getRow(0).getCell(14).getStringCellValue())));
+                        jgmapright.put("合格点数", decf.format(Double.valueOf(sheetright.getRow(0).getCell(16).getStringCellValue())));
+                        jgmapright.put("合格率", df.format(Double.valueOf(sheetright.getRow(0).getCell(18).getStringCellValue())));
+                        mapList.add(jgmap);
+                        mapList.add(jgmapright);
+                    }
+                }else {
+                    String sheetname = lxname+"左幅";
+                    XSSFSheet sheetl = xwb.getSheet(sheetname);
+                    XSSFCell xmnameleft = sheetl.getRow(1).getCell(2);//项目名
+                    XSSFCell htdnameleft = sheetl.getRow(1).getCell(8);//合同段名
+                    if (proname.equals(xmnameleft.toString()) && htd.equals(htdnameleft.toString())) {
+                        sheetl.getRow(0).getCell(14).setCellType(CellType.STRING);//总点数
+                        sheetl.getRow(0).getCell(16).setCellType(CellType.STRING);//合格点数
+                        sheetl.getRow(0).getCell(18).setCellType(CellType.STRING);//合格率
+                        sheetl.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率
+                        Map<String, Object> jgmap = new HashMap<>();
+                        jgmap.put("检测项目",qlmc);
+                        jgmap.put("zyf",lxname);
+                        jgmap.put("yxpc",sheetl.getRow(6).getCell(9).getStringCellValue());
+                        jgmap.put("总点数", decf.format(Double.valueOf(sheetl.getRow(0).getCell(14).getStringCellValue())));
+                        jgmap.put("合格点数", decf.format(Double.valueOf(sheetl.getRow(0).getCell(16).getStringCellValue())));
+                        jgmap.put("合格率", df.format(Double.valueOf(sheetl.getRow(0).getCell(18).getStringCellValue())));
+                        mapList.add(jgmap);
+                    }
+                }
+           // }
+
+        }
+        return mapList;
+
+    }
+
+    public List<Map<String, Object>> selectqlmc2(String proname, String htd) {
+        List<Map<String,Object>> qlmclist = jjgFbgcQlgcQmhpMapper.selectqlmc2(proname,htd);
         return qlmclist;
     }
 }

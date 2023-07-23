@@ -429,11 +429,10 @@ public class JjgFbgcLmgcLmssxsServiceImpl extends ServiceImpl<JjgFbgcLmgcLmssxsM
 
     @Override
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
 
         File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "15沥青路面渗水系数.xlsx");
         if (!f.exists()) {
@@ -458,95 +457,136 @@ public class JjgFbgcLmgcLmssxsServiceImpl extends ServiceImpl<JjgFbgcLmgcLmssxsM
             XSSFSheet s4 = wb.getSheet("隧道路面(右幅)");
             XSSFSheet s5 = wb.getSheet("匝道路面");
 
-            if (!lmzfsheet && proname.equals(s1.getRow(1).getCell(2).toString()) && htd.equals(s1.getRow(1).getCell(8).toString()) && fbgc.equals(s1.getRow(2).getCell(2).toString())){
+            if (!lmzfsheet && proname.equals(s1.getRow(1).getCell(2).toString()) && htd.equals(s1.getRow(1).getCell(8).toString())){
                 int sllastRowNum = s1.getLastRowNum();
                 s1.getRow(sllastRowNum).getCell(4).setCellType(CellType.STRING);//检测点数
                 s1.getRow(sllastRowNum).getCell(8).setCellType(CellType.STRING);//合格点数
                 s1.getRow(sllastRowNum).getCell(10).setCellType(CellType.STRING);//合格率（%）
+                s1.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率（%）
+
+                s1.getRow(sllastRowNum).getCell(12).setCellType(CellType.STRING);
+                s1.getRow(sllastRowNum).getCell(13).setCellType(CellType.STRING);
+
                 map1.put("检测项目","沥青路面(左幅)");
+                map1.put("规定值",s1.getRow(6).getCell(9).getStringCellValue());
                 map1.put("检测点数",decf.format(Double.valueOf(s1.getRow(sllastRowNum).getCell(4).getStringCellValue())));
                 map1.put("合格点数",decf.format(Double.valueOf(s1.getRow(sllastRowNum).getCell(8).getStringCellValue())));
                 map1.put("合格率",df.format(Double.valueOf(s1.getRow(sllastRowNum).getCell(10).getStringCellValue())));
+
+                map1.put("最大值",s1.getRow(sllastRowNum).getCell(12).getStringCellValue());
+                map1.put("最小值",s1.getRow(sllastRowNum).getCell(13).getStringCellValue());
+
                 mapList.add(map1);
-            }else {
+            }/*else {
                 map1.put("检测项目","沥青路面(左幅)");
+                map1.put("规定值",0);
                 map1.put("检测点数",0);
                 map1.put("合格点数",0);
                 map1.put("合格率",0);
                 mapList.add(map1);
-            }
+            }*/
 
-            if (!lmyfsheet && proname.equals(s2.getRow(1).getCell(2).toString()) && htd.equals(s2.getRow(1).getCell(8).toString()) && fbgc.equals(s2.getRow(2).getCell(2).toString())){
+            if (!lmyfsheet && proname.equals(s2.getRow(1).getCell(2).toString()) && htd.equals(s2.getRow(1).getCell(8).toString())){
                 int sllastRowNum = s2.getLastRowNum();
                 s2.getRow(sllastRowNum).getCell(4).setCellType(CellType.STRING);//检测点数
                 s2.getRow(sllastRowNum).getCell(8).setCellType(CellType.STRING);//合格点数
                 s2.getRow(sllastRowNum).getCell(10).setCellType(CellType.STRING);//合格率（%）
+                s2.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率（%）
+                s2.getRow(sllastRowNum).getCell(12).setCellType(CellType.STRING);
+                s2.getRow(sllastRowNum).getCell(13).setCellType(CellType.STRING);
                 map2.put("检测项目","沥青路面(右幅)");
+                map2.put("规定值",s1.getRow(6).getCell(9).getStringCellValue());
                 map2.put("检测点数",decf.format(Double.valueOf(s2.getRow(sllastRowNum).getCell(4).getStringCellValue())));
                 map2.put("合格点数",decf.format(Double.valueOf(s2.getRow(sllastRowNum).getCell(8).getStringCellValue())));
                 map2.put("合格率",df.format(Double.valueOf(s2.getRow(sllastRowNum).getCell(10).getStringCellValue())));
+                map2.put("最大值",s2.getRow(sllastRowNum).getCell(12).getStringCellValue());
+                map2.put("最小值",s2.getRow(sllastRowNum).getCell(13).getStringCellValue());
                 mapList.add(map2);
-            }else {
+            }/*else {
                 map2.put("检测项目","沥青路面(右幅)");
+                map2.put("规定值",0);
                 map2.put("检测点数",0);
                 map2.put("合格点数",0);
                 map2.put("合格率",0);
                 mapList.add(map2);
-            }
+            }*/
 
-            if (!sdzfsheet && proname.equals(s3.getRow(1).getCell(2).toString()) && htd.equals(s3.getRow(1).getCell(8).toString()) && fbgc.equals(s3.getRow(2).getCell(2).toString())){
+            if (!sdzfsheet && proname.equals(s3.getRow(1).getCell(2).toString()) && htd.equals(s3.getRow(1).getCell(8).toString())){
                 int sllastRowNum = s3.getLastRowNum();
                 s3.getRow(sllastRowNum).getCell(4).setCellType(CellType.STRING);//检测点数
                 s3.getRow(sllastRowNum).getCell(8).setCellType(CellType.STRING);//合格点数
                 s3.getRow(sllastRowNum).getCell(10).setCellType(CellType.STRING);//合格率（%）
+                s3.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率（%）
+
+                s3.getRow(sllastRowNum).getCell(12).setCellType(CellType.STRING);
+                s3.getRow(sllastRowNum).getCell(13).setCellType(CellType.STRING);
                 map3.put("检测项目","隧道路面(左幅)");
+                map3.put("规定值",s3.getRow(6).getCell(9).getStringCellValue());
                 map3.put("检测点数",decf.format(Double.valueOf(s3.getRow(sllastRowNum).getCell(4).getStringCellValue())));
                 map3.put("合格点数",decf.format(Double.valueOf(s3.getRow(sllastRowNum).getCell(8).getStringCellValue())));
                 map3.put("合格率",df.format(Double.valueOf(s3.getRow(sllastRowNum).getCell(10).getStringCellValue())));
+                map3.put("最大值",s3.getRow(sllastRowNum).getCell(12).getStringCellValue());
+                map3.put("最小值",s3.getRow(sllastRowNum).getCell(13).getStringCellValue());
                 mapList.add(map3);
-            }else {
+            }/*else {
                 map3.put("检测项目","隧道路面(左幅)");
+                map3.put("规定值",0);
                 map3.put("检测点数",0);
                 map3.put("合格点数",0);
                 map3.put("合格率",0);
                 mapList.add(map3);
-            }
+            }*/
 
-            if (!sdyfsheet && proname.equals(s4.getRow(1).getCell(2).toString()) && htd.equals(s4.getRow(1).getCell(8).toString()) && fbgc.equals(s4.getRow(2).getCell(2).toString())){
+            if (!sdyfsheet && proname.equals(s4.getRow(1).getCell(2).toString()) && htd.equals(s4.getRow(1).getCell(8).toString())){
                 int sllastRowNum = s4.getLastRowNum();
                 s4.getRow(sllastRowNum).getCell(4).setCellType(CellType.STRING);//检测点数
                 s4.getRow(sllastRowNum).getCell(8).setCellType(CellType.STRING);//合格点数
                 s4.getRow(sllastRowNum).getCell(10).setCellType(CellType.STRING);//合格率（%）
+                s4.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率（%）
+                s4.getRow(sllastRowNum).getCell(12).setCellType(CellType.STRING);
+                s4.getRow(sllastRowNum).getCell(13).setCellType(CellType.STRING);
+
                 map4.put("检测项目","隧道路面(右幅)");
+                map4.put("规定值",s4.getRow(6).getCell(9).getStringCellValue());
                 map4.put("检测点数",decf.format(Double.valueOf(s4.getRow(sllastRowNum).getCell(4).getStringCellValue())));
                 map4.put("合格点数",decf.format(Double.valueOf(s4.getRow(sllastRowNum).getCell(8).getStringCellValue())));
                 map4.put("合格率",df.format(Double.valueOf(s4.getRow(sllastRowNum).getCell(10).getStringCellValue())));
+                map4.put("最大值",s4.getRow(sllastRowNum).getCell(12).getStringCellValue());
+                map4.put("最小值",s4.getRow(sllastRowNum).getCell(13).getStringCellValue());
                 mapList.add(map4);
-            }else {
+            }/*else {
                 map4.put("检测项目","隧道路面(右幅)");
+                map4.put("规定值",0);
                 map4.put("检测点数",0);
                 map4.put("合格点数",0);
                 map4.put("合格率",0);
                 mapList.add(map4);
-            }
+            }*/
 
-            if (!zdsheet && proname.equals(s5.getRow(1).getCell(2).toString()) && htd.equals(s5.getRow(1).getCell(8).toString()) && fbgc.equals(s5.getRow(2).getCell(2).toString())){
+            if (!zdsheet && proname.equals(s5.getRow(1).getCell(2).toString()) && htd.equals(s5.getRow(1).getCell(8).toString())){
                 int sllastRowNum = s5.getLastRowNum();
                 s5.getRow(sllastRowNum).getCell(4).setCellType(CellType.STRING);//检测点数
                 s5.getRow(sllastRowNum).getCell(8).setCellType(CellType.STRING);//合格点数
                 s5.getRow(sllastRowNum).getCell(10).setCellType(CellType.STRING);//合格率（%）
+                s5.getRow(6).getCell(9).setCellType(CellType.STRING);//合格率（%）
+                s5.getRow(sllastRowNum).getCell(12).setCellType(CellType.STRING);
+                s5.getRow(sllastRowNum).getCell(13).setCellType(CellType.STRING);
                 map5.put("检测项目","匝道路面");
+                map5.put("规定值",s5.getRow(6).getCell(9).getStringCellValue());
                 map5.put("检测点数",decf.format(Double.valueOf(s5.getRow(sllastRowNum).getCell(4).getStringCellValue())));
                 map5.put("合格点数",decf.format(Double.valueOf(s5.getRow(sllastRowNum).getCell(8).getStringCellValue())));
                 map5.put("合格率",df.format(Double.valueOf(s5.getRow(sllastRowNum).getCell(10).getStringCellValue())));
+                map5.put("最大值",s4.getRow(sllastRowNum).getCell(12).getStringCellValue());
+                map5.put("最小值",s4.getRow(sllastRowNum).getCell(13).getStringCellValue());
                 mapList.add(map5);
-            }else {
+            }/*else {
                 map5.put("检测项目","匝道路面");
+                map5.put("规定值",0);
                 map5.put("检测点数",0);
                 map5.put("合格点数",0);
                 map5.put("合格率",0);
                 mapList.add(map5);
-            }
+            }*/
             return mapList;
         }
     }

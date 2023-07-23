@@ -36,11 +36,11 @@ public class JjgLqsQl {
 
     @ApiModelProperty(value = "桩号起")
     @TableField("zhq")
-    private String zhq;
+    private Double zhq;
 
     @ApiModelProperty(value = "桩号止")
     @TableField("zhz")
-    private String zhz;
+    private Double zhz;
 
     @ApiModelProperty(value = "桥梁全长")
     @TableField("qlqc")

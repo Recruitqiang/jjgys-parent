@@ -19,7 +19,7 @@ import java.util.Map;
 @Mapper
 public interface JjgFbgcLmgcLmhpMapper extends BaseMapper<JjgFbgcLmgcLmhp> {
 
-    List<Map<String, String>> selectlx(String proname, String htd, String fbgc);
+    List<Map<String, String>> selectlx(String proname, String htd);
 
     List<Map<String, Object>> selectljx(String proname, String htd, String fbgc);
 

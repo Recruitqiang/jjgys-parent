@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -20,4 +21,9 @@ import java.util.List;
 public interface JjgFbgcLjgcHdgqdMapper extends BaseMapper<JjgFbgcLjgcHdgqd> {
 
     List<String> selectzh(String proname,String htd);
+
+    List<String> selectsjqd(String proname, String htd);
+
+    Map<String, Object> selectchs(String proname, String htd);
+
 }

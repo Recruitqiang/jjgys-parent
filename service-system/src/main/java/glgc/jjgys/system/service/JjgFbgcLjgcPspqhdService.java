@@ -29,4 +29,6 @@ public interface JjgFbgcLjgcPspqhdService extends IService<JjgFbgcLjgcPspqhd> {
     void exportpspqhd(HttpServletResponse response);
 
     void importpspqhd(MultipartFile file,CommonInfoVo commonInfoVo);
+
+    List<String> selectyxps(String proname, String htd);
 }

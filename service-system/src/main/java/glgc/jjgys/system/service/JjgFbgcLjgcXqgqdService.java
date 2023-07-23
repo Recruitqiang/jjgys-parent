@@ -28,4 +28,8 @@ public interface JjgFbgcLjgcXqgqdService extends IService<JjgFbgcLjgcXqgqd> {
     void exportxqgqd(HttpServletResponse response);
 
     void importxqgqd(MultipartFile file,CommonInfoVo commonInfoVo);
+
+    List<String> selectsjqd(String proname, String htd);
+
+    Map<String, Object> selectchs(String proname, String htd);
 }

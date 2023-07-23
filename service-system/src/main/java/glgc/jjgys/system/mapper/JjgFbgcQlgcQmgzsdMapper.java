@@ -19,4 +19,6 @@ import java.util.Map;
 public interface JjgFbgcQlgcQmgzsdMapper extends BaseMapper<JjgFbgcQlgcQmgzsd> {
 
     List<Map<String, Object>> selectqlmc(String proname, String htd, String fbgc);
+
+    List<Map<String, Object>> selectqlmc2(String proname, String htd);
 }

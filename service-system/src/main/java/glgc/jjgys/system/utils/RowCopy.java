@@ -116,6 +116,15 @@ public class RowCopy {
     }
 
 
+    /**
+     *
+     * @param wb
+     * @param pSourceSheetName
+     * @param pTargetSheetName
+     * @param pStartRow
+     * @param pEndRow
+     * @param pPosition
+     */
     public static void copyRows(XSSFWorkbook wb, String pSourceSheetName, String pTargetSheetName, int pStartRow, int pEndRow, int pPosition) {
         XSSFRow sourceRow = null;
         XSSFRow targetRow = null;
@@ -149,8 +158,7 @@ public class RowCopy {
         // 拷贝合并的单元格
         for (i = 0; i < sourceSheet.getNumMergedRegions(); i++) {
             region = sourceSheet.getMergedRegion(i);
-            if ((region.getFirstRow() >= pStartRow)
-                    && (region.getLastRow()) <= pEndRow) {
+            if ((region.getFirstRow() >= pStartRow) && (region.getLastRow()) <= pEndRow) {
                 targetRowFrom = region.getFirstRow() - pStartRow + pPosition;
                 targetRowTo = region.getLastRow() - pStartRow + pPosition;
                 region.setFirstRow(targetRowFrom);

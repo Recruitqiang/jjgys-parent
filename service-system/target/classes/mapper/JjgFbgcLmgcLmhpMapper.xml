@@ -3,7 +3,7 @@
 <mapper namespace="glgc.jjgys.system.mapper.JjgFbgcLmgcLmhpMapper">
 
     <select id="selectlx" resultType="java.util.Map" parameterType="java.lang.String">
-        SELECT DISTINCT lxlx from jjg_fbgc_lmgc_lmhp where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
+        SELECT DISTINCT lxlx from jjg_fbgc_lmgc_lmhp where proname = #{proname} and htd = #{htd}
     </select>
 
     <select id="selectljx" resultType="java.util.Map" parameterType="java.lang.String">

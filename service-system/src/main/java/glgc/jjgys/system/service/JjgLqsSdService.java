@@ -6,6 +6,7 @@ import glgc.jjgys.model.project.JjgLqsSd;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * <p>
@@ -20,4 +21,6 @@ public interface JjgLqsSdService extends IService<JjgLqsSd> {
     void exportSD(HttpServletResponse response,String projectname);
 
     void importSD(MultipartFile file, String proname);
+
+    List<JjgLqsSd> getsdName(String proname, String htd);
 }

@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -395,26 +396,42 @@ public class JjgFbgcLjgcXqgqdServiceImpl extends ServiceImpl<JjgFbgcLjgcXqgqdMap
 
     @Override
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        List<Map<String,Object>> mapList = new ArrayList<>();
+        Map<String,Object> jgmap = new HashMap<>();
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
-        String title = "混凝土强度质量鉴定表（回弹法）";
+
         String sheetname = "原始数据";
         //获取鉴定表文件
         File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"06路基小桥砼强度.xlsx");
         if(!f.exists()){
-            return null;
+            jgmap.put("检测总点数",0);
+            jgmap.put("合格点数",0);
+            jgmap.put("合格率",0);
+            mapList.add(jgmap);
         }else {
-            Map<String,Object> map = new HashMap<>();
-            map.put("proname",proname);
-            map.put("title",title);
-            map.put("htd",htd);
-            map.put("fbgc",fbgc);
-            map.put("f",f);
-            map.put("sheetname",sheetname);
-            List<Map<String, Object>> mapList = JjgFbgcCommonUtils.gettqdjcjg(map);
-            return mapList;
+            //创建工作簿
+            XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+            //读取工作表
+            XSSFSheet slSheet = xwb.getSheet(sheetname);
+            int lastRowNum = slSheet.getLastRowNum();
+            slSheet.getRow(lastRowNum-1).getCell(1).setCellType(CellType.STRING);
+            slSheet.getRow(lastRowNum-1).getCell(3).setCellType(CellType.STRING);
+            slSheet.getRow(lastRowNum-1).getCell(6).setCellType(CellType.STRING);
+            double zds= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(1).getStringCellValue());
+            double hgds= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(3).getStringCellValue());
+            double hgl= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(6).getStringCellValue());
+            String zdsz = decf.format(zds);
+            String hgdsz = decf.format(hgds);
+            String hglz = df.format(hgl);
+            jgmap.put("检测总点数",zdsz);
+            jgmap.put("合格点数",hgdsz);
+            jgmap.put("合格率",hglz);
+            mapList.add(jgmap);
         }
+        return mapList;
 
     }
 
@@ -454,6 +471,18 @@ public class JjgFbgcLjgcXqgqdServiceImpl extends ServiceImpl<JjgFbgcLjgcXqgqdMap
             throw new JjgysException(20001,"解析excel出错，请传入正确格式的excel");
         }
 
+    }
+
+    @Override
+    public List<String> selectsjqd(String proname, String htd) {
+        List<String>  list = jjgFbgcLjgcXqgqdMapper.selectsjqd(proname,htd);
+        return list;
+    }
+
+    @Override
+    public Map<String, Object> selectchs(String proname, String htd) {
+        Map<String, Object> map = jjgFbgcLjgcXqgqdMapper.selectchs(proname,htd);
+        return map;
     }
 
 

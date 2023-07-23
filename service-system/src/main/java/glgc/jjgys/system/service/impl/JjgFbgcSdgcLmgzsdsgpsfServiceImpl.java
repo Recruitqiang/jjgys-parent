@@ -16,6 +16,7 @@ import glgc.jjgys.system.service.JjgFbgcSdgcLmgzsdsgpsfService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
@@ -319,7 +320,7 @@ public class JjgFbgcSdgcLmgzsdsgpsfServiceImpl extends ServiceImpl<JjgFbgcSdgcLm
      * @return
      */
     private Map<String, Object> lookqljdb(String proname, String htd, String sdmc, String sheetname, String title) throws IOException {
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "51构造深度手工铺沙法-"+sdmc+".xlsx");
         if (!f.exists()) {
@@ -398,5 +399,47 @@ public class JjgFbgcSdgcLmgzsdsgpsfServiceImpl extends ServiceImpl<JjgFbgcSdgcLm
     public List<Map<String, Object>> selectsdmc(String proname, String htd, String fbgc) {
         List<Map<String,Object>> sdmclist = jjgFbgcSdgcLmgzsdsgpsfMapper.selectsdmc(proname,htd,fbgc);
         return sdmclist;
+    }
+
+    @Override
+    public List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo, String value) throws IOException {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + value);
+        if (!f.exists()) {
+            return null;
+        } else {
+            XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(f));
+            List<Map<String, Object> > resultList = new ArrayList<>();
+            XSSFSheet slSheet = wb.getSheet("混凝土隧道");
+            XSSFCell bt = slSheet.getRow(0).getCell(0);//标题
+            XSSFCell xmname = slSheet.getRow(1).getCell(1);//项目名
+            XSSFCell htdname = slSheet.getRow(1).getCell(9);//合同段名
+            //List<Map<String, Object>> mapList = new ArrayList<>();
+            Map<String, Object> jgmap = new HashMap<>();
+            if (proname.equals(xmname.toString()) && htd.equals(htdname.toString())) {
+                //获取到最后一行
+                int lastRowNum = slSheet.getLastRowNum();
+                slSheet.getRow(lastRowNum).getCell(1).setCellType(CellType.STRING);//总点数
+                slSheet.getRow(lastRowNum).getCell(4).setCellType(CellType.STRING);//合格点数
+                slSheet.getRow(lastRowNum).getCell(7).setCellType(CellType.STRING);//合格率
+                slSheet.getRow(3).getCell(1).setCellType(CellType.STRING);//合格率
+                double zds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(1).getStringCellValue());
+                double hgds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(4).getStringCellValue());
+                double hgl = Double.valueOf(slSheet.getRow(lastRowNum).getCell(7).getStringCellValue());
+                String zdsz1 = decf.format(zds);
+                String hgdsz1 = decf.format(hgds);
+                String hglz1 = df.format(hgl);
+                jgmap.put("检测项目", StringUtils.substringBetween(value, "-", "."));
+                jgmap.put("检测点数", zdsz1);
+                jgmap.put("合格点数", hgdsz1);
+                jgmap.put("合格率", hglz1);
+                jgmap.put("设计值", slSheet.getRow(3).getCell(1).getStringCellValue());
+                resultList.add(jgmap);
+            }
+            return resultList;
+        }
     }
 }

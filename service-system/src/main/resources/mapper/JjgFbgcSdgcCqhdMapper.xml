@@ -6,13 +6,34 @@
         SELECT DISTINCT sdmc from jjg_fbgc_sdgc_cqhd  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
     </select>
 
+    <select id="selectsdmc2" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT sdmc from jjg_fbgc_sdgc_cqhd  where proname = #{proname} and htd = #{htd}
+    </select>
+
     <select id="selectcd" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT zgy1,zgy2,zgy3 from jjg_fbgc_sdgc_cqhd  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and sdmc=#{sdmc}
+
+    </select>
+
+    <select id="selectcd2" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT zgy1,zgy2,zgy3 from jjg_fbgc_sdgc_cqhd  where proname = #{proname} and htd = #{htd} and sdmc=#{sdmc}
 
     </select>
 
     <select id="selectwz" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT wz from jjg_fbgc_sdgc_cqhd  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and sdmc=#{sdmc}
     </select>
+    <select id="selectwz2" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT wz from jjg_fbgc_sdgc_cqhd  where proname = #{proname} and htd = #{htd} and sdmc=#{sdmc}
+    </select>
+
+    <select id="selectsjhd" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT sjhd,sdmc from jjg_fbgc_sdgc_cqhd  where proname = #{proname} and htd = #{htd} and sdmc=#{s}
+    </select>
+
+    <select id="getds" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT * from jjg_fbgc_sdgc_cqhd  where proname = #{proname} and htd = #{htd} and sdmc=#{sdmc}
+    </select>
+
 
 </mapper>

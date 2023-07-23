@@ -29,4 +29,6 @@ public interface JjgFbgcLjgcPsdmccService extends IService<JjgFbgcLjgcPsdmcc> {
     void exportpsdmcc(HttpServletResponse response);
 
     void importpsdmcc(MultipartFile file,CommonInfoVo commonInfoVo);
+
+    List<Map<String,Object>> selectyxps(String proname, String htd);
 }

@@ -16,9 +16,7 @@ import glgc.jjgys.system.service.JjgFbgcQlgcSbBhchdService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
@@ -385,6 +383,77 @@ public class JjgFbgcQlgcSbBhchdServiceImpl extends ServiceImpl<JjgFbgcQlgcSbBhch
         return result;
     }
 
+    @Override
+    public List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo) {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String sheetname = "保护层";
+        DecimalFormat decf = new DecimalFormat("0.##");
+        //获取鉴定表文件
+        File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "31桥梁上部保护层厚度.xlsx");
+        if (!f.exists()) {
+            return null;
+        }else {
+            List<Map<String, Object>> data = new ArrayList<>();
+
+            try (FileInputStream fis = new FileInputStream(f)) {
+                Workbook workbook = WorkbookFactory.create(fis);
+                Sheet sheet = workbook.getSheet(sheetname); // 假设数据在第一个工作表中
+
+                DataFormatter dataFormatter = new DataFormatter();
+                FormulaEvaluator formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+                for (int i = 3; i <= sheet.getLastRowNum(); i++) { // 循环每一行，从第3行开始（忽略表头）
+
+                    Row row = sheet.getRow(i);
+                    Cell cell0 = getMergedCell(sheet, i, 0); // 获取合并单元格 // 第0列
+                    Cell cell15 = row.getCell(15); // 第0列
+                    Cell cell18 = row.getCell(18); // 第0列
+                    Cell cell19 = row.getCell(19); // 第34列
+
+
+                    if (cell0.getStringCellValue().equals("桥梁名称") && dataFormatter.formatCellValue(cell18, formulaEvaluator).equals("总点数") ) { // 判断是否不为空
+                        Cell nextRowCell18 = sheet.getRow(i + 1).getCell(18); // 下一行的第0列
+                        Cell nextRowCell19 = sheet.getRow(i + 1).getCell(19); // 下一行的第34列
+
+                        Cell nextRowCell0 = sheet.getRow(i + 2).getCell(0); // 下一行的第34列
+                        Cell nextRowCell15 = sheet.getRow(i + 2).getCell(15); // 下一行的第34列
+
+                        String data18 = dataFormatter.formatCellValue(nextRowCell18, formulaEvaluator);
+                        String data19 = dataFormatter.formatCellValue(nextRowCell19, formulaEvaluator);
+
+                        String data0 = nextRowCell0.getStringCellValue();
+                        String data15 = nextRowCell15.getStringCellValue();
+
+                        Map map = new HashMap();
+                        map.put("qlmc",data0);
+                        map.put("zds",data18);
+                        map.put("hgds",data19);
+                        map.put("sjqd",data15);
+
+                        data.add(map);
+
+                    }
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return data;
+
+        }
+    }
+    private static Cell getMergedCell(Sheet sheet, int rowIndex, int columnIndex) {
+        for (CellRangeAddress range : sheet.getMergedRegions()) {
+            if (range.isInRange(rowIndex, columnIndex)) {
+                Row mergedRow = sheet.getRow(range.getFirstRow());
+                return mergedRow.getCell(range.getFirstColumn());
+            }
+        }
+        return sheet.getRow(rowIndex).getCell(columnIndex);
+    }
+
     /**
      * 写入数据
      * @param data
@@ -542,11 +611,11 @@ public class JjgFbgcQlgcSbBhchdServiceImpl extends ServiceImpl<JjgFbgcQlgcSbBhch
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
+        //String fbgc = commonInfoVo.getFbgc();
         String title = "钢筋保护层厚度质量鉴定表";
         String sheetname = "保护层";
 
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         //获取鉴定表文件
         File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"31桥梁上部保护层厚度.xlsx");
@@ -562,7 +631,7 @@ public class JjgFbgcQlgcSbBhchdServiceImpl extends ServiceImpl<JjgFbgcQlgcSbBhch
             XSSFCell hd = slSheet.getRow(2).getCell(2);//涵洞
             List<Map<String,Object>> mapList = new ArrayList<>();
             Map<String,Object> jgmap = new HashMap<>();
-            if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
+            if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString())){
                 slSheet.getRow(2).getCell(18).setCellType(CellType.STRING);
                 slSheet.getRow(2).getCell(19).setCellType(CellType.STRING);
                 slSheet.getRow(2).getCell(20).setCellType(CellType.STRING);

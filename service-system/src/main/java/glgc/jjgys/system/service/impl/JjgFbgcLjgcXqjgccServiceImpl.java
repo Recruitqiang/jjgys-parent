@@ -110,6 +110,10 @@ public class JjgFbgcLjgcXqjgccServiceImpl extends ServiceImpl<JjgFbgcLjgcXqjgccM
 
     @Override
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        List<Map<String,Object>> mapList = new ArrayList<>();
+        Map<String,Object> jgmap = new HashMap<>();
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
         String fbgc = commonInfoVo.getFbgc();
@@ -120,16 +124,26 @@ public class JjgFbgcLjgcXqjgccServiceImpl extends ServiceImpl<JjgFbgcLjgcXqjgccM
         if(!f.exists()){
             return null;
         }else {
-            Map<String,Object> map = new HashMap<>();
-            map.put("proname",proname);
-            map.put("title",title);
-            map.put("htd",htd);
-            map.put("fbgc",fbgc);
-            map.put("f",f);
-            map.put("sheetname",sheetname);
-            List<Map<String, Object>> mapList = JjgFbgcCommonUtils.getdmcjjcjg(map);
-            return mapList;
+            //创建工作簿
+            XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
+            //读取工作表
+            XSSFSheet slSheet = xwb.getSheet(sheetname);
+            int lastRowNum = slSheet.getLastRowNum();
+            slSheet.getRow(lastRowNum-1).getCell(1).setCellType(CellType.STRING);
+            slSheet.getRow(lastRowNum-1).getCell(3).setCellType(CellType.STRING);
+            slSheet.getRow(lastRowNum-1).getCell(6).setCellType(CellType.STRING);
+            double zds= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(1).getStringCellValue());
+            double hgds= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(3).getStringCellValue());
+            double hgl= Double.valueOf(slSheet.getRow(lastRowNum-1).getCell(6).getStringCellValue());
+            String zdsz = decf.format(zds);
+            String hgdsz = decf.format(hgds);
+            String hglz = df.format(hgl);
+            jgmap.put("检测总点数",zdsz);
+            jgmap.put("合格点数",hgdsz);
+            jgmap.put("合格率",hglz);
+            mapList.add(jgmap);
         }
+        return mapList;
 
     }
 
@@ -169,6 +183,12 @@ public class JjgFbgcLjgcXqjgccServiceImpl extends ServiceImpl<JjgFbgcLjgcXqjgccM
             throw new JjgysException(20001,"解析excel出错，请传入正确格式的excel");
         }
 
+    }
+
+    @Override
+    public List<Map<String, Object>> selectyxps(String proname, String htd) {
+        List<Map<String, Object>> list = jjgFbgcLjgcXqjgccMapper.selectyxps(proname,htd);
+        return list;
     }
 
     private void calculateSheet(XSSFSheet sheet) {

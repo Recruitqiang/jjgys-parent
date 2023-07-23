@@ -29,4 +29,6 @@ public interface JjgFbgcSdgcZtkdService extends IService<JjgFbgcSdgcZtkd> {
     void exportsdztkd(HttpServletResponse response);
 
     void importsdztkd(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo);
 }

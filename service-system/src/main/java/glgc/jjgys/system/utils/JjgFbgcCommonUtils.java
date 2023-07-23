@@ -326,7 +326,7 @@ public class JjgFbgcCommonUtils {
     public static List<Map<String,Object>> gettqdjcjg(Map<String,Object> map) throws IOException {
         List<Map<String,Object>> mapList = new ArrayList<>();
         Map<String,Object> jgmap = new HashMap<>();
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         //创建工作簿
         XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(map.get("f").toString()));

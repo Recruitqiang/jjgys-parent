@@ -18,5 +18,5 @@ import java.util.Map;
 @Mapper
 public interface JjgFbgcSdgcSdhntlmhdzxfMapper extends BaseMapper<JjgFbgcSdgcSdhntlmhdzxf> {
 
-    List<Map<String, Object>> selectsdmc(String proname, String htd, String fbgc);
+    List<Map<String, Object>> selectsdmc(String proname, String htd);
 }

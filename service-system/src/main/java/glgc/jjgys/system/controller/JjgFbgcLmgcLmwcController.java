@@ -56,7 +56,7 @@ public class JjgFbgcLmgcLmwcController {
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     public void downloadExport(HttpServletResponse response, String proname, String htd) throws IOException {
-        String fileName = "13路面弯沉.xlsx";
+        String fileName = "13路面弯沉(贝克曼梁法).xlsx";
         String p = filespath+ File.separator+proname+File.separator+htd+File.separator+fileName;
         File file = new File(p);
         if (file.exists()){

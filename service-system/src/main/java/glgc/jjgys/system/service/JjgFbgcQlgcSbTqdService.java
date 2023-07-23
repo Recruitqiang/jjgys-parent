@@ -28,4 +28,8 @@ public interface JjgFbgcQlgcSbTqdService extends IService<JjgFbgcQlgcSbTqd> {
     void exportqlsbtqd(HttpServletResponse response);
 
     void importqlsbtqd(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo);
+
+    List<Map<String, Object>> getqlname(String proname, String htd);
 }

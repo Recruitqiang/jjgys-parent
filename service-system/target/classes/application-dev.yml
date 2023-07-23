@@ -3,6 +3,8 @@ server:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 查看日志
+    #设置当查询结果值为null时，同样映射该查询字段给map。
+    call-setters-on-nulls: true
 jjgys:
   path:
     filepath: D:/work/jjgys/opt/files

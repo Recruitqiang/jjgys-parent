@@ -71,7 +71,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         sysMenuService.save(htdSysMenu);
         sysMenuService.save(lqsSysMenu);
-        //sysMenuService.save(scSysMenu);
+
     }
 
     @Override

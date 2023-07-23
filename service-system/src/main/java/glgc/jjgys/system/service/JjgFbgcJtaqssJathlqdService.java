@@ -28,4 +28,8 @@ public interface JjgFbgcJtaqssJathlqdService extends IService<JjgFbgcJtaqssJathl
     List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException;
 
     void generateJdb(CommonInfoVo commonInfoVo) throws IOException, ParseException;
+
+    List<String> selectsjqd(String proname, String htd);
+
+    Map<String, Object> selectchs(String proname, String htd);
 }

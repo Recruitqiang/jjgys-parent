@@ -33,9 +33,17 @@ public class JjgHtd {
     @TableField("jldw")
     private String jldw;
 
-    @ApiModelProperty(value = "桩号")
-    @TableField("zh")
-    private String zh;
+    @ApiModelProperty(value = "ZY")
+    @TableField("zy")
+    private String zy;
+
+    @ApiModelProperty(value = "工程部位(起)")
+    @TableField("zhq")
+    private String zhq;
+
+    @ApiModelProperty(value = "工程部位(止)")
+    @TableField("zhz")
+    private String zhz;
 
     @ApiModelProperty(value = "合同段类型")
     @TableField("lx")

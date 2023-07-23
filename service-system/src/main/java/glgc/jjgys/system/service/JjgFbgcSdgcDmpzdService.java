@@ -29,4 +29,6 @@ public interface JjgFbgcSdgcDmpzdService extends IService<JjgFbgcSdgcDmpzd> {
     void exportsddmpzd(HttpServletResponse response);
 
     void importsddmpzd(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo);
 }

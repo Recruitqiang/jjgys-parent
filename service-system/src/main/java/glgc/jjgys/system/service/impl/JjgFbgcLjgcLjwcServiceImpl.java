@@ -890,16 +890,18 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
             XSSFCell htdname = slSheet.getRow(1).getCell(7);//合同段名
             List<Map<String, Object>> mapList = new ArrayList<>();
             Map<String, Object> jgmap = new HashMap<>();
-            DecimalFormat df = new DecimalFormat(".00");
+            DecimalFormat df = new DecimalFormat("0.00");
             DecimalFormat decf = new DecimalFormat("0.##");
             if (proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString())) {
                 int lastRowNum = slSheet.getLastRowNum();
                 slSheet.getRow(lastRowNum).getCell(4).setCellType(CellType.STRING);//检测单元数
                 slSheet.getRow(lastRowNum).getCell(6).setCellType(CellType.STRING);//合格单元
                 slSheet.getRow(lastRowNum).getCell(8).setCellType(CellType.STRING);//合格率
+                slSheet.getRow(5).getCell(5).setCellType(CellType.STRING);//合格率
                 jgmap.put("检测单元数", decf.format(Double.valueOf(slSheet.getRow(lastRowNum).getCell(4).getStringCellValue())));
                 jgmap.put("合格单元数", decf.format(Double.valueOf(slSheet.getRow(lastRowNum).getCell(6).getStringCellValue())));
                 jgmap.put("合格率", df.format(Double.valueOf(slSheet.getRow(lastRowNum).getCell(8).getStringCellValue())));
+                jgmap.put("规定值", slSheet.getRow(5).getCell(5).getStringCellValue());
                 mapList.add(jgmap);
                 return mapList;
             }

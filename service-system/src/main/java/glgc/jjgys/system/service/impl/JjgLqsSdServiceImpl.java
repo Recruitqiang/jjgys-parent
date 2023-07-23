@@ -2,6 +2,7 @@ package glgc.jjgys.system.service.impl;
 
 import com.alibaba.excel.EasyExcel;
 import glgc.jjgys.common.excel.ExcelUtil;
+import glgc.jjgys.model.project.JjgLqsQl;
 import glgc.jjgys.model.project.JjgLqsSd;
 import glgc.jjgys.model.projectvo.lqs.SdVo;
 import glgc.jjgys.system.easyexcel.ExcelHandler;
@@ -77,6 +78,13 @@ public class JjgLqsSdServiceImpl extends ServiceImpl<JjgLqsSdMapper, JjgLqsSd> i
             throw new JjgysException(20001,"解析excel出错，请传入正确格式的excel");
         }
 
+
+    }
+
+    @Override
+    public List<JjgLqsSd> getsdName(String proname, String htd) {
+        List<JjgLqsSd> list = jjgLqsSdMapper.getsdName(proname,htd);
+        return list;
 
     }
 }

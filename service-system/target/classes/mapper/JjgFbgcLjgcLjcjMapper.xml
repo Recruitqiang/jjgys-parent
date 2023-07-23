@@ -8,5 +8,10 @@
         group by  xh
     </select>
 
+    <select id="selectyxps" resultType="java.lang.String" parameterType="java.util.List">
+        SELECT DISTINCT(yxps) FROM jjg_fbgc_ljgc_ljcj
+        WHERE proname = #{proname} and htd = #{htd}
+    </select>
+
 
 </mapper>

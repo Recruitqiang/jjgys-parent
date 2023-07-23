@@ -24,4 +24,6 @@ public interface JjgFbgcSdgcLmssxsMapper extends BaseMapper<JjgFbgcSdgcLmssxs> {
     List<JjgFbgcLmgcLmssxs> selectsdzfdata(String proname, String htd, String fbgc, String sdmc);
 
     List<JjgFbgcLmgcLmssxs> selectsdyfdata(String proname, String htd, String fbgc, String sdmc);
+
+    List<Map<String, Object>> selectsdmc1(String proname, String htd);
 }

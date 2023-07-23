@@ -316,11 +316,10 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
-        String title = "道路交通标线施工质量鉴定表";
+
         String sheetname = "标线";
 
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
 
         String fileName1 = "57交安标线厚度";
@@ -337,23 +336,23 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
             //获取鉴定表文件
             File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+list.get(i)+".xlsx");
             if(!f.exists()){
-                return null;
+                break;
             }else {
                 XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
                 //读取工作表
                 XSSFSheet slSheet = xwb.getSheet(sheetname);
-                XSSFCell bt = slSheet.getRow(0).getCell(0);
                 XSSFCell xmname = slSheet.getRow(1).getCell(4);//陕西高速
                 XSSFCell htdname = slSheet.getRow(1).getCell(14);//LJ-1
-                XSSFCell hd = slSheet.getRow(2).getCell(14);//涵洞
                 Map<String,Object> jgmap = new HashMap<>();
-                if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())) {
+                if(proname.equals(xmname.toString()) && htd.equals(htdname.toString())) {
                     //获取到最后一行
                     int lastRowNum = slSheet.getLastRowNum();
                     slSheet.getRow(lastRowNum - 4).getCell(14).setCellType(CellType.STRING);
                     slSheet.getRow(lastRowNum - 3).getCell(14).setCellType(CellType.STRING);
                     slSheet.getRow(lastRowNum - 2).getCell(14).setCellType(CellType.STRING);
                     slSheet.getRow(lastRowNum - 1).getCell(14).setCellType(CellType.STRING);
+
+                    slSheet.getRow(5).getCell(4).setCellType(CellType.STRING);
                     double zds = Double.valueOf(slSheet.getRow(lastRowNum - 4).getCell(14).getStringCellValue());
                     double hgds = Double.valueOf(slSheet.getRow(lastRowNum - 3).getCell(14).getStringCellValue());
                     double bhgds = Double.valueOf(slSheet.getRow(lastRowNum - 2).getCell(14).getStringCellValue());
@@ -363,6 +362,7 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
                     String bhgdsz = decf.format(bhgds);
                     String hglz = df.format(hgl);
                     jgmap.put("检测项目",list.get(i).toString().substring(2));
+                    jgmap.put("规定值或允许偏差",slSheet.getRow(5).getCell(4).getStringCellValue());
                     jgmap.put("总点数", zdsz);
                     jgmap.put("合格点数", hgdsz);
                     jgmap.put("不合格点数", bhgdsz);
@@ -412,6 +412,12 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
             }
             return null;
         }*/
+    }
+
+    @Override
+    public Map<String, Object> selectchs(String proname, String htd) {
+        Map<String, Object> map = jjgFbgcJtaqssJabxMapper.selectchs(proname,htd);
+        return map;
     }
 
     /**

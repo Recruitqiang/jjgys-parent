@@ -775,8 +775,7 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
-        String title = "道路防护栏施工质量鉴定表（波形梁钢护栏）";
+
         String sheetname = "防护栏";
         //获取鉴定表文件
         File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "58交安钢防护栏.xlsx");
@@ -795,15 +794,16 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
             Map<String, Object> jgmap2 = new HashMap<>();
             Map<String, Object> jgmap3 = new HashMap<>();
             Map<String, Object> jgmap4 = new HashMap<>();
-            DecimalFormat df = new DecimalFormat(".00");
+            DecimalFormat df = new DecimalFormat("0.00");
             DecimalFormat decf = new DecimalFormat("0.##");
-            if (proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())) {
+            if (proname.equals(xmname.toString()) && htd.equals(htdname.toString())) {
                 //获取到最后一行
                 int lastRowNum = slSheet.getLastRowNum();
                 slSheet.getRow(lastRowNum - 3).getCell(3).setCellType(XSSFCell.CELL_TYPE_STRING);//总点数
                 slSheet.getRow(lastRowNum - 2).getCell(3).setCellType(XSSFCell.CELL_TYPE_STRING);//合格点数
                 slSheet.getRow(lastRowNum - 1).getCell(3).setCellType(XSSFCell.CELL_TYPE_STRING);//不合格点数
                 slSheet.getRow(lastRowNum).getCell(3).setCellType(XSSFCell.CELL_TYPE_STRING);//合格率
+                slSheet.getRow(5).getCell(2).setCellType(XSSFCell.CELL_TYPE_STRING);
                 double zds1 = Double.valueOf(slSheet.getRow(lastRowNum - 3).getCell(3).getStringCellValue());
                 double hgds1 = Double.valueOf(slSheet.getRow(lastRowNum - 2).getCell(3).getStringCellValue());
                 double bhgds1 = Double.valueOf(slSheet.getRow(lastRowNum - 2).getCell(3).getStringCellValue());
@@ -812,7 +812,8 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
                 String hgdsz1 = decf.format(hgds1);
                 String bhgdsz1 = decf.format(bhgds1);
                 String hglz1 = df.format(hgl1);
-                jgmap1.put("检测项目", "波形梁板基底金属厚度（mm）");
+                jgmap1.put("检测项目", "波形梁板基底金属厚度");
+                jgmap1.put("规定值或允许偏差", slSheet.getRow(5).getCell(2).getStringCellValue());
                 jgmap1.put("总点数", zdsz1);
                 jgmap1.put("合格点数", hgdsz1);
                 jgmap1.put("不合格点数", bhgdsz1);
@@ -822,6 +823,7 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
                 slSheet.getRow(lastRowNum - 2).getCell(6).setCellType(XSSFCell.CELL_TYPE_STRING);//合格点数
                 slSheet.getRow(lastRowNum - 1).getCell(6).setCellType(XSSFCell.CELL_TYPE_STRING);//不合格点数
                 slSheet.getRow(lastRowNum).getCell(6).setCellType(XSSFCell.CELL_TYPE_STRING);//合格率
+                slSheet.getRow(5).getCell(6).setCellType(XSSFCell.CELL_TYPE_STRING);
                 double zds2 = Double.valueOf(slSheet.getRow(lastRowNum - 3).getCell(6).getStringCellValue());
                 double hgds2 = Double.valueOf(slSheet.getRow(lastRowNum - 2).getCell(6).getStringCellValue());
                 double bhgds2 = Double.valueOf(slSheet.getRow(lastRowNum - 2).getCell(6).getStringCellValue());
@@ -830,7 +832,8 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
                 String hgdsz2 = decf.format(hgds2);
                 String bhgdsz2 = decf.format(bhgds2);
                 String hglz2 = df.format(hgl2);
-                jgmap2.put("检测项目", "波形梁钢护栏立柱壁厚（mm）");
+                jgmap2.put("检测项目", "波形梁钢护栏立柱壁厚");
+                jgmap2.put("规定值或允许偏差",  slSheet.getRow(5).getCell(6).getStringCellValue());
                 jgmap2.put("总点数", zdsz2);
                 jgmap2.put("合格点数", hgdsz2);
                 jgmap2.put("不合格点数", bhgdsz2);
@@ -840,6 +843,7 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
                 slSheet.getRow(lastRowNum - 2).getCell(10).setCellType(XSSFCell.CELL_TYPE_STRING);//合格点数
                 slSheet.getRow(lastRowNum - 1).getCell(10).setCellType(XSSFCell.CELL_TYPE_STRING);//不合格点数
                 slSheet.getRow(lastRowNum).getCell(10).setCellType(XSSFCell.CELL_TYPE_STRING);//合格率
+                slSheet.getRow(5).getCell(10).setCellType(XSSFCell.CELL_TYPE_STRING);
                 double zds3 = Double.valueOf(slSheet.getRow(lastRowNum - 3).getCell(10).getStringCellValue());
                 double hgds3 = Double.valueOf(slSheet.getRow(lastRowNum - 2).getCell(10).getStringCellValue());
                 double bhgds3 = Double.valueOf(slSheet.getRow(lastRowNum - 2).getCell(10).getStringCellValue());
@@ -848,7 +852,8 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
                 String hgdsz3 = decf.format(hgds3);
                 String bhgdsz3 = decf.format(bhgds3);
                 String hglz3 = df.format(hgl3);
-                jgmap3.put("检测项目", "波形梁钢护栏横梁中心高度（mm）");
+                jgmap3.put("检测项目", "波形梁钢护栏横梁中心高度");
+                jgmap3.put("规定值或允许偏差", slSheet.getRow(5).getCell(10).getStringCellValue());
                 jgmap3.put("总点数", zdsz3);
                 jgmap3.put("合格点数", hgdsz3);
                 jgmap3.put("不合格点数", bhgdsz3);
@@ -858,6 +863,7 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
                 slSheet.getRow(lastRowNum - 2).getCell(13).setCellType(XSSFCell.CELL_TYPE_STRING);//合格点数
                 slSheet.getRow(lastRowNum - 1).getCell(13).setCellType(XSSFCell.CELL_TYPE_STRING);//不合格点数
                 slSheet.getRow(lastRowNum).getCell(13).setCellType(XSSFCell.CELL_TYPE_STRING);//合格率
+                slSheet.getRow(5).getCell(13).setCellType(XSSFCell.CELL_TYPE_STRING);
                 double zds4 = Double.valueOf(slSheet.getRow(lastRowNum - 3).getCell(13).getStringCellValue());
                 double hgds4 = Double.valueOf(slSheet.getRow(lastRowNum - 2).getCell(13).getStringCellValue());
                 double bhgds4 = Double.valueOf(slSheet.getRow(lastRowNum - 2).getCell(13).getStringCellValue());
@@ -866,7 +872,8 @@ public class JjgFbgcJtaqssJabxfhlServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
                 String hgdsz4 = decf.format(hgds4);
                 String bhgdsz4 = decf.format(bhgds4);
                 String hglz4 = df.format(hgl4);
-                jgmap4.put("检测项目", "波形梁钢护栏立柱埋入深度（mm）");
+                jgmap4.put("检测项目", "波形梁钢护栏立柱埋入深度");
+                jgmap4.put("规定值或允许偏差", slSheet.getRow(5).getCell(13).getStringCellValue());
                 jgmap4.put("总点数", zdsz4);
                 jgmap4.put("合格点数", hgdsz4);
                 jgmap4.put("不合格点数", bhgdsz4);

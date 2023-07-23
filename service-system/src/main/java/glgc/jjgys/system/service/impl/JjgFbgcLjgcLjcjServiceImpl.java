@@ -309,8 +309,8 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
-        String title = "路基填筑沉降量鉴定表";
+        //String fbgc = commonInfoVo.getFbgc();
+        //String title = "路基填筑沉降量鉴定表";
         String sheetname = "路基沉降";
         //获取鉴定表文件
         File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"01路基压实度沉降.xlsx");
@@ -319,7 +319,7 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
         }else {
             List<Map<String,Object>> mapList = new ArrayList<>();//存放结果
             Map<String,Object> jgmap = new HashMap<>();
-            DecimalFormat df = new DecimalFormat(".00");
+            DecimalFormat df = new DecimalFormat("0.00");
             DecimalFormat decf = new DecimalFormat("0.##");
             //创建工作簿
             XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(f));
@@ -334,14 +334,14 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
             String htdname = slSheet.getRow(2).getCell(4).toString();//LJ-1
             String hd = slSheet.getRow(3).getCell(1).toString();//涵洞
             if(slSheet != null){
-                if(proname.equals(xmname) && title.equals(bt1) && htd.equals(htdname) && fbgc.equals(hd)){
+                //if(proname.equals(xmname) && title.equals(bt1) && htd.equals(htdname) && fbgc.equals(hd)){
                     jgmap.put("总点数",decf.format(Double.valueOf(slSheet.getRow(7).getCell(8).getStringCellValue())));
                     jgmap.put("合格点数",decf.format(Double.valueOf(slSheet.getRow(7).getCell(9).getStringCellValue())));
                     jgmap.put("合格率",df.format(Double.valueOf(slSheet.getRow(7).getCell(10).getStringCellValue())));
                     mapList.add(jgmap);
-                }else {
-                    return null;
-                }
+//                }else {
+//                    return null;
+//                }
             }
             return mapList;
         }
@@ -385,5 +385,11 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
         }
 
 
+    }
+
+    @Override
+    public List<String> selectyxps(String proname, String htd) {
+        List<String> list = jjgFbgcLjgcLjcjMapper.selectyxps(proname,htd);
+        return list;
     }
 }

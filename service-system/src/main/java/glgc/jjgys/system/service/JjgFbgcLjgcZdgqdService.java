@@ -41,4 +41,8 @@ public interface JjgFbgcLjgcZdgqdService extends IService<JjgFbgcLjgcZdgqd> {
     String getBridgeName(String name);
 
     void calculateSheet(XSSFWorkbook wb);
+
+    List<Map<String, Object>> selectsjqd(String proname, String htd);
+
+    Map<String, Object> selectchs(String proname, String htd);
 }

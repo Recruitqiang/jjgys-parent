@@ -28,4 +28,6 @@ public interface JjgFbgcQlgcXbTqdService extends IService<JjgFbgcQlgcXbTqd> {
     void importqlxbtqd(MultipartFile file, CommonInfoVo commonInfoVo);
 
     void exportqlxbtqd(HttpServletResponse response);
+
+    List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo);
 }

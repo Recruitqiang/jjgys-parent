@@ -6,13 +6,18 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.WriteWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ExcelUtil {
     /**
@@ -98,12 +103,34 @@ public class ExcelUtil {
      */
     public static ExcelWriterFactroy writeExcelWithSheets(HttpServletResponse response, List<? extends BaseRowModel> list,
                                                           String fileName, String sheetName, BaseRowModel object) {
-        ExcelWriterFactroy writer = new ExcelWriterFactroy(getOutputStream(fileName, response), ExcelTypeEnum.XLSX);
+        ExcelWriterFactroy writer = new ExcelWriterFactroy(getOutputStream(fileName,response), ExcelTypeEnum.XLSX);
         Sheet sheet = new Sheet(1, 0, object.getClass());
         sheet.setSheetName(sheetName);
         writer.write(list, sheet);
         return writer;
     }
+
+
+
+
+    public static void writeExcelMultipleSheets(HttpServletResponse response, List<? extends BaseRowModel> list,
+                                            String fileName, String[] sheetNames, BaseRowModel object) throws IOException {
+        OutputStream outputStream = getOutputStream(fileName, response);
+        ExcelWriter writer = EasyExcel.write(outputStream, object.getClass()).build();
+        WriteSheet writeSheet;
+        for (int i = 0; i < sheetNames.length; i++) {
+            writeSheet = EasyExcel.writerSheet(i, sheetNames[i]).build();
+            writer.write(list, writeSheet);
+        }
+        writer.finish();
+        outputStream.flush();
+        outputStream.close();
+    }
+
+
+
+
+
     /**
      * 导出文件时为Writer生成OutputStream
      */
@@ -115,8 +142,11 @@ public class ExcelUtil {
             if (!dbfFile.exists() || dbfFile.isDirectory()) {
                 dbfFile.createNewFile();
             }
-            fileName = new String(filePath.getBytes(), "ISO-8859-1");
-            response.addHeader("Content-Disposition", "filename=" + fileName);
+            String encodedFileName = URLEncoder.encode(filePath, StandardCharsets.UTF_8.toString());
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"");
+
+            /*fileName = new String(filePath.getBytes(), "ISO-8859-1");
+            response.addHeader("Content-Disposition", "filename=" + fileName);*/
             return response.getOutputStream();
         } catch (IOException e) {
             throw new ExcelException("创建文件失败！");

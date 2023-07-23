@@ -9,4 +9,10 @@
 
     </select>
 
+    <select id="selecthtd" resultType="glgc.jjgys.model.project.JjgHtd" parameterType="java.lang.String">
+        SELECT * FROM jjg_htdinfo WHERE proname=#{proname}
+
+
+    </select>
+
 </mapper>

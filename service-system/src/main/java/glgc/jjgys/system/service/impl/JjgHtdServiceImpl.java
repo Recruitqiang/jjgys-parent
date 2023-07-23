@@ -12,10 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.text.DecimalFormat;
+import java.util.*;
 
 @Service
 public class JjgHtdServiceImpl extends ServiceImpl<JjgHtdMapper, JjgHtd> implements JjgHtdService {
@@ -110,6 +108,69 @@ public class JjgHtdServiceImpl extends ServiceImpl<JjgHtdMapper, JjgHtd> impleme
         jjgHtdMapper.insert(jjgHtd);
         return true;
     }
+
+    @Override
+    public JjgHtd selectlx(String proname, String htd) {
+        QueryWrapper<JjgHtd> wrapperhtd = new QueryWrapper<>();
+        wrapperhtd.like("proname", proname);
+        wrapperhtd.like("name", htd);
+        JjgHtd jjgHtd = jjgHtdMapper.selectOne(wrapperhtd);
+        return jjgHtd;
+    }
+
+    @Override
+    public JjgHtd selectInfo(String proname, String htd) {
+        QueryWrapper<JjgHtd> wrapperhtd = new QueryWrapper<>();
+        wrapperhtd.like("proname", proname);
+        wrapperhtd.like("name", htd);
+        JjgHtd jjgHtd = jjgHtdMapper.selectOne(wrapperhtd);
+        return jjgHtd;
+    }
+
+    @Override
+    public String getAllzh(String proname) {
+        QueryWrapper<JjgHtd> wrapperhtd = new QueryWrapper<>();
+        wrapperhtd.like("proname", proname);
+        List<JjgHtd> htdList = jjgHtdMapper.selectList(wrapperhtd);
+        double minZhq = 0;
+        double maxZhz = 0;
+        for (JjgHtd jjgHtd : htdList) {
+            Double value1 = Double.valueOf(jjgHtd.getZhq());
+            Double value2 = Double.valueOf(jjgHtd.getZhz());
+            if (value1 < minZhq) {
+                minZhq = value1;
+            }
+            if (value2 > maxZhz) {
+                maxZhz = value2;
+            }
+        }
+        String getgcbw = getgcbw(minZhq, maxZhz);
+        return getgcbw;
+
+    }
+
+    @Override
+    public List<JjgHtd> gethtd(String proname) {
+        /*QueryWrapper<JjgHtd> wrapperhtd = new QueryWrapper<>();
+        wrapperhtd.select(proname);
+        wrapperhtd.like("proname", proname);
+        List<JjgHtd> htdList = jjgHtdMapper.selectList(wrapperhtd);*/
+        List<JjgHtd> htdList = jjgHtdMapper.selecthtd(proname);
+        return htdList;
+    }
+
+    private String getgcbw(double a, double b) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.###");
+
+        int aa = (int) a / 1000;
+        int bb = (int) b / 1000;
+        double cc = a % 1000;
+        double dd = b % 1000;
+        String result = "K"+aa+"+"+decimalFormat.format(cc)+"--"+"K"+bb+"+"+decimalFormat.format(dd);
+
+        return result;
+    }
+
     /**
      * 处理多合同段类型前端传到后端的对象，转换成字符串存
      * @param a

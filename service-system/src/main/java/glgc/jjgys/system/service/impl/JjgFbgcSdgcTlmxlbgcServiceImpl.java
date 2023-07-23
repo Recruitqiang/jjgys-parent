@@ -16,6 +16,7 @@ import glgc.jjgys.system.service.JjgFbgcSdgcTlmxlbgcService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -60,7 +61,7 @@ public class JjgFbgcSdgcTlmxlbgcServiceImpl extends ServiceImpl<JjgFbgcSdgcTlmxl
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
         String fbgc = commonInfoVo.getFbgc();
-        List<Map<String,Object>> sdmclist = jjgFbgcSdgcTlmxlbgcMapper.selectsdmc(proname,htd,fbgc);
+        List<Map<String,Object>> sdmclist = jjgFbgcSdgcTlmxlbgcMapper.selectsdmc(proname,htd);
         if (sdmclist.size()>0){
             for (Map<String, Object> m : sdmclist)
             {
@@ -102,7 +103,7 @@ public class JjgFbgcSdgcTlmxlbgcServiceImpl extends ServiceImpl<JjgFbgcSdgcTlmxl
                 //创建文件根目录
                 fdir.mkdirs();
             }
-            File directory = new File("service-system/src/main/resources/static");
+            File directory = new File("src/main/resources/static");
             String reportPath = directory.getCanonicalPath();
             String path = reportPath + File.separator + "混凝土路面相邻板高差.xlsx";
             Files.copy(Paths.get(path), new FileOutputStream(f));
@@ -241,6 +242,10 @@ public class JjgFbgcSdgcTlmxlbgcServiceImpl extends ServiceImpl<JjgFbgcSdgcTlmxl
                 row.createCell(9).setCellFormula(
                         "MIN(" + rowstart.getCell(3).getReference() + ":"
                                 + rowend.getCell(3).getReference() + ")");// =COUNT(D7:D30)
+
+                row.createCell(10).setCellFormula(
+                        "AVERAGE(" + rowstart.getCell(3).getReference() + ":"
+                                + rowend.getCell(3).getReference() + ")");// =COUNT(D7:D30)
             }
         }
     }
@@ -342,13 +347,13 @@ public class JjgFbgcSdgcTlmxlbgcServiceImpl extends ServiceImpl<JjgFbgcSdgcTlmxl
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
+        //String fbgc = commonInfoVo.getFbgc();
         String title = "混凝土路面相邻板高差质量鉴定表";
         String sheetname = "相邻板高差";
 
         List<Map<String, Object>> mapList = new ArrayList<>();
 
-        List<Map<String,Object>> sdmclist = jjgFbgcSdgcTlmxlbgcMapper.selectsdmc(proname,htd,fbgc);
+        List<Map<String,Object>> sdmclist = jjgFbgcSdgcTlmxlbgcMapper.selectsdmc(proname,htd);
         if (sdmclist.size()>0){
             for (Map<String, Object> m : sdmclist) {
                 for (String k : m.keySet()){
@@ -373,7 +378,7 @@ public class JjgFbgcSdgcTlmxlbgcServiceImpl extends ServiceImpl<JjgFbgcSdgcTlmxl
      * @return
      */
     private Map<String, Object> looksdjdb(String proname, String htd, String sdmc, String sheetname, String title) throws IOException {
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "48隧道混凝土路面相邻板高差-"+sdmc+".xlsx");
         if (!f.exists()) {
@@ -391,6 +396,9 @@ public class JjgFbgcSdgcTlmxlbgcServiceImpl extends ServiceImpl<JjgFbgcSdgcTlmxl
                 slSheet.getRow(lastRowNum).getCell(3).setCellType(CellType.STRING);//总点数
                 slSheet.getRow(lastRowNum).getCell(5).setCellType(CellType.STRING);//合格点数
                 slSheet.getRow(lastRowNum).getCell(7).setCellType(CellType.STRING);//合格率
+                slSheet.getRow(3).getCell(2).setCellType(CellType.STRING);//合格率
+                slSheet.getRow(lastRowNum).getCell(8).setCellType(CellType.STRING);
+                slSheet.getRow(lastRowNum).getCell(9).setCellType(CellType.STRING);
                 double zds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(3).getStringCellValue());
                 double hgds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(5).getStringCellValue());
                 double hgl = Double.valueOf(slSheet.getRow(lastRowNum).getCell(7).getStringCellValue());
@@ -401,6 +409,9 @@ public class JjgFbgcSdgcTlmxlbgcServiceImpl extends ServiceImpl<JjgFbgcSdgcTlmxl
                 jgmap.put("检测点数", zdsz1);
                 jgmap.put("合格点数", hgdsz1);
                 jgmap.put("合格率", hglz1);
+                jgmap.put("最大值", slSheet.getRow(lastRowNum).getCell(8).getStringCellValue());
+                jgmap.put("最小值", slSheet.getRow(lastRowNum).getCell(9).getStringCellValue());
+                jgmap.put("规定值", slSheet.getRow(3).getCell(2).getStringCellValue());
             }
             return jgmap;
         }
@@ -447,7 +458,48 @@ public class JjgFbgcSdgcTlmxlbgcServiceImpl extends ServiceImpl<JjgFbgcSdgcTlmxl
 
     @Override
     public List<Map<String, Object>> selectsdmc(String proname, String htd, String fbgc) {
-        List<Map<String,Object>> sdmclist = jjgFbgcSdgcTlmxlbgcMapper.selectsdmc(proname,htd,fbgc);
+        List<Map<String,Object>> sdmclist = jjgFbgcSdgcTlmxlbgcMapper.selectsdmc(proname,htd);
         return sdmclist;
+    }
+
+    @Override
+    public List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo, String value) throws IOException {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + value);
+        if (!f.exists()) {
+            return null;
+        } else {
+            XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(f));
+            List<Map<String, Object> > resultList = new ArrayList<>();
+            XSSFSheet slSheet = wb.getSheet("相邻板高差");
+            XSSFCell bt = slSheet.getRow(0).getCell(0);//标题
+            XSSFCell xmname = slSheet.getRow(1).getCell(2);//项目名
+            XSSFCell htdname = slSheet.getRow(1).getCell(6);//合同段名
+            Map<String, Object> jgmap = new HashMap<>();
+            if (proname.equals(xmname.toString()) &&  htd.equals(htdname.toString())) {
+                //获取到最后一行
+                int lastRowNum = slSheet.getLastRowNum();
+                slSheet.getRow(lastRowNum).getCell(3).setCellType(CellType.STRING);//总点数
+                slSheet.getRow(lastRowNum).getCell(5).setCellType(CellType.STRING);//合格点数
+                slSheet.getRow(lastRowNum).getCell(7).setCellType(CellType.STRING);//合格率
+                slSheet.getRow(3).getCell(2).setCellType(CellType.STRING);//合格率
+                double zds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(3).getStringCellValue());
+                double hgds = Double.valueOf(slSheet.getRow(lastRowNum).getCell(5).getStringCellValue());
+                double hgl = Double.valueOf(slSheet.getRow(lastRowNum).getCell(7).getStringCellValue());
+                String zdsz1 = decf.format(zds);
+                String hgdsz1 = decf.format(hgds);
+                String hglz1 = df.format(hgl);
+                jgmap.put("检测项目", StringUtils.substringBetween(value, "-", "."));
+                jgmap.put("检测点数", zdsz1);
+                jgmap.put("规定值", slSheet.getRow(3).getCell(2).getStringCellValue());
+                jgmap.put("合格点数", hgdsz1);
+                jgmap.put("合格率", hglz1);
+                resultList.add(jgmap);
+            }
+            return resultList;
+        }
     }
 }

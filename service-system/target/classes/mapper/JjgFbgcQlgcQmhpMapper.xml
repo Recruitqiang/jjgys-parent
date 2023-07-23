@@ -6,8 +6,16 @@
         SELECT DISTINCT qlmc from jjg_fbgc_qlgc_qmhp  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}
     </select>
 
+    <select id="selectqlmc2" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT qlmc from jjg_fbgc_qlgc_qmhp  where proname = #{proname} and htd = #{htd}
+    </select>
+
     <select id="selectzh" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT zh,lmlx from jjg_fbgc_qlgc_qmhp  where proname = #{proname} and htd = #{htd} and fbgc= #{fbgc} and qlmc=#{qlmc}
+    </select>
+
+    <select id="selectzh2" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT zh,lmlx from jjg_fbgc_qlgc_qmhp  where proname = #{proname} and htd = #{htd} and qlmc=#{qlmc}
     </select>
 
 </mapper>

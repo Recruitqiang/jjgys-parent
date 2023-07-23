@@ -28,4 +28,8 @@
           and jbbx1.hxscz5 is not null
     </select>
 
+    <select id="selectchs" resultType="java.util.Map" parameterType="java.lang.String">
+        select COUNT(DISTINCT(wz)) wz FROM jjg_fbgc_jtaqss_jabx where proname = #{proname} and htd = #{htd}
+    </select>
+
 </mapper>

@@ -13,8 +13,7 @@ import glgc.jjgys.system.service.JjgFbgcQlgcXbJgccService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
@@ -488,11 +487,11 @@ public class JjgFbgcQlgcXbJgccServiceImpl extends ServiceImpl<JjgFbgcQlgcXbJgccM
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
+        //String fbgc = commonInfoVo.getFbgc();
         String title = "结构（断面）尺寸质量鉴定表";
         String sheetname = "尺寸";
 
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         //获取鉴定表文件
         File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"26桥梁下部主要结构尺寸.xlsx");
@@ -508,7 +507,7 @@ public class JjgFbgcQlgcXbJgccServiceImpl extends ServiceImpl<JjgFbgcQlgcXbJgccM
             XSSFCell hd = slSheet.getRow(2).getCell(2);//涵洞1
             List<Map<String,Object>> mapList = new ArrayList<>();
             Map<String,Object> jgmap = new HashMap<>();
-            if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
+            if(proname.equals(xmname.toString()) && title.equals(bt.toString()) && htd.equals(htdname.toString())){
                 slSheet.getRow(2).getCell(9).setCellType(CellType.STRING);
                 slSheet.getRow(2).getCell(10).setCellType(CellType.STRING);
                 slSheet.getRow(2).getCell(11).setCellType(CellType.STRING);
@@ -559,6 +558,73 @@ public class JjgFbgcQlgcXbJgccServiceImpl extends ServiceImpl<JjgFbgcQlgcXbJgccM
                     ).doRead();
         } catch (IOException e) {
             throw new JjgysException(20001,"解析excel出错，请传入正确格式的excel");
+        }
+
+    }
+
+    @Override
+    public List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo) {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String sheetname = "尺寸";
+        DecimalFormat decf = new DecimalFormat("0.##");
+        //获取鉴定表文件
+        File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "26桥梁下部主要结构尺寸.xlsx");
+        if (!f.exists()) {
+            return null;
+        }else {
+            List<Map<String, Object>> data = new ArrayList<>();
+
+            try (FileInputStream fis = new FileInputStream(f)) {
+                Workbook workbook = WorkbookFactory.create(fis);
+                Sheet sheet = workbook.getSheet(sheetname); // 假设数据在第一个工作表中
+
+                DataFormatter dataFormatter = new DataFormatter();
+                FormulaEvaluator formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+
+                Iterator<Row> rowIterator = sheet.iterator();
+                int rowNum = 0;
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
+                    rowNum++;
+                    if (rowNum > 4 && row !=null) {
+                        Cell cell0 = row.getCell(0);
+                        Cell cell9 = row.getCell(9);
+                        Cell cell10 = row.getCell(10);
+                        Cell cell6 = row.getCell(6);
+
+                        if (cell0 != null && cell9 != null) {
+                            String cellValue0 = cell0.getStringCellValue();
+                            cell6.setCellType(CellType.STRING);
+                            String cellValue31 = cell6.getStringCellValue();
+
+                            String cellValue34 = dataFormatter.formatCellValue(cell9, formulaEvaluator);
+                            String cellValue35 = dataFormatter.formatCellValue(cell10, formulaEvaluator);
+
+                            //String cellValue34 = String.valueOf(decf.format(cell9.getNumericCellValue()));
+                            //String cellValue35 = String.valueOf(decf.format(cell10.getNumericCellValue()));
+
+                            if (!cellValue0.isEmpty() && !cellValue34.isEmpty()) {
+                                Map map = new HashMap();
+                                map.put("qlmc",cellValue0);
+                                map.put("zds",cellValue34);
+                                map.put("hgds",cellValue35);
+                                map.put("sjqd",cellValue31);
+
+                                data.add(map);
+                            }
+
+
+                        }
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return data;
+
         }
 
     }

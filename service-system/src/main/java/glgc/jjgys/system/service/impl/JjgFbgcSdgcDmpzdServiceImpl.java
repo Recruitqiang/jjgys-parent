@@ -16,8 +16,7 @@ import glgc.jjgys.system.service.JjgFbgcSdgcDmpzdService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
@@ -394,10 +393,10 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
+        //String fbgc = commonInfoVo.getFbgc();
         String sheetname = "二衬大面平整度";
 
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         //获取鉴定表文件
         File f = new File(filepath+File.separator+proname+File.separator+htd+File.separator+"40隧道大面平整度.xlsx");
@@ -412,7 +411,7 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
             XSSFCell hd = slSheet.getRow(2).getCell(1);//涵洞
             List<Map<String,Object>> mapList = new ArrayList<>();
             Map<String,Object> jgmap = new HashMap<>();
-            if(proname.equals(xmname.toString()) && htd.equals(htdname.toString()) && fbgc.equals(hd.toString())){
+            if(proname.equals(xmname.toString()) && htd.equals(htdname.toString())){
                 slSheet.getRow(5).getCell(7).setCellType(CellType.STRING);
                 slSheet.getRow(5).getCell(8).setCellType(CellType.STRING);
                 slSheet.getRow(5).getCell(9).setCellType(CellType.STRING);
@@ -467,5 +466,77 @@ public class JjgFbgcSdgcDmpzdServiceImpl extends ServiceImpl<JjgFbgcSdgcDmpzdMap
             throw new JjgysException(20001,"解析excel出错，请传入正确格式的excel");
         }
 
+    }
+
+    @Override
+    public List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo) {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        String sheetname = "二衬大面平整度";
+        DecimalFormat decf = new DecimalFormat("0.##");
+        //获取鉴定表文件
+        File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "40隧道大面平整度.xlsx");
+        if (!f.exists()) {
+            return null;
+        }else {
+            List<Map<String, Object>> data = new ArrayList<>();
+
+            try (FileInputStream fis = new FileInputStream(f)) {
+                Workbook workbook = WorkbookFactory.create(fis);
+                Sheet sheet = workbook.getSheet(sheetname); // 假设数据在第一个工作表中
+
+                DataFormatter dataFormatter = new DataFormatter();
+                FormulaEvaluator formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+                for (int i = 1; i <= sheet.getLastRowNum(); i++) { // 循环每一行，从第3行开始（忽略表头）
+
+                    Row row = sheet.getRow(i);
+                    Cell cell0 = getMergedCell(sheet, i, 0); // 获取合并单元格 // 第0列
+                    Cell cell13 = row.getCell(3); // 第0列
+                    Cell cell8 = row.getCell(7); // 第0列
+                    Cell cell9 = row.getCell(8); // 第34列
+
+
+                    if (cell0.getStringCellValue().equals("隧道名称") && dataFormatter.formatCellValue(cell8, formulaEvaluator).equals("总点数") ) { // 判断是否不为空
+                        Cell nextRowCell8 = sheet.getRow(i + 1).getCell(7); // 下一行的第0列
+                        Cell nextRowCell9 = sheet.getRow(i + 1).getCell(8); // 下一行的第34列
+
+                        Cell nextRowCell0 = sheet.getRow(i + 1).getCell(0); // 下一行的第34列
+                        Cell nextRowCell3 = sheet.getRow(i + 1).getCell(3); // 下一行的第34列
+
+                        String data8 = dataFormatter.formatCellValue(nextRowCell8, formulaEvaluator);
+                        String data9 = dataFormatter.formatCellValue(nextRowCell9, formulaEvaluator);
+
+                        String data0 = nextRowCell0.getStringCellValue();
+                        String data3 = dataFormatter.formatCellValue(nextRowCell3, formulaEvaluator);
+
+                        Map map = new HashMap();
+                        map.put("qlmc",data0);
+                        map.put("zds",data8);
+                        map.put("hgds",data9);
+                        map.put("sjqd",data3);
+
+                        data.add(map);
+
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return data;
+        }
+
+
+    }
+
+    private static Cell getMergedCell(Sheet sheet, int rowIndex, int columnIndex) {
+        for (CellRangeAddress range : sheet.getMergedRegions()) {
+            if (range.isInRange(rowIndex, columnIndex)) {
+                Row mergedRow = sheet.getRow(range.getFirstRow());
+                return mergedRow.getCell(range.getFirstColumn());
+            }
+        }
+        return sheet.getRow(rowIndex).getCell(columnIndex);
     }
 }

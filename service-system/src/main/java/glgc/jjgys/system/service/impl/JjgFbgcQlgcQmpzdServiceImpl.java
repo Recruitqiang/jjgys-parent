@@ -16,6 +16,7 @@ import glgc.jjgys.system.service.JjgFbgcQlgcQmpzdService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -287,13 +288,13 @@ public class JjgFbgcQlgcQmpzdServiceImpl extends ServiceImpl<JjgFbgcQlgcQmpzdMap
     public List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException {
         String proname = commonInfoVo.getProname();
         String htd = commonInfoVo.getHtd();
-        String fbgc = commonInfoVo.getFbgc();
+        //String fbgc = commonInfoVo.getFbgc();
         String title = "平整度质量鉴定表";
         String sheetname = "平整度";
 
         List<Map<String, Object>> mapList = new ArrayList<>();
 
-        List<Map<String,Object>> qlmclist = jjgFbgcQlgcQmpzdMapper.selectqlmc(proname,htd,fbgc);
+        List<Map<String,Object>> qlmclist = jjgFbgcQlgcQmpzdMapper.selectqlmc2(proname,htd);
         if (qlmclist.size()>0){
             for (Map<String, Object> m : qlmclist) {
                 for (String k : m.keySet()){
@@ -319,7 +320,7 @@ public class JjgFbgcQlgcQmpzdServiceImpl extends ServiceImpl<JjgFbgcQlgcQmpzdMap
      * @throws IOException
      */
     private Map<String, Object> lookqljdb(String proname, String htd, String qlmc, String sheetname, String title) throws IOException {
-        DecimalFormat df = new DecimalFormat(".00");
+        DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat decf = new DecimalFormat("0.##");
         File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + "34桥面平整度3米直尺法-"+qlmc+".xlsx");
         if (!f.exists()) {
@@ -336,9 +337,11 @@ public class JjgFbgcQlgcQmpzdServiceImpl extends ServiceImpl<JjgFbgcQlgcQmpzdMap
                 slSheet.getRow(2).getCell(7).setCellType(CellType.STRING);//总点数
                 slSheet.getRow(3).getCell(7).setCellType(CellType.STRING);//合格点数
                 slSheet.getRow(4).getCell(7).setCellType(CellType.STRING);//合格率
+                slSheet.getRow(5).getCell(2).setCellType(CellType.STRING);//合格率
                 double zds = Double.valueOf(slSheet.getRow(2).getCell(7).getStringCellValue());
                 double hgds = Double.valueOf(slSheet.getRow(3).getCell(7).getStringCellValue());
                 double hgl = Double.valueOf(slSheet.getRow(4).getCell(7).getStringCellValue());
+                double sjz = Double.valueOf(slSheet.getRow(5).getCell(2).getStringCellValue());
                 String zdsz1 = decf.format(zds);
                 String hgdsz1 = decf.format(hgds);
                 String hglz1 = df.format(hgl);
@@ -346,6 +349,7 @@ public class JjgFbgcQlgcQmpzdServiceImpl extends ServiceImpl<JjgFbgcQlgcQmpzdMap
                 jgmap.put("检测点数", zdsz1);
                 jgmap.put("合格点数", hgdsz1);
                 jgmap.put("合格率", hglz1);
+                jgmap.put("yxpc", sjz);
             }
             return jgmap;
         }
@@ -393,5 +397,47 @@ public class JjgFbgcQlgcQmpzdServiceImpl extends ServiceImpl<JjgFbgcQlgcQmpzdMap
     public List<Map<String, Object>> selectqlmc(String proname, String htd, String fbgc) {
         List<Map<String,Object>> qlmclist = jjgFbgcQlgcQmpzdMapper.selectqlmc(proname,htd,fbgc);
         return qlmclist;
+    }
+
+    @Override
+    public List<Map<String, Object>> lookjg(CommonInfoVo commonInfoVo, String value) throws IOException {
+        String proname = commonInfoVo.getProname();
+        String htd = commonInfoVo.getHtd();
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat decf = new DecimalFormat("0.##");
+        File f = new File(filepath + File.separator + proname + File.separator + htd + File.separator + value);
+        if (!f.exists()) {
+            return null;
+        } else {
+            XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(f));
+            XSSFSheet slSheet = wb.getSheet("平整度");
+            XSSFCell bt = slSheet.getRow(0).getCell(0);//标题
+            XSSFCell xmname = slSheet.getRow(1).getCell(1);//项目名
+            XSSFCell htdname = slSheet.getRow(1).getCell(4);//合同段名
+            Map<String, Object> jgmap = new HashMap<>();
+            List list =new ArrayList();
+            if (proname.equals(xmname.toString()) && htd.equals(htdname.toString())) {
+
+                slSheet.getRow(2).getCell(7).setCellType(CellType.STRING);//总点数
+                slSheet.getRow(3).getCell(7).setCellType(CellType.STRING);//合格点数
+                slSheet.getRow(4).getCell(7).setCellType(CellType.STRING);//合格率
+                slSheet.getRow(5).getCell(2).setCellType(CellType.STRING);//合格率
+                double zds = Double.valueOf(slSheet.getRow(2).getCell(7).getStringCellValue());
+                double hgds = Double.valueOf(slSheet.getRow(3).getCell(7).getStringCellValue());
+                double hgl = Double.valueOf(slSheet.getRow(4).getCell(7).getStringCellValue());
+                double sjz = Double.valueOf(slSheet.getRow(5).getCell(2).getStringCellValue());
+                String zdsz1 = decf.format(zds);
+                String hgdsz1 = decf.format(hgds);
+                String hglz1 = df.format(hgl);
+                jgmap.put("检测项目", StringUtils.substringBetween(value, "-", "."));
+                jgmap.put("检测点数", zdsz1);
+                jgmap.put("合格点数", hgdsz1);
+                jgmap.put("合格率", hglz1);
+                jgmap.put("yxpc", sjz);
+            }
+            list.add(jgmap);
+            return list;
+        }
+
     }
 }
