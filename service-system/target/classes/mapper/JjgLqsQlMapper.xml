@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgLqsQlMapper">
+
+    <select id="selectqlzf" resultType="glgc.jjgys.model.project.JjgLqsQl" parameterType="java.lang.String">
+        SELECT * FROM jjg_lqs_ql where proname = #{proname} and zhq >=#{htdzhq} and zhz &lt;= #{htdzhz} and lf = #{lf} and wz='主线' ORDER BY zhq
+    </select>
+
+    <select id="selectqlyf" resultType="glgc.jjgys.model.project.JjgLqsQl" parameterType="java.lang.String">
+        SELECT * FROM jjg_lqs_ql where proname = #{proname} and zhq >=#{htdzhq} and zhz &lt;= #{htdzhz} and lf = #{lf} and wz='主线' ORDER BY zhq
+    </select>
+
+    <select id="selectqlList" resultType="glgc.jjgys.model.project.JjgLqsQl" parameterType="java.lang.String">
+        SELECT * FROM jjg_lqs_ql where proname = #{proname} and zhq >=#{zhq} and zhz &lt;= #{zhz} and bz=#{bz} and wz=#{wz} and lf=#{zdlf} ORDER BY zhq
+    </select>
+
+    <select id="getqlName" resultType="glgc.jjgys.model.project.JjgLqsQl" parameterType="java.lang.String">
+        SELECT * FROM jjg_lqs_ql where proname = #{proname} and htd = #{htd}
+    </select>
+
+</mapper>

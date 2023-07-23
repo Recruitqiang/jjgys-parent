@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgFbgcLjgcZddmccMapper">
+
+    <select id="selectyxps" resultType="java.util.Map" parameterType="java.lang.String">
+        select DISTINCT
+            CASE WHEN yxwcz LIKE '不%'
+                     THEN yxwcz ELSE CONCAT_WS(';', CONCAT('+', yxwcz), CONCAT('-', yxwcf)) END AS result
+        FROM jjg_fbgc_ljgc_zddmcc where proname = #{proname} and htd = #{htd}
+    </select>
+
+    <select id="selectchs" resultType="java.util.Map" parameterType="java.lang.String">
+        select COUNT(DISTINCT(cjzh)) ccs FROM jjg_fbgc_ljgc_zddmcc where proname = #{proname} and htd = #{htd}
+    </select>
+
+</mapper>

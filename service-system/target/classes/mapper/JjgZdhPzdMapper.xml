@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgZdhPzdMapper">
+
+    <select id="selectlx" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT lxbs from jjg_zdh_pzd  where proname = #{proname} and htd = #{htd}
+    </select>
+
+    <select id="selectcdnum" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(DISTINCT cd) from jjg_zdh_pzd where proname = #{proname} and htd = #{htd} and lxbs=#{zx}
+    </select>
+
+    <select id="selectSdZfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT pzd.*,sd.name,sd.pzlx from (SELECT * from jjg_zdh_pzd where proname = #{proname} and htd = #{htd} and cd LIKE '左幅%' and lxbs=#{zx} and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) pzd
+        LEFT JOIN (SELECT * FROM jjg_lqs_sd where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz} and lf = '左幅' and wz=#{zx}) sd
+        ON pzd.proname=sd.proname
+        ORDER BY pzd.qdzh,FIELD(pzd.cd, ${result})
+    </select>
+
+    <select id="selectSdyfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT pzd.*,sd.name,sd.pzlx from (SELECT * from jjg_zdh_pzd where proname = #{proname} and htd = #{htd} and cd LIKE '右幅%' and lxbs=#{zx} and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) pzd
+                                       LEFT JOIN (SELECT * FROM jjg_lqs_sd where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz} and lf = '右幅' and wz=#{zx}) sd
+                                                 ON pzd.proname=sd.proname
+        ORDER BY pzd.qdzh,FIELD(pzd.cd, ${result})
+    </select>
+
+    <select id="selectQlZfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT pzd.*,ql.qlname name,ql.pzlx from (SELECT * from jjg_zdh_pzd where proname = #{proname} and htd = #{htd} and cd LIKE '左幅%' and lxbs=#{zx} and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) pzd
+                                              LEFT JOIN (SELECT * FROM jjg_lqs_ql where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz} and lf = '左幅' and wz=#{zx}) ql
+                                                        ON pzd.proname=ql.proname
+        ORDER BY pzd.qdzh,FIELD(pzd.cd, ${result})
+    </select>
+
+    <select id="selectQlYfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT pzd.*,ql.qlname name,ql.pzlx from (SELECT * from jjg_zdh_pzd where proname = #{proname} and htd = #{htd} and cd LIKE '右幅%' and lxbs=#{zx} and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) pzd
+                                              LEFT JOIN (SELECT * FROM jjg_lqs_ql where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz} and lf = '右幅' and wz=#{zx}) ql
+                                                        ON pzd.proname=ql.proname
+        ORDER BY pzd.qdzh,FIELD(pzd.cd, ${result})
+    </select>
+
+    <select id="selectzfList" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT *, #{zx} as name from jjg_zdh_pzd where proname = #{proname} and htd = #{htd} and cd LIKE '左幅%' and lxbs = #{zx} ORDER BY zdbs,qdzh,FIELD(cd, ${result})
+    </select>
+
+    <select id="selectyfList" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT *,#{zx} as name  from jjg_zdh_pzd where proname = #{proname} and htd = #{htd} and cd LIKE '右幅%' and lxbs = #{zx} ORDER BY zdbs,qdzh,FIELD(cd, ${result})
+    </select>
+
+    <select id="selectsd" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT * from jjg_zdh_pzd where proname = #{proname} and htd = #{htd} and lxbs = #{zx} ORDER BY zdbs,qdzh
+    </select>
+
+    <select id="selectSdData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT pzd.*,sd.name,sd.pzlx from (SELECT * from jjg_zdh_pzd where proname = #{proname} and htd = #{htd} and lxbs=#{zx} and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) pzd
+        LEFT JOIN (SELECT * FROM jjg_lqs_sd where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz} and wz=#{zx}) sd
+        ON pzd.proname=sd.proname
+        ORDER BY pzd.qdzh,FIELD(pzd.cd,${result})
+    </select>
+
+    <select id="selectsdpzd" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT pzd.*,sd.name,sd.pzlx from (
+                                       SELECT * from jjg_zdh_pzd where proname = #{proname} and cd LIKE '${lf}%' and lxbs=#{zx} AND zdbs=#{bz} and qdzh >= #{zhq1} and qdzh &lt;= #{sdzhz}) pzd
+                                       LEFT JOIN (SELECT * FROM jjg_lqs_sd where proname = #{proname} and zdbz=#{bz}  and zhq = #{zhq1} and zhz = #{zhz1} and lf = #{lf} and wz=#{zx}) sd
+                                                 ON pzd.proname=sd.proname
+        ORDER BY pzd.qdzh
+    </select>
+
+    <select id="selectqlpzd" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT pzd.*, ql.qlname name,ql.pzlx from (
+                                               SELECT * from jjg_zdh_pzd where proname = #{proname} and cd LIKE '${lf}%' and lxbs=#{zx} AND zdbs=#{bz} and qdzh >= #{qlzhq} and qdzh &lt;= #{qlzhzj}
+                                           ) pzd
+                                               LEFT JOIN (SELECT * FROM jjg_lqs_ql where proname = #{proname} and bz=#{bz} and zhq =#{qlzhq} and zhz = #{qlzhz} and lf = #{lf} and wz=#{zx}) ql
+                                                         ON pzd.proname=ql.proname
+        ORDER BY pzd.qdzh
+    </select>
+
+</mapper>

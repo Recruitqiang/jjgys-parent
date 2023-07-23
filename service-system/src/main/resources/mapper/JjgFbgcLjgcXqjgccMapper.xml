@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgFbgcLjgcXqjgccMapper">
+
+    <select id="selectyxps" resultType="java.util.Map" parameterType="java.util.List">
+        SELECT DISTINCT yxwcz,yxwcf FROM jjg_fbgc_ljgc_xqjgcc
+        WHERE proname = #{proname} and htd = #{htd}
+    </select>
+
+</mapper>

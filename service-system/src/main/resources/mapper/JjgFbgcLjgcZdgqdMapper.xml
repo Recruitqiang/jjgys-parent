@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgFbgcLjgcZdgqdMapper">
+
+    <select id="selectsjqd" resultType="java.util.Map" parameterType="java.lang.String">
+        select DISTINCT(sjqd) FROM jjg_fbgc_ljgc_zdgqd where proname = #{proname} and htd = #{htd}
+    </select>
+
+    <select id="selectchs" resultType="java.util.Map" parameterType="java.lang.String">
+        select COUNT(DISTINCT(zh)) ccs FROM jjg_fbgc_ljgc_zdgqd where proname = #{proname} and htd = #{htd}
+    </select>
+
+</mapper>

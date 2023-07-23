@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgZdhMcxsMapper">
+
+    <select id="selectcdnum" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(DISTINCT cd) from jjg_zdh_mcxs where proname = #{proname} and htd = #{htd} and lxbs=#{zx}
+    </select>
+
+
+    <select id="selectSdZfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT mcxs.*,sd.name from (SELECT * from jjg_zdh_mcxs where proname = #{proname} and htd = #{htd} and cd LIKE '左幅%' and lxbs='主线' and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) mcxs
+        LEFT JOIN (SELECT * FROM jjg_lqs_sd where proname = #{proname} and zhq = #{zhq1} and zhz = #{zhz1} and lf = '左幅' and wz='主线') sd
+        ON mcxs.proname=sd.proname
+        ORDER BY mcxs.qdzh
+        ORDER BY mcxs.qdzh
+    </select>
+
+    <select id="selectSdyfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT mcxs.*,sd.name from (SELECT * from jjg_zdh_mcxs where proname = #{proname} and htd = #{htd} and cd LIKE '右幅%' and lxbs='主线' and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) mcxs
+                                       LEFT JOIN (SELECT * FROM jjg_lqs_sd where proname = #{proname} and zhq = #{zhq1} and zhz = #{zhz1} and lf = '右幅' and wz='主线') sd
+                                                 ON mcxs.proname=sd.proname
+        ORDER BY mcxs.qdzh
+    </select>
+
+
+    <select id="selectQlZfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT mcxs.*,ql.qlname name from (SELECT * from jjg_zdh_mcxs where proname = #{proname} and htd = #{htd} and cd LIKE '左幅%' and lxbs='主线' and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) mcxs
+         LEFT JOIN (SELECT * FROM jjg_lqs_ql where proname = #{proname} and zhq = #{zhq1} and zhz = #{zhz1} and lf = '左幅' and wz='主线') ql
+         ON mcxs.proname=ql.proname
+        ORDER BY mcxs.qdzh
+    </select>
+
+    <select id="selectQlYfData" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT mcxs.*,ql.qlname name from (SELECT * from jjg_zdh_mcxs where proname = #{proname} and htd = #{htd} and cd LIKE '右幅%' and lxbs='主线' and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) mcxs
+        LEFT JOIN (SELECT * FROM jjg_lqs_ql where proname = #{proname} and zhq = #{zhq1} and zhz = #{zhz1} and lf = '右幅' and wz='主线') ql
+        ON mcxs.proname=ql.proname
+        ORDER BY mcxs.qdzh
+    </select>
+
+    <select id="selectzfList" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT *, concat(#{zx}, '左幅') as name from jjg_zdh_mcxs where proname = #{proname} and htd = #{htd} and cd LIKE '左幅%' and lxbs = #{zx} ORDER BY zdbs,qdzh
+    </select>
+
+    <select id="selectyfList" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT *,concat(#{zx}, '右幅') as name  from jjg_zdh_mcxs where proname = #{proname} and htd = #{htd} and cd LIKE '右幅%' and lxbs = #{zx} ORDER BY qdzh
+    </select>
+
+    <select id="selectlx" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT lxbs from jjg_zdh_mcxs  where proname = #{proname} and htd = #{htd}
+    </select>
+
+    <select id="selectsdmcxs" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT mcxs.*,sd.name from (
+        SELECT * from jjg_zdh_mcxs where proname = #{proname} and cd LIKE '${lf}%' and lxbs=#{zx} AND zdbs=#{bz} and qdzh >= #{sdzhq} and qdzh &lt;= #{sdzhz}) mcxs
+        LEFT JOIN (SELECT * FROM jjg_lqs_sd where proname = #{proname} and zdbz=#{bz}  and zhq = #{zhq1} and zhz = #{zhz1} and lf = #{lf} and wz=#{zx}) sd
+        ON mcxs.proname=sd.proname
+        ORDER BY mcxs.qdzh
+    </select>
+
+    <select id="selectqlmcxs" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT mcxs.*, ql.qlname name from (
+        SELECT * from jjg_zdh_mcxs where proname = #{proname} and cd LIKE '${lf}%' and lxbs=#{zx} AND zdbs=#{bz} and qdzh >= #{qlzhq} and qdzh &lt;= #{qlzhz}
+        ) mcxs
+        LEFT JOIN (SELECT * FROM jjg_lqs_ql where proname = #{proname} and bz=#{bz} and zhq =#{zhq1} and zhz = #{zhz1} and lf = #{lf} and wz=#{zx}) ql
+        ON mcxs.proname=ql.proname
+        ORDER BY mcxs.qdzh
+    </select>
+
+
+</mapper>
