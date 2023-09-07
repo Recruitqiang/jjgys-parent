@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="glgc.jjgys.system.mapper.JjgLookProjectPlanMapper">
+
+    <select id="selectplan" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT proname,htd,fbgc,zb,num from jjg_planinfo  where proname = #{proname} and htd = #{htd}
+    </select>
+</mapper>
