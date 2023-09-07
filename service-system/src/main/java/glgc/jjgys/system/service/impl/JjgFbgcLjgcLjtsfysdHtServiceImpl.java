@@ -1032,4 +1032,10 @@ public class JjgFbgcLjgcLjtsfysdHtServiceImpl extends ServiceImpl<JjgFbgcLjgcLjt
             throw new JjgysException(20001,"解析excel出错，请传入正确格式的excel");
         }
     }
+
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcLjgcLjtsfysdHtMapper.selectnum(proname, htd);
+        return selectnum;
+    }
 }

@@ -30,4 +30,6 @@ public interface JjgFbgcLjgcXqjgccService extends IService<JjgFbgcLjgcXqjgcc> {
     void importxqjgcc(MultipartFile file,CommonInfoVo commonInfoVo);
 
     List<Map<String, Object>> selectyxps(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

@@ -30,4 +30,6 @@ public interface JjgFbgcJtaqssJabxfhlService extends IService<JjgFbgcJtaqssJabxf
     void importjabxfhl(MultipartFile file, CommonInfoVo commonInfoVo) throws IOException, ParseException;
 
     List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException;
+
+    int selectnum(String proname, String htd);
 }

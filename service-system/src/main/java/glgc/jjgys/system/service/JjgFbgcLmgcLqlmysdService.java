@@ -30,4 +30,5 @@ public interface JjgFbgcLmgcLqlmysdService extends IService<JjgFbgcLmgcLqlmysd> 
 
     void importlqlmysd(MultipartFile file, CommonInfoVo commonInfoVo);
 
+    int selectnum(String proname, String htd);
 }

@@ -12,6 +12,7 @@ import glgc.jjgys.system.service.SysMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Api(tags = "项目管理接口")
 @RestController
+@Transactional
 @RequestMapping(value = "/project")
 @CrossOrigin//解决跨域
 public class ProjectController {
@@ -52,17 +54,13 @@ public class ProjectController {
     }
 
     @ApiOperation("批量删除项目信息")
+    @Transactional
     @DeleteMapping("removeBatch")
     //传json数组[1,2,3]，用List接收
     public Result removeBeatch(@RequestBody List<String> idList){
-        System.out.println(idList);
-        boolean isSuccess = projectService.removeByIds(idList);
-        if(isSuccess){
-            return Result.ok(null);
-        } else {
-            return Result.fail(null).message("删除失败！");
-        }
-
+        projectService.deleteOtherInfo(idList);
+        //boolean isSuccess = projectService.removeByIds(idList);
+        return Result.ok();
     }
 
     /**

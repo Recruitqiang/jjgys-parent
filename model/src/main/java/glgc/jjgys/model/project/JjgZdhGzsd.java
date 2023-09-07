@@ -68,6 +68,9 @@ public class JjgZdhGzsd implements Serializable {
     @TableField("zdbs")
     private String zdbs;
 
+    @TableField("val")
+    private int val;
+
     @TableField("proname")
     private String proname;
 

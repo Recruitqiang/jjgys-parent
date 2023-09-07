@@ -16,4 +16,7 @@ public interface JjgHtdService extends IService<JjgHtd> {
     String getAllzh(String proname);
 
     List<JjgHtd> gethtd(String proname);
+
+    boolean removeData(List<String> idList);
+
 }

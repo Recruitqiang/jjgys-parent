@@ -25,4 +25,6 @@ public interface JjgFbgcJtaqssJabxMapper extends BaseMapper<JjgFbgcJtaqssJabx> {
     List<JjgFbgcJtaqssJabx> selecthxnfsxs(String proname, String htd, String fbgc);
 
     Map<String, Object> selectchs(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

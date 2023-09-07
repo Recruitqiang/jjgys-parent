@@ -21,4 +21,6 @@ import java.util.List;
 public interface JjgFbgcLjgcLjbpMapper extends BaseMapper<JjgFbgcLjgcLjbp> {
 
     List<String> selectyxps(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

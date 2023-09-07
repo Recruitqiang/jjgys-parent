@@ -30,4 +30,6 @@ public interface JjgFbgcLjgcHdjgccService extends IService<JjgFbgcLjgcHdjgcc> {
     List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException;
 
     List<String> selectyxps(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

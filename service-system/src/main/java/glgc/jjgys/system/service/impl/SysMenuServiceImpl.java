@@ -1,5 +1,6 @@
 package glgc.jjgys.system.service.impl;
 
+import glgc.jjgys.model.project.JjgHtd;
 import glgc.jjgys.model.system.SysMenu;
 import glgc.jjgys.model.system.SysRoleMenu;
 import glgc.jjgys.model.vo.AssginMenuVo;
@@ -28,6 +29,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Autowired
     private SysRoleMenuMapper sysRoleMenuMapper;
+
+    @Autowired
+    private SysMenuMapper sysMenuMapper;
 
     //菜单列表（树形）
     @Override
@@ -151,5 +155,111 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             }
         }
         return permissionList;
+    }
+
+    @Override
+    public List<SysMenu> selectname(String proname) {
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+        wrapper.eq("name", proname);
+        List<SysMenu> htdList = sysMenuMapper.selectList(wrapper);
+        return htdList;
+    }
+
+    @Override
+    public List<SysMenu> selectscname(Long pronameid) {
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+        wrapper.eq("name", "实测数据");
+        wrapper.eq("parent_id", pronameid);
+        List<SysMenu> htdList = sysMenuMapper.selectList(wrapper);
+        return htdList;
+    }
+
+    @Override
+    public boolean delecthtd(Long scid, String htd) {
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+        wrapper.eq("name", htd);
+        wrapper.eq("parent_id", scid);
+        sysMenuMapper.delete(wrapper);
+        return true;
+    }
+
+    @Override
+    public List<SysMenu> selecthtd(Long scid, String htd) {
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+        wrapper.eq("parent_id", scid);
+        List<SysMenu> htdList = sysMenuMapper.selectList(wrapper);
+        return htdList;
+
+    }
+
+    @Override
+    public boolean delectfbgc(Long fbgcid) {
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+        wrapper.eq("parent_id", fbgcid);
+        List<SysMenu> list = sysMenuMapper.selectList(wrapper);
+        for (SysMenu sysMenu : list) {
+            Long id = sysMenu.getId();
+            sysMenuMapper.deleteById(id);
+        }
+        return true;
+    }
+
+    @Override
+    public SysMenu selectcdinfo(String proName) {
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+        wrapper.eq("name", proName);
+        wrapper.eq("parent_id", "1600779312636739586");
+        SysMenu sysMenu = sysMenuMapper.selectOne(wrapper);
+        return sysMenu;
+    }
+
+    @Override
+    public SysMenu getscChildrenMenu(Long proid) {
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+        wrapper.eq("name", "实测数据");
+        wrapper.eq("parent_id", proid);
+        SysMenu sysMenu = sysMenuMapper.selectOne(wrapper);
+        return sysMenu;
+
+    }
+
+    @Override
+    public List<SysMenu> getAllHtd(Long scid) {
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+        wrapper.eq("parent_id", scid);
+        List<SysMenu> menuList = sysMenuMapper.selectList(wrapper);
+        return menuList;
+    }
+
+    @Override
+    public void removeFbgc(List<SysMenu> htdlist) {
+        for (SysMenu sysMenu : htdlist) {
+            Long htdid = sysMenu.getId();
+            QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+            wrapper.eq("parent_id", htdid);
+            List<SysMenu> menuList = sysMenuMapper.selectList(wrapper);//所有分部工程的信息
+            removefbgcInfo(menuList);
+        }
+        //
+        for (SysMenu sysMenu : htdlist) {
+            sysMenuMapper.deleteById(sysMenu.getId());
+        }
+    }
+
+    @Override
+    public void delectChildrenMenu(Long proid) {
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+        wrapper.eq("parent_id", proid);
+        List<SysMenu> menuList = sysMenuMapper.selectList(wrapper);
+        for (SysMenu sysMenu : menuList) {
+            sysMenuMapper.deleteById(sysMenu.getId());
+        }
+
+    }
+
+    private void removefbgcInfo(List<SysMenu> menuList) {
+        for (SysMenu sysMenu : menuList) {
+            sysMenuMapper.deleteById(sysMenu.getId());
+        }
     }
 }

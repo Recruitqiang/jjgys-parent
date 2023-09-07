@@ -32,4 +32,6 @@ public interface JjgFbgcJtaqssJathlqdService extends IService<JjgFbgcJtaqssJathl
     List<String> selectsjqd(String proname, String htd);
 
     Map<String, Object> selectchs(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

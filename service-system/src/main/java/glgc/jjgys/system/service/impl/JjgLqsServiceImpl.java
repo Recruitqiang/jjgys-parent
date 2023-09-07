@@ -86,6 +86,8 @@ public class JjgLqsServiceImpl implements JjgLqsService {
                 {
                     JjgLqsQl jjgLqsQl = new JjgLqsQl();
                     BeanUtils.copyProperties(ql,jjgLqsQl);
+                    jjgLqsQl.setZhq(Double.valueOf(ql.getZhq()));
+                    jjgLqsQl.setZhz(Double.valueOf(ql.getZhz()));
                     jjgLqsQl.setProname(projectname);
                     jjgLqsQl.setCreateTime(new Date());
                     jjgLqsQlMapper.insert(jjgLqsQl);
@@ -99,6 +101,8 @@ public class JjgLqsServiceImpl implements JjgLqsService {
                 {
                     JjgLqsSd jjgLqsSd = new JjgLqsSd();
                     BeanUtils.copyProperties(sd,jjgLqsSd);
+                    jjgLqsSd.setZhq(Double.valueOf(sd.getZhq()));
+                    jjgLqsSd.setZhz(Double.valueOf(sd.getZhz()));
                     jjgLqsSd.setProname(projectname);
                     jjgLqsSd.setCreateTime(new Date());
                     jjgLqsSdMapper.insert(jjgLqsSd);
@@ -112,6 +116,8 @@ public class JjgLqsServiceImpl implements JjgLqsService {
                 {
                     JjgLqsFhlm jjgLqsFhlm = new JjgLqsFhlm();
                     BeanUtils.copyProperties(fhlm,jjgLqsFhlm);
+                    jjgLqsFhlm.setZhq(Double.valueOf(fhlm.getZhq()));
+                    jjgLqsFhlm.setZhz(Double.valueOf(fhlm.getZhz()));
                     jjgLqsFhlm.setProname(projectname);
                     jjgLqsFhlm.setCreateTime(new Date());
                     jjgLqsFhlmMapper.insert(jjgLqsFhlm);
@@ -163,6 +169,8 @@ public class JjgLqsServiceImpl implements JjgLqsService {
                 {
                     JjgLjxQl jjgLjxQl = new JjgLjxQl();
                     BeanUtils.copyProperties(ljxqlVo,jjgLjxQl);
+                    jjgLjxQl.setZhq(Double.valueOf(ljxqlVo.getZhq()));
+                    jjgLjxQl.setZhz(Double.valueOf(ljxqlVo.getZhz()));
                     jjgLjxQl.setProname(projectname);
                     jjgLjxQl.setCreateTime(new Date());
                     jjgLqsLjxqlMapper.insert(jjgLjxQl);
@@ -176,6 +184,8 @@ public class JjgLqsServiceImpl implements JjgLqsService {
                 {
                     JjgLjxSd jjgLjxSd = new JjgLjxSd();
                     BeanUtils.copyProperties(ljxsdVo,jjgLjxSd);
+                    jjgLjxSd.setZhq(Double.valueOf(ljxsdVo.getZhq()));
+                    jjgLjxSd.setZhz(Double.valueOf(ljxsdVo.getZhz()));
                     jjgLjxSd.setProname(projectname);
                     jjgLjxSd.setCreateTime(new Date());
                     jjgLqsLjxsdMapper.insert(jjgLjxSd);
@@ -189,6 +199,8 @@ public class JjgLqsServiceImpl implements JjgLqsService {
                 {
                     JjgLjxhntlm jjgLjxhntlm = new JjgLjxhntlm();
                     BeanUtils.copyProperties(ljxhntlmVo,jjgLjxhntlm);
+                    jjgLjxhntlm.setZhq(Double.valueOf(ljxhntlmVo.getZhq()));
+                    jjgLjxhntlm.setZhz(Double.valueOf(ljxhntlmVo.getZhz()));
                     jjgLjxhntlm.setProname(projectname);
                     jjgLjxhntlm.setCreateTime(new Date());
                     jjgLqsLjxhntlmMapper.insert(jjgLjxhntlm);

@@ -30,4 +30,6 @@ public interface JjgFbgcLmgcLmhpService extends IService<JjgFbgcLmgcLmhp> {
     void importlmhp(MultipartFile file, CommonInfoVo commonInfoVo);
 
     List<Map<String, String>> selectmc(String proname, String htd, String fbgc);
+
+    int selectnum(String proname, String htd);
 }

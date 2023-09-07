@@ -78,7 +78,7 @@ public class JjgFbgcJtaqssJabxController {
         response.reset();
         response.setHeader("Content-disposition", "attachment; filename=" + downloadName);
         response.setContentType("application/zip;charset=utf-8");
-        response.setCharacterEncoding("utf-8");
+        //response.setCharacterEncoding("utf-8");
         //返回客户端浏览器的版本号、类型
         /*String agent = request.getHeader("USER-AGENT");
         try {

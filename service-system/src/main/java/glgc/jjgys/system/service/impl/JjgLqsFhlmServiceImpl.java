@@ -59,6 +59,8 @@ public class JjgLqsFhlmServiceImpl extends ServiceImpl<JjgLqsFhlmMapper, JjgLqsF
                                     {
                                         JjgLqsFhlm jjgLqsFhlm = new JjgLqsFhlm();
                                         BeanUtils.copyProperties(fhlm,jjgLqsFhlm);
+                                        jjgLqsFhlm.setZhq(Double.valueOf(fhlm.getZhq()));
+                                        jjgLqsFhlm.setZhz(Double.valueOf(fhlm.getZhz()));
                                         jjgLqsFhlm.setProname(proname);
                                         jjgLqsFhlm.setCreateTime(new Date());
                                         jjgLqsFhlmMapper.insert(jjgLqsFhlm);

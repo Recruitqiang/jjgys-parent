@@ -72,6 +72,12 @@ public class JjgFbgcLjgcLjtsfysdSlServiceImpl extends ServiceImpl<JjgFbgcLjgcLjt
         }
     }
 
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcLjgcLjtsfysdSlMapper.selectnum(proname, htd);
+        return selectnum;
+    }
+
 
     /**
      * 根据数据的条数，计算要生成几页

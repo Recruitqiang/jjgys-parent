@@ -13,6 +13,7 @@ import glgc.jjgys.system.service.JjgZdhGzsdService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import glgc.jjgys.system.utils.JjgFbgcCommonUtils;
 import glgc.jjgys.system.utils.RowCopy;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
@@ -42,6 +43,7 @@ import java.util.*;
  * @since 2023-06-15
  */
 @Service
+@Slf4j
 public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhGzsd> implements JjgZdhGzsdService {
 
     @Autowired
@@ -78,8 +80,13 @@ public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhG
         for (Map<String, Object> map : lxlist) {
             String zx = map.get("lxbs").toString();
             int num = jjgZdhGzsdMapper.selectcdnum(proname,htd,zx);
-            System.out.println(num);
-            handlezxData(proname,htd,zx,num/2,commonInfoVo.getSjz());
+            int cds = 0;
+            if (num == 1){
+                cds = 2;
+            }else {
+                cds=num;
+            }
+            handlezxData(proname,htd,zx,cds,commonInfoVo.getSjz());
         }
 
     }
@@ -93,7 +100,7 @@ public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhG
      * @param sjz
      */
     private void handlezxData(String proname, String htd, String zx, int cdsl, String sjz) throws IOException, ParseException {
-
+        log.info("准备数据......");
         if (zx.equals("主线")){
             /**
              * 还需要判断时几车道，待处理
@@ -348,7 +355,13 @@ public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhG
             for (Map<String, Object> item : list) {
                 String zdbs = String.valueOf(item.get("zdbs"));
                 String qdzh = String.valueOf(item.get("qdzh"));
-                String sfc = String.valueOf(item.get("mtd"));
+                //String sfc = String.valueOf(item.get("mtd"));
+                String sfc = "";
+                if (item.get("mtd") == null){
+                    sfc = "-";
+                }else {
+                    sfc = item.get("mtd").toString();
+                }
                 if (map.containsKey(zdbs)) {
                     Map<String, List<String>> mapItem = map.get(zdbs);
                     if (mapItem.containsKey(qdzh)) {
@@ -431,7 +444,13 @@ public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhG
             Map<String, List<String>> resultMap = new TreeMap<>();
             for (Map<String, Object> map : list) {
                 String zh = map.get("qdzh").toString();
-                String sfc = map.get("mtd").toString();
+                //String sfc = map.get("mtd").toString();
+                String sfc = "";
+                if (map.get("mtd") == null){
+                    sfc = "-";
+                }else {
+                    sfc = map.get("mtd").toString();
+                }
                 if (resultMap.containsKey(zh)) {
                     resultMap.get(zh).add(sfc);
                 } else {
@@ -684,7 +703,12 @@ public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhG
                             String[] sfc = lm.get("mtd").toString().split(",");
                             for (int i = 0; i < sfc.length; i++) {
                                 sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27)).setCellValue((Double.parseDouble(lm.get("qdzh").toString())));
-                                sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl + 1) * (index / 27) + 1 + i).setCellValue(Double.parseDouble(sfc[i]));
+                                if (sfc[i].equals("-")){
+                                    sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl + 1) * (index / 27) + 1 + i).setCellValue("-");
+                                }else {
+                                    sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl + 1) * (index / 27) + 1 + i).setCellValue(Double.parseDouble(sfc[i]));
+
+                                }
                             }
                         } else {
                             for (int i = 0; i < cdsl; i++) {
@@ -723,7 +747,12 @@ public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhG
                             String[] sfc = lm.get("mtd").toString().split(",");
                             for (int i = 0; i < sfc.length; i++) {
                                 sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27)).setCellValue((Double.parseDouble(lm.get("qdzh").toString())));
-                                sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27) + 1 + i).setCellValue(Double.parseDouble(sfc[i]));
+                                if (sfc[i].equals("-")){
+                                    sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27) + 1 + i).setCellValue("-");
+                                }else {
+                                    sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27) + 1 + i).setCellValue(Double.parseDouble(sfc[i]));
+
+                                }
                             }
                         } else {
                             for (int i = 0; i < cdsl; i++) {
@@ -1333,7 +1362,12 @@ public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhG
                     String[] sfc = lm.get("mtd").toString().split(",");
                     for (int i = 0; i < sfc.length; i++) {
                         sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27)).setCellValue((Double.parseDouble(lm.get("qdzh").toString())));
-                        sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27) + 1 + i).setCellValue(Double.parseDouble(sfc[i]));
+                        if (sfc[i].equals("-")){
+                            sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27) + 1 + i).setCellValue("-");
+                        }else {
+                            sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27) + 1 + i).setCellValue(Double.parseDouble(sfc[i]));
+
+                        }
                     }
 
                 } else {
@@ -1545,7 +1579,12 @@ public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhG
         String[] sfc = row.get("mtd").toString().split(",");
         for (int i = 0 ; i < sfc.length ; i++) {
             sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27)).setCellValue(Double.valueOf(row.get("qdzh").toString()));
-            sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27)+1+i).setCellValue(Double.parseDouble(sfc[i]));
+            if (sfc[i].equals("-")){
+                sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27)+1+i).setCellValue("-");
+            }else {
+                sheet.getRow(tableNum * 33 + 6 + index % 27).getCell((cdsl+1) * (index / 27)+1+i).setCellValue(Double.parseDouble(sfc[i]));
+            }
+
         }
     }
 
@@ -1572,7 +1611,8 @@ public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhG
             fbgcname = "路面面层";
         }
         sheet.getRow(tableNum * 33 + 1).getCell(2).setCellValue(proname);
-        //sheet.getRow(tableNum * 33 + 1).getCell(cdsl*3+4).setCellValue(htd);
+        sheet.getRow(tableNum * 33 + 1).createCell(cdsl*3+4).setCellType(CellType.STRING);
+        sheet.getRow(tableNum * 33 + 1).getCell(cdsl*3+4).setCellValue(htd);
         sheet.getRow(tableNum * 33 + 2).getCell(2).setCellValue("路面工程");
         sheet.getRow(tableNum * 33 + 2).getCell(cdsl*3+4).setCellValue(time);
         sheet.getRow(tableNum * 33 + 2).getCell(cdsl*2+2).setCellValue(fbgcname+"("+name+")");
@@ -1636,7 +1676,13 @@ public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhG
             Map<String, List<String>> resultMap = new TreeMap<>();
             for (Map<String, Object> map : list) {
                 String zh = map.get("qdzh").toString();
-                String sfc = map.get("mtd").toString();
+                String sfc = "";
+                if (map.get("mtd") == null){
+                    sfc = "-";
+                }else {
+                    sfc = map.get("mtd").toString();
+                }
+                //String sfc = map.get("mtd").toString();
                 if (resultMap.containsKey(zh)) {
                     resultMap.get(zh).add(sfc);
                 } else {
@@ -1795,9 +1841,19 @@ public class JjgZdhGzsdServiceImpl extends ServiceImpl<JjgZdhGzsdMapper, JjgZdhG
                                             gzsd.setProname(commonInfoVo.getProname());
                                             gzsd.setHtd(commonInfoVo.getHtd());
                                             gzsd.setQdzh(Double.parseDouble(gzsdVo.getQdzh()));
-                                            /*if (!gzsdVo.getZdzh().isEmpty() && gzsdVo.getZdzh()!=null){
-                                                gzsd.setZdzh(Double.parseDouble(gzsdVo.getZdzh()));
-                                            }*/
+                                            gzsd.setZdzh(Double.parseDouble(gzsdVo.getZdzh()));
+                                            gzsd.setCd(sheetName);
+                                            if (sheetName.contains("一")){
+                                                gzsd.setVal(1);
+                                            }else if (sheetName.contains("二")){
+                                                gzsd.setVal(2);
+                                            }else if (sheetName.contains("三")){
+                                                gzsd.setVal(3);
+                                            }else if (sheetName.contains("四")){
+                                                gzsd.setVal(4);
+                                            }else if (sheetName.contains("五")){
+                                                gzsd.setVal(5);
+                                            }
                                             gzsd.setCd(sheetName);
                                             jjgZdhGzsdMapper.insert(gzsd);
                                         }

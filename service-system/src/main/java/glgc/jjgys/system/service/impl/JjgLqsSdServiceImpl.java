@@ -67,6 +67,8 @@ public class JjgLqsSdServiceImpl extends ServiceImpl<JjgLqsSdMapper, JjgLqsSd> i
                                     {
                                         JjgLqsSd jjgLqsSd = new JjgLqsSd();
                                         BeanUtils.copyProperties(sd,jjgLqsSd);
+                                        jjgLqsSd.setZhq(Double.valueOf(sd.getZhq()));
+                                        jjgLqsSd.setZhz(Double.valueOf(sd.getZhz()));
                                         jjgLqsSd.setProname(proname);
                                         jjgLqsSd.setCreateTime(new Date());
                                         jjgLqsSdMapper.insert(jjgLqsSd);

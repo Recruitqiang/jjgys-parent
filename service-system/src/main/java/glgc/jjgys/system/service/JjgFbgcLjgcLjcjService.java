@@ -29,4 +29,6 @@ public interface JjgFbgcLjgcLjcjService extends IService<JjgFbgcLjgcLjcj> {
     void importljcj(MultipartFile file, CommonInfoVo commonInfoVo);
 
     List<String> selectyxps(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

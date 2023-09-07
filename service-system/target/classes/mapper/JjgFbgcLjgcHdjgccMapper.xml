@@ -9,4 +9,8 @@
         FROM jjg_fbgc_ljgc_hdjgcc where proname = #{proname} and htd = #{htd}
     </select>
 
+    <select id="selectnum" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select COUNT(DISTINCT(zh)) FROM jjg_fbgc_ljgc_hdjgcc where proname = #{proname} and htd = #{htd}
+    </select>
+
 </mapper>

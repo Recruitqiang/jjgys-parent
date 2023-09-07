@@ -31,30 +31,33 @@ import java.util.Date;
 @HeadRowHeight(30)
 public class JjgZdhLdhdVo extends BaseRowModel {
 
-
     /**
      * 桩号
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "桩号" ,index = 0)
+    @ExcelProperty(value = "起点桩号" ,index = 0)
     private String zh;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "雷达" ,index = 1)
+    @ExcelProperty(value = "终点桩号" ,index = 1)
+    private String zdzh;
+
+    @ColumnWidth(23)
+    @ExcelProperty(value = "雷达" ,index = 2)
     private String ld;
 
     /**
      * 类型标识
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "路线类型" ,index = 2)
+    @ExcelProperty(value = "路线类型" ,index = 3)
     private String lxbs;
 
     /**
      * 匝道标识
      */
     @ColumnWidth(23)
-    @ExcelProperty(value = "匝道标识" ,index = 3)
+    @ExcelProperty(value = "匝道标识" ,index = 4)
     private String zdbs;
 
 

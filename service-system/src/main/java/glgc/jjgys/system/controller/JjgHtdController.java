@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -17,21 +18,22 @@ import java.util.List;
 
 @Api(tags = "合同段")
 @RestController
+@Transactional
 @RequestMapping("/project/info/htd")
 public class JjgHtdController {
 
     @Autowired
     private JjgHtdService jjgHtdService;
 
+
     @ApiOperation("批量删除合同段信息")
+    @Transactional
     @DeleteMapping("removeBatch")
     public Result removeBeatch(@RequestBody List<String> idList){
-        boolean htdres = jjgHtdService.removeByIds(idList);
-        if(htdres){
-            return Result.ok();
-        } else {
-            return Result.fail().message("删除失败！");
-        }
+        jjgHtdService.removeData(idList);
+        jjgHtdService.removeByIds(idList);
+        return Result.ok();
+
     }
 
     @ApiOperation("添加合同段")

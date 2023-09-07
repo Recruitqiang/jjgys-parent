@@ -247,6 +247,12 @@ public class JjgFbgcLjgcLjwcServiceImpl extends ServiceImpl<JjgFbgcLjgcLjwcMappe
         xwb.setPrintArea(xwb.getSheetIndex("评定单元"), 0, 8, 0, (record/23+1)*23+4);
     }
 
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcLjgcLjwcMapper.selectnum(proname, htd);
+        return selectnum;
+    }
+
     /**
      * 取得时间
      * @param sheet

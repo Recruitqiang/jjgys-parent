@@ -392,4 +392,10 @@ public class JjgFbgcLjgcLjcjServiceImpl extends ServiceImpl<JjgFbgcLjgcLjcjMappe
         List<String> list = jjgFbgcLjgcLjcjMapper.selectyxps(proname,htd);
         return list;
     }
+
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcLjgcLjcjMapper.selectnum(proname, htd);
+        return selectnum;
+    }
 }

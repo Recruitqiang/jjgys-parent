@@ -13,8 +13,6 @@ import java.net.URLEncoder;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.WritableByteChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
@@ -40,7 +38,7 @@ public class JjgFbgcCommonUtils {
         response.reset();
         response.setHeader("Content-disposition", "attachment; filename=" + downloadName);
         response.setContentType("application/zip;charset=utf-8");
-        response.setCharacterEncoding("utf-8");
+        //response.setCharacterEncoding("utf-8");
 
         //设置压缩流：直接写入response，实现边压缩边下载
         ZipOutputStream zipOs = null;
@@ -518,7 +516,7 @@ public class JjgFbgcCommonUtils {
         response.reset();
         response.setHeader("Content-disposition", "attachment; filename=" + downloadName);
         response.setContentType("application/zip;charset=utf-8");
-        response.setCharacterEncoding("utf-8");
+        //response.setCharacterEncoding("utf-8");
 
         //设置压缩流：直接写入response，实现边压缩边下载
         ZipOutputStream zipOs = null;

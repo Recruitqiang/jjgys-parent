@@ -84,7 +84,7 @@ public class JjgZdhLdhdServiceImpl extends ServiceImpl<JjgZdhLdhdMapper, JjgZdhL
             if (num == 1){
                 n=2;
             }else {
-                n=num/2;
+                n=num;
             }
             handlezxData(proname,htd,zx,n,commonInfoVo);
         }
@@ -1898,6 +1898,8 @@ public class JjgZdhLdhdServiceImpl extends ServiceImpl<JjgZdhLdhdMapper, JjgZdhL
             for (int i = 0 ; i < sfc.length ; i++) {
                 if (!sfc[i].equals("-")){
                     sheet.getRow(tableNum * b + index % b).getCell(2+i).setCellValue(Double.parseDouble(sfc[i]));
+                }else {
+                    sheet.getRow(tableNum * b + index % b).getCell(2+i).setCellValue("-");
                 }
 
             }
@@ -2165,7 +2167,13 @@ public class JjgZdhLdhdServiceImpl extends ServiceImpl<JjgZdhLdhdMapper, JjgZdhL
             Map<String, List<String>> resultMap = new TreeMap<>();
             for (Map<String, Object> map : list) {
                 String zh = map.get("zh").toString();
-                String sfc = map.get("ld").toString();
+                //String sfc = map.get("ld").toString();
+                String sfc = "";
+                if (map.get("ld") == null){
+                    sfc = "-";
+                }else {
+                    sfc = map.get("ld").toString();
+                }
                 if (resultMap.containsKey(zh)) {
                     resultMap.get(zh).add(sfc);
                 } else {
@@ -2228,7 +2236,13 @@ public class JjgZdhLdhdServiceImpl extends ServiceImpl<JjgZdhLdhdMapper, JjgZdhL
             for (Map<String, Object> item : list) {
                 String zdbs = String.valueOf(item.get("zdbs"));
                 String qdzh = String.valueOf(item.get("zh"));
-                String sfc = String.valueOf(item.get("ld"));
+                //String sfc = String.valueOf(item.get("ld"));
+                String sfc = "";
+                if (item.get("ld") == null){
+                    sfc = "-";
+                }else {
+                    sfc = item.get("ld").toString();
+                }
                 if (map.containsKey(zdbs)) {
                     Map<String, List<String>> mapItem = map.get(zdbs);
                     if (mapItem.containsKey(qdzh)) {
@@ -2447,7 +2461,19 @@ public class JjgZdhLdhdServiceImpl extends ServiceImpl<JjgZdhLdhdMapper, JjgZdhL
                                             ldhd.setProname(commonInfoVo.getProname());
                                             ldhd.setHtd(commonInfoVo.getHtd());
                                             ldhd.setZh(Double.parseDouble(ldhdVo.getZh()));
+                                            ldhd.setZhz(Double.parseDouble(ldhdVo.getZdzh()));
                                             ldhd.setCd(sheetName);
+                                            if (sheetName.contains("一")){
+                                                ldhd.setVal(1);
+                                            }else if (sheetName.contains("二")){
+                                                ldhd.setVal(2);
+                                            }else if (sheetName.contains("三")){
+                                                ldhd.setVal(3);
+                                            }else if (sheetName.contains("四")){
+                                                ldhd.setVal(4);
+                                            }else if (sheetName.contains("五")){
+                                                ldhd.setVal(5);
+                                            }
                                             jjgZdhLdhdMapper.insert(ldhd);
                                         }
                                     }

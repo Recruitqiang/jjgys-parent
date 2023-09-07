@@ -392,6 +392,12 @@ public class JjgFbgcLjgcZdgqdServiceImpl extends ServiceImpl<JjgFbgcLjgcZdgqdMap
         return map;
     }
 
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcLjgcZdgqdMapper.selectnum(proname, htd);
+        return selectnum;
+    }
+
     public int gettableNum(int size){
         return size%20 ==0 ? size/20 : size/20+1;
     }

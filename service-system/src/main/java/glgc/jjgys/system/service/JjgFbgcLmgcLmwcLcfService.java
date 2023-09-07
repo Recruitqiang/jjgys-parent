@@ -28,4 +28,6 @@ public interface JjgFbgcLmgcLmwcLcfService extends IService<JjgFbgcLmgcLmwcLcf> 
     void exportlmwclcf(HttpServletResponse response);
 
     void importlmwclcf(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    int selectnum(String proname, String htd);
 }

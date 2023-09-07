@@ -3,7 +3,7 @@
 <mapper namespace="glgc.jjgys.system.mapper.JjgZdhLdhdMapper">
 
     <select id="selectcdnum" resultType="java.lang.Integer" parameterType="java.lang.String">
-        SELECT COUNT(DISTINCT cd) from jjg_zdh_ldhd where proname = #{proname} and htd = #{htd} and lxbs=#{zx}
+        SELECT COUNT(DISTINCT val) from jjg_zdh_ldhd where proname = #{proname} and htd = #{htd} and lxbs=#{zx}
     </select>
 
     <select id="selectlx" resultType="java.util.Map" parameterType="java.lang.String">

@@ -7,43 +7,43 @@
     </select>
 
     <select id="selectcdnum" resultType="java.lang.Integer" parameterType="java.lang.String">
-        SELECT COUNT(DISTINCT cd) from jjg_zdh_gzsd where proname = #{proname} and htd = #{htd} and lxbs=#{zx}
+        SELECT COUNT(DISTINCT val) from jjg_zdh_gzsd where proname = #{proname} and htd = #{htd} and lxbs=#{zx}
     </select>
 
     <select id="selectzfList" resultType="java.util.Map" parameterType="java.lang.String">
-        SELECT *, concat(#{zx}, '左幅') as name from jjg_zdh_gzsd where proname = #{proname} and htd = #{htd} and cd LIKE '左幅%' and lxbs = #{zx} ORDER BY zdbs,qdzh
+        SELECT *, concat(#{zx}, '左幅') as name from jjg_zdh_gzsd where proname = #{proname} and htd = #{htd} and cd LIKE '左幅%' and lxbs = #{zx} ORDER BY zdbs,qdzh,val
     </select>
 
     <select id="selectyfList" resultType="java.util.Map" parameterType="java.lang.String">
-        SELECT *,concat(#{zx}, '右幅') as name  from jjg_zdh_gzsd where proname = #{proname} and htd = #{htd} and cd LIKE '右幅%' and lxbs = #{zx} ORDER BY qdzh
+        SELECT *,concat(#{zx}, '右幅') as name  from jjg_zdh_gzsd where proname = #{proname} and htd = #{htd} and cd LIKE '右幅%' and lxbs = #{zx} ORDER BY zdbs,qdzh,val
     </select>
 
     <select id="selectSdZfData" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT mcxs.*,sd.name from (SELECT * from jjg_zdh_gzsd where proname = #{proname} and htd = #{htd} and cd LIKE '左幅%' and lxbs=#{zx} and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) mcxs
         LEFT JOIN (SELECT * FROM jjg_lqs_sd where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz} and lf = '左幅' and wz=#{zx}) sd
         ON mcxs.proname=sd.proname
-        ORDER BY mcxs.qdzh
+        ORDER BY mcxs.qdzh,mcxs.val
     </select>
 
     <select id="selectSdyfData" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT mcxs.*,sd.name from (SELECT * from jjg_zdh_gzsd where proname = #{proname} and htd = #{htd} and cd LIKE '右幅%' and lxbs=#{zx} and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) mcxs
                                        LEFT JOIN (SELECT * FROM jjg_lqs_sd where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz} and lf = '右幅' and wz=#{zx}) sd
                                                  ON mcxs.proname=sd.proname
-        ORDER BY mcxs.qdzh
+        ORDER BY mcxs.qdzh,mcxs.val
     </select>
 
     <select id="selectQlZfData" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT mcxs.*,ql.qlname name from (SELECT * from jjg_zdh_gzsd where proname = #{proname} and htd = #{htd} and cd LIKE '左幅%' and lxbs=#{zx} and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) mcxs
         LEFT JOIN (SELECT * FROM jjg_lqs_ql where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz} and lf = '左幅' and wz=#{zx}) ql
         ON mcxs.proname=ql.proname
-        ORDER BY mcxs.qdzh
+        ORDER BY mcxs.qdzh,mcxs.val
     </select>
 
     <select id="selectQlYfData" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT mcxs.*,ql.qlname name from (SELECT * from jjg_zdh_gzsd where proname = #{proname} and htd = #{htd} and cd LIKE '右幅%' and lxbs=#{zx} and qdzh >= #{zhq} and qdzh &lt;= #{zhz}) mcxs
         LEFT JOIN (SELECT * FROM jjg_lqs_ql where proname = #{proname} and zhq = #{zhq} and zhz = #{zhz} and lf = '右幅' and wz=#{zx}) ql
         ON mcxs.proname=ql.proname
-        ORDER BY mcxs.qdzh
+        ORDER BY mcxs.qdzh,mcxs.val
     </select>
 
     <select id="selectsdgzsd" resultType="java.util.Map" parameterType="java.lang.String">

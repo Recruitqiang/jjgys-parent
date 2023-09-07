@@ -191,6 +191,12 @@ public class JjgFbgcLjgcXqjgccServiceImpl extends ServiceImpl<JjgFbgcLjgcXqjgccM
         return list;
     }
 
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcLjgcXqjgccMapper.selectnum(proname, htd);
+        return selectnum;
+    }
+
     private void calculateSheet(XSSFSheet sheet) {
         XSSFRow row = null;
         XSSFRow rowstart = null;

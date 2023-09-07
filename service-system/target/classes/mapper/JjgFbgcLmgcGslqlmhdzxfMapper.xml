@@ -53,4 +53,8 @@
             lx like '%连接线隧道%' order by zh
     </select>
 
+    <select id="selectnum" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select COUNT(DISTINCT(zh)) FROM jjg_fbgc_lmgc_gslqlmhdzxf where proname = #{proname} and htd = #{htd}
+    </select>
+
 </mapper>

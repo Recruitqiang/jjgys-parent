@@ -41,4 +41,6 @@ public interface JjgFbgcLmgcLmhpMapper extends BaseMapper<JjgFbgcLmgcLmhp> {
 
     List<JjgFbgcLmgcLmhp> selecthpljx(Map<String, String> map);
 
+    int selectnum(String proname, String htd);
+
 }

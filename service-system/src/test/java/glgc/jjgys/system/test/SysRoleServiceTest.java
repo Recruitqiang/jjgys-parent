@@ -196,6 +196,15 @@ public class SysRoleServiceTest {
     @Autowired
     private JjgFbgcGenerateTablelService jjgFbgcGenerateTablelService;
 
+    @Autowired
+    private JjgFbgcGenerateWordService jjgFbgcGenerateWordService;
+
+    @Autowired
+    private JjgZdhCzService jjgZdhCzService;
+
+    @Autowired
+    private JjgLookProjectPlanService jjgLookProjectPlanService;
+
 
 
     @Test
@@ -206,14 +215,15 @@ public class SysRoleServiceTest {
         CommonInfoVo commonInfoVo = new CommonInfoVo();
         commonInfoVo.setProname("陕西高速");
         commonInfoVo.setHtd("LJ-1");
-        commonInfoVo.setSjz("22");
-        commonInfoVo.setFbgc("路基土石方");
+        //commonInfoVo.setSjz("0.1");
         /*commonInfoVo.setSjz("22");
         /*commonInfoVo.setSjz("22");
         commonInfoVo.setQlsjz("10");
         commonInfoVo.setSdsjz("10");
         commonInfoVo.setFhlmsjz("10");*/
         //commonInfoVo.setFbgc("路面工程");
+
+        //jjgLookProjectPlanService.lookplan(commonInfoVo);
 
 
         /*QueryWrapper<JjgFbgcJtaqssJabx> wrapper=new QueryWrapper<>();
@@ -223,9 +233,10 @@ public class SysRoleServiceTest {
         wrapper.orderByDesc("wz","hdscz1");
         List<JjgFbgcJtaqssJabx> data = jjgFbgcJtaqssJabxMapper.selectList(wrapper);
         jjgFbgcJtaqssJabxService.bxnfsxs(data);*/
-        //jjgFbgcSdgcGssdlqlmhdzxfService.generateJdb(commonInfoVo);
+        //jjgZdhGzsdService.generateJdb(commonInfoVo);
 
-        jjgFbgcGenerateTablelService.generateBGZBG("陕西高速");
+        //jjgFbgcGenerateTablelService.generateBGZBG("陕西高速");
+        jjgFbgcGenerateWordService.generateword("陕西高速");
 
 
         //List<Map<String, Object>> maps = jjgFbgcSdgcGssdlqlmhdzxfService.lookJdbjg(commonInfoVo);

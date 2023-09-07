@@ -28,4 +28,6 @@ public interface JjgFbgcLmgcLmgzsdsgpsfService extends IService<JjgFbgcLmgcLmgzs
     void exportlmgzsdsgpsf(HttpServletResponse response);
 
     void importlmgzsdsgpsf(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    int selectnum(String proname, String htd);
 }

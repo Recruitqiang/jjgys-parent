@@ -29,4 +29,6 @@ public interface JjgFbgcLmgcHntlmqdService extends IService<JjgFbgcLmgcHntlmqd> 
     void exporthntlmqd(HttpServletResponse response);
 
     void importhntlmqd(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    int selectnum(String proname, String htd);
 }

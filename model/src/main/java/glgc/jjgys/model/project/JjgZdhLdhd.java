@@ -38,6 +38,9 @@ public class JjgZdhLdhd implements Serializable {
     @TableField("zh")
     private Double zh;
 
+    @TableField("zhz")
+    private Double zhz;
+
     @TableField("ld")
     private String ld;
 
@@ -58,6 +61,10 @@ public class JjgZdhLdhd implements Serializable {
      */
     @TableField("zdbs")
     private String zdbs;
+
+    @TableField("val")
+    private int val;
+
 
     @TableField("proname")
     private String proname;

@@ -471,4 +471,10 @@ public class JjgFbgcLmgcHntlmhdzxfServiceImpl extends ServiceImpl<JjgFbgcLmgcHnt
         }
 
     }
+
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcLmgcHntlmhdzxfMapper.selectnum(proname, htd);
+        return selectnum;
+    }
 }
