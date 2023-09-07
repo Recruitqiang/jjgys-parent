@@ -17,4 +17,5 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface JjgFbgcLjgcLjwcLcfMapper extends BaseMapper<JjgFbgcLjgcLjwcLcf> {
 
+    int selectnum(String proname, String htd);
 }

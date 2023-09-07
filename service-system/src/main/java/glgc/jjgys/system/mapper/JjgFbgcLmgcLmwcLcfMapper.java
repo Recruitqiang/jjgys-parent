@@ -20,4 +20,5 @@ public interface JjgFbgcLmgcLmwcLcfMapper extends BaseMapper<JjgFbgcLmgcLmwcLcf>
 
     List<Map<String, Object>> selectwdata(String proname, String htd, String fbgc);
 
+    int selectnum(String proname, String htd);
 }

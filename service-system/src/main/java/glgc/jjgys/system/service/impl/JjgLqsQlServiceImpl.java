@@ -54,6 +54,8 @@ public class JjgLqsQlServiceImpl extends ServiceImpl<JjgLqsQlMapper, JjgLqsQl> i
                                     {
                                         JjgLqsQl jjgLqsQl = new JjgLqsQl();
                                         BeanUtils.copyProperties(ql,jjgLqsQl);
+                                        jjgLqsQl.setZhq(Double.valueOf(ql.getZhq()));
+                                        jjgLqsQl.setZhz(Double.valueOf(ql.getZhz()));
                                         jjgLqsQl.setProname(proname);
                                         jjgLqsQl.setCreateTime(new Date());
                                         jjgLqsQlMapper.insert(jjgLqsQl);

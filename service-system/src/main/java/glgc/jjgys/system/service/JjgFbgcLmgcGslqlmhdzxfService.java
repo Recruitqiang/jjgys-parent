@@ -29,4 +29,6 @@ public interface JjgFbgcLmgcGslqlmhdzxfService extends IService<JjgFbgcLmgcGslql
     void exportlqlmhd(HttpServletResponse response);
 
     void importLqlmhd(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    int selectnum(String proname, String htd);
 }

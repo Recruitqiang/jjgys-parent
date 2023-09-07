@@ -26,4 +26,5 @@ public interface JjgFbgcLjgcHdgqdMapper extends BaseMapper<JjgFbgcLjgcHdgqd> {
 
     Map<String, Object> selectchs(String proname, String htd);
 
+    int selectnum(String proname, String htd);
 }

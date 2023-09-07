@@ -28,4 +28,6 @@ public interface JjgFbgcLjgcLjwcLcfService extends IService<JjgFbgcLjgcLjwcLcf> 
     void importljwclcf(MultipartFile file, CommonInfoVo commonInfoVo);
 
     List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException;
+
+    int selectnum(String proname, String htd);
 }

@@ -29,4 +29,6 @@ public interface JjgFbgcLmgcTlmxlbgcService extends IService<JjgFbgcLmgcTlmxlbgc
     void exportxlbgs(HttpServletResponse response);
 
     void importxlbgs(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    int selectnum(String proname, String htd);
 }

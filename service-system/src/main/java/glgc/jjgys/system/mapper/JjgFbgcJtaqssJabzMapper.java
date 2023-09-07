@@ -20,4 +20,6 @@ import java.util.Map;
 public interface JjgFbgcJtaqssJabzMapper extends BaseMapper<JjgFbgcJtaqssJabz> {
 
     Map<String, Object> selectchs(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

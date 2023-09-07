@@ -485,5 +485,11 @@ public class JjgFbgcLjgcXqgqdServiceImpl extends ServiceImpl<JjgFbgcLjgcXqgqdMap
         return map;
     }
 
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcLjgcXqgqdMapper.selectnum(proname, htd);
+        return selectnum;
+    }
+
 
 }

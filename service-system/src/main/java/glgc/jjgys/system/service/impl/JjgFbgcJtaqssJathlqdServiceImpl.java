@@ -200,6 +200,12 @@ public class JjgFbgcJtaqssJathlqdServiceImpl extends ServiceImpl<JjgFbgcJtaqssJa
         return map;
     }
 
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcJtaqssJathlqdMapper.selectnum(proname, htd);
+        return selectnum;
+    }
+
     /**
      *
      * @param sheet

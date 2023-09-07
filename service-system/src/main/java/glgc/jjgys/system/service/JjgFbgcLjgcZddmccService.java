@@ -32,4 +32,6 @@ public interface JjgFbgcLjgcZddmccService extends IService<JjgFbgcLjgcZddmcc> {
     List<Map<String, Object>> selectyxps(String proname, String htd);
 
     Map<String, Object> selectchs(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

@@ -29,4 +29,6 @@ public interface JjgFbgcJtaqssJathldmccService extends IService<JjgFbgcJtaqssJat
     void importjathldmcc(MultipartFile file, CommonInfoVo commonInfoVo);
 
     List<Map<String, Object>> selectyxpc(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

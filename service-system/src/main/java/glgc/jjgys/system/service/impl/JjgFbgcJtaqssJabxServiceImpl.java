@@ -420,6 +420,12 @@ public class JjgFbgcJtaqssJabxServiceImpl extends ServiceImpl<JjgFbgcJtaqssJabxM
         return map;
     }
 
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcJtaqssJabxMapper.selectnum(proname, htd);
+        return selectnum;
+    }
+
     /**
      * 计算白线逆反射系数
      * @param sheet

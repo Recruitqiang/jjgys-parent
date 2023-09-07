@@ -2,6 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="glgc.jjgys.system.mapper.JjgFbgcLmgcLqlmysdMapper">
 
+    <select id="selectnum" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select COUNT(DISTINCT(zh)) FROM jjg_fbgc_lmgc_lqlmysd where proname = #{proname} and htd = #{htd}
+    </select>
+
     <select id="selectsffl" resultType="java.lang.String" parameterType="java.util.Map">
         SELECT DISTINCT(sffl) FROM jjg_fbgc_lmgc_lqlmysd
         WHERE proname = #{proname} and htd = #{htd} and fbgc= #{fbgc}

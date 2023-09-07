@@ -29,4 +29,6 @@ public interface JjgFbgcLjgcLjtsfysdHtService extends IService<JjgFbgcLjgcLjtsfy
     void exportysdht(HttpServletResponse response) throws IOException;
 
     void importysdht(MultipartFile file, CommonInfoVo commonInfoVo) throws IOException, ParseException;
+
+    int selectnum(String proname, String htd);
 }

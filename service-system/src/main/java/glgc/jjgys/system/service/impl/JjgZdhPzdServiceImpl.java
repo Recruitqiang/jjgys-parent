@@ -62,6 +62,9 @@ public class JjgZdhPzdServiceImpl extends ServiceImpl<JjgZdhPzdMapper, JjgZdhPzd
     @Autowired
     private JjgLqsSfzMapper jjgLqsSfzMapper;
 
+    @Autowired
+    private JjgLqsLjxMapper jjgLqsLjxMapper;
+
     @Value(value = "${jjgys.path.filepath}")
     private String filepath;
 
@@ -74,7 +77,13 @@ public class JjgZdhPzdServiceImpl extends ServiceImpl<JjgZdhPzdMapper, JjgZdhPzd
         for (Map<String, Object> map : lxlist) {
             String zx = map.get("lxbs").toString();
             int num = jjgZdhPzdMapper.selectcdnum(proname,htd,zx);
-            handlezxData(proname,htd,zx,num/2,commonInfoVo.getSjz());
+            int cds = 0;
+            if (num == 1){
+                cds = 2;
+            }else {
+                cds=num;
+            }
+            handlezxData(proname,htd,zx,cds,commonInfoVo.getSjz());
         }
 
     }
@@ -182,6 +191,116 @@ public class JjgZdhPzdServiceImpl extends ServiceImpl<JjgZdhPzdMapper, JjgZdhPzd
 
             writeExcelData(proname,htd,lmzf,lmyf,sdzxList,sdyxList,qlzxList,qlyxList,cdsl,sjz,zx);
         }else if (zx.contains("连接线")){
+            //查询的是摩擦系数表中的连接线
+            List<Map<String,Object>> dataljxzf = jjgZdhPzdMapper.selectzfList(proname,htd,zx,result);
+            List<Map<String,Object>> dataljxyf = jjgZdhPzdMapper.selectyfList(proname,htd,zx,result);
+            //连接线
+            QueryWrapper<JjgLjx> wrapperljx = new QueryWrapper<>();
+            wrapperljx.like("proname",proname);
+            wrapperljx.like("sshtd",htd);
+            List<JjgLjx> jjgLjxList = jjgLqsLjxMapper.selectList(wrapperljx);
+
+            List<Map<String,Object>> sdpzd = new ArrayList<>();
+            List<Map<String,Object>> qlpzd = new ArrayList<>();
+
+            for (JjgLjx jjgLjx : jjgLjxList) {
+                String zhq = jjgLjx.getZhq();
+                String zhz = jjgLjx.getZhz();
+                String bz = jjgLjx.getBz();
+                String ljxlf = jjgLjx.getLf();
+                String wz = jjgLjx.getLjxname();
+                List<JjgLqsSd> jjgLqssd = jjgLqsSdMapper.selectsdList(proname,zhq,zhz,bz,wz,ljxlf);
+                for (JjgLqsSd jjgLqsSd : jjgLqssd) {
+                    String lf = jjgLqsSd.getLf();
+
+                    Double sdq = jjgLqsSd.getZhq()+10;
+                    String sdzhq = String.valueOf(sdq);
+                    String sdzhz = jjgLqsSd.getZhz().toString();
+
+                    String zhq1 = String.valueOf((jjgLqsSd.getZhq()));
+                    String zhz1 = String.valueOf((jjgLqsSd.getZhz()));
+                    sdpzd.addAll(jjgZdhPzdMapper.selectsdpzd1(proname,bz,lf,zx,zhq1,zhz1,sdzhq,sdzhz));
+                }
+
+                List<JjgLqsQl> jjgLqsql = jjgLqsQlMapper.selectqlList(proname,zhq,zhz,bz,wz,ljxlf);
+                for (JjgLqsQl jjgLqsQl : jjgLqsql) {
+                    String lf = jjgLqsQl.getLf();
+                    Double qlq = jjgLqsQl.getZhq()+10;
+                    Double qlz = jjgLqsQl.getZhz();
+
+                    String qlzhq = String.valueOf(qlq);
+                    String qlzhz = String.valueOf(qlz);
+
+                    String zhq1 = String.valueOf(jjgLqsQl.getZhq());
+                    String zhz1 = String.valueOf(jjgLqsQl.getZhz());
+                    qlpzd.addAll(jjgZdhPzdMapper.selectqlpzd1(proname,bz,lf, qlzhq, qlzhz, zx, zhq1, zhz1));
+                }
+            }
+            List<Map<String,Object>> zfqlpzd = new ArrayList<>();
+            List<Map<String,Object>> yfqlpzd = new ArrayList<>();
+            if (qlpzd.size()>0){
+                for (int i = 0; i < qlpzd.size(); i++) {
+                    if (qlpzd.get(i).get("cd").toString().contains("左幅")){
+                        zfqlpzd.add(qlpzd.get(i));
+                    }
+                    if (qlpzd.get(i).get("cd").toString().contains("右幅")){
+                        yfqlpzd.add(qlpzd.get(i));
+                    }
+                }
+            }
+            List<Map<String,Object>> zfsdpzd = new ArrayList<>();
+            List<Map<String,Object>> yfsdpzd = new ArrayList<>();
+            if (sdpzd.size()>0){
+                for (Map<String, Object> sdmcx : sdpzd) {
+                    if (sdmcx.get("cd").toString().contains("左幅")){
+                        zfsdpzd.add(sdmcx);
+                    }
+                    if (sdmcx.get("cd").toString().contains("右幅")){
+                        yfsdpzd.add(sdmcx);
+                    }
+                }
+            }
+
+            //拼接IRI数据
+            List<Map<String, Object>> sdzList = montageZDIRI(zfsdpzd,cdsl);
+            List<Map<String, Object>> sdyList = montageZDIRI(yfsdpzd,cdsl);
+            List<Map<String, Object>> qlzList = montageZDIRI(zfqlpzd,cdsl);
+
+            List<Map<String, Object>> qlyList = montageZDIRI(yfqlpzd,cdsl);
+
+            List<Map<String, Object>> zdzfList = montageZDIRI(dataljxzf,cdsl);
+            List<Map<String, Object>> zdyfList = montageZDIRI(dataljxyf,cdsl);
+
+
+            List<Map<String, Object>> zdzf = new ArrayList<>();
+            double zdzh = Double.parseDouble(zdzfList.get(0).get("qdzh").toString());
+            double finzdzh = Double.parseDouble(zdzfList.get(zdzfList.size()-1).get("qdzh").toString());;
+            zdzf.addAll(decrementNumberByStep(zdzh,finzdzh,zdzfList,cdsl));
+
+            Collections.sort(zdzf, new Comparator<Map<String, Object>>() {
+                @Override
+                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                    // 名字相同时按照 qdzh 排序
+                    Double qdzh1 = Double.parseDouble(o1.get("qdzh").toString());
+                    Double qdzh2 = Double.parseDouble(o2.get("qdzh").toString());
+                    return qdzh1.compareTo(qdzh2);
+                }
+            });
+
+            List<Map<String, Object>> zdyf = new ArrayList<>();
+            double zdzh1 = Double.parseDouble(zdyfList.get(0).get("qdzh").toString());
+            double finzdzh1 = Double.parseDouble(zdyfList.get(zdyfList.size()-1).get("qdzh").toString());;
+            zdyf.addAll(decrementNumberByStep(zdzh1,finzdzh1,zdyfList,cdsl));
+            Collections.sort(zdyf, new Comparator<Map<String, Object>>() {
+                @Override
+                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                    // 名字相同时按照 qdzh 排序
+                    Double qdzh1 = Double.parseDouble(o1.get("qdzh").toString());
+                    Double qdzh2 = Double.parseDouble(o2.get("qdzh").toString());
+                    return qdzh1.compareTo(qdzh2);
+                }
+            });
+            writeExcelData(proname,htd,zdzf,zdyf,sdzList,sdyList,qlzList,qlyList,cdsl,sjz,zx);
 
         }else {
             //匝道的所有数据
@@ -1519,10 +1638,14 @@ public class JjgZdhPzdServiceImpl extends ServiceImpl<JjgZdhPzdMapper, JjgZdhPzd
                     if (lm.get("cd").equals("左幅")){
                         if (!sfc[i].equals("-")) {
                             sheet.getRow(tableNum * a + 7 + index % b).getCell(5 + i).setCellValue(Double.parseDouble(sfc[i]));
+                        }else {
+                            sheet.getRow(tableNum * a + 7 + index % b).getCell(5 + i).setCellValue(sfc[i]);
                         }
                     }else {
                         if (!sfc[i].equals("-")){
                             sheet.getRow(tableNum * a + 7 + index % b).getCell((2*cdsl+5)+i).setCellValue(Double.parseDouble(sfc[i]));
+                        }else {
+                            sheet.getRow(tableNum * a + 7 + index % b).getCell((2*cdsl+5)+i).setCellValue(sfc[i]);
                         }
 
                     }
@@ -2107,19 +2230,11 @@ public class JjgZdhPzdServiceImpl extends ServiceImpl<JjgZdhPzdMapper, JjgZdhPzd
         String[] sfc = row.get("iri").toString().split(",");
         if (!sfc[0].isEmpty()) {
             for (int i = 0 ; i < sfc.length ; i++) {
-                //if (row.get("cd").toString().equals("左幅")){
                 if (!sfc[i].equals("-")){
                     sheet.getRow(tableNum * a + 7 + index % b).getCell(5+i).setCellValue(Double.parseDouble(sfc[i]));
-                }/*else {
-                    sheet.getRow(tableNum * a + 7 + index % b).getCell((2*cdsl+5)+i).setCellValue(Double.parseDouble(sfc[i]));
-                }*/
-
-                /*}else {
-                    if (!sfc[i].equals("-")){
-                        sheet.getRow(tableNum * a + 7 + index % b).getCell((2*cdsl+5)+i).setCellValue(Double.parseDouble(sfc[i]));
-                    }
-
-                }*/
+                }else {
+                    sheet.getRow(tableNum * a + 7 + index % b).getCell((2*cdsl+5)+i).setCellValue(sfc[i]);
+                }
 
             }
         }
@@ -2175,8 +2290,20 @@ public class JjgZdhPzdServiceImpl extends ServiceImpl<JjgZdhPzdMapper, JjgZdhPzd
             Map<String, List<String>> resultMapz = new TreeMap<>();
             for (Map<String, Object> map : list) {
                 String qdzh = map.get("qdzh").toString();
-                String ziri = map.get("ziri").toString();
-                String yiri = map.get("yiri").toString();
+                //String ziri = map.get("ziri").toString();
+                //String yiri = map.get("yiri").toString();
+                String ziri = "";
+                String yiri = "";
+                if (map.get("ziri") == null){
+                    ziri = "-";
+                }else {
+                    ziri = map.get("ziri").toString();
+                }
+                if (map.get("yiri") == null){
+                    yiri = "-";
+                }else {
+                    yiri = map.get("yiri").toString();
+                }
                 if (resultMapz.containsKey(qdzh)) {
                     resultMapz.get(qdzh).add(ziri);
                     resultMapz.get(qdzh).add(yiri);
@@ -2185,7 +2312,6 @@ public class JjgZdhPzdServiceImpl extends ServiceImpl<JjgZdhPzdMapper, JjgZdhPzd
                     sfcList.add(ziri);
                     sfcList.add(yiri);
                     resultMapz.put(qdzh, sfcList);
-                    //resultMapz.put(qdzh, sfcList);
                 }
             }
 
@@ -2333,6 +2459,17 @@ public class JjgZdhPzdServiceImpl extends ServiceImpl<JjgZdhPzdMapper, JjgZdhPzd
                                             pzd.setQdzh(Double.parseDouble(pzdVo.getQdzh()));
                                             if (!pzdVo.getZdzh().isEmpty() && pzdVo.getZdzh()!=null){
                                                 pzd.setZdzh(Double.parseDouble(pzdVo.getZdzh()));
+                                            }
+                                            if (sheetName.contains("一")){
+                                                pzd.setVal(1);
+                                            }else if (sheetName.contains("二")){
+                                                pzd.setVal(2);
+                                            }else if (sheetName.contains("三")){
+                                                pzd.setVal(3);
+                                            }else if (sheetName.contains("四")){
+                                                pzd.setVal(4);
+                                            }else if (sheetName.contains("五")){
+                                                pzd.setVal(5);
                                             }
                                             pzd.setCd(sheetName);
                                             jjgZdhPzdMapper.insert(pzd);

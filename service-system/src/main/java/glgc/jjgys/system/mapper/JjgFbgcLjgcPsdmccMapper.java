@@ -21,4 +21,6 @@ import java.util.Map;
 public interface JjgFbgcLjgcPsdmccMapper extends BaseMapper<JjgFbgcLjgcPsdmcc> {
 
     List<Map<String,Object>> selectyxps(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

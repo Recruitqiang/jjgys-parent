@@ -37,4 +37,6 @@ public interface JjgFbgcLmgcGslqlmhdzxfMapper extends BaseMapper<JjgFbgcLmgcGslq
     List<JjgFbgcLmgcGslqlmhdzxf> selectljxq(String proname, String htd, String fbgc);
 
     List<JjgFbgcLmgcGslqlmhdzxf> selectljxsd(String proname, String htd, String fbgc);
+
+    int selectnum(String proname, String htd);
 }

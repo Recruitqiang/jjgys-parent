@@ -31,4 +31,24 @@ public interface SysMenuService extends IService<SysMenu> {
 
     //根据userid查询按钮权限值
     List<String> getUserButtonList(String id);
+
+    List<SysMenu> selectname(String proname);
+
+    List<SysMenu> selectscname(Long pronameid);
+
+    boolean delecthtd(Long scid, String htd);
+
+    List<SysMenu> selecthtd(Long scid, String htd);
+
+    boolean delectfbgc(Long fbgcid);
+
+    SysMenu selectcdinfo(String proName);
+
+    SysMenu getscChildrenMenu(Long proid);
+
+    List<SysMenu> getAllHtd(Long scid);
+
+    void removeFbgc(List<SysMenu> htdlist);
+
+    void delectChildrenMenu(Long proid);
 }

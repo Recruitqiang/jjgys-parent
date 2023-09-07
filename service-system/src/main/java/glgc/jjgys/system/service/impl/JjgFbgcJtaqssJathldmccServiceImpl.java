@@ -431,4 +431,10 @@ public class JjgFbgcJtaqssJathldmccServiceImpl extends ServiceImpl<JjgFbgcJtaqss
         List<Map<String, Object>> list = jjgFbgcJtaqssJathldmccMapper.selectyxpc(proname,htd);
         return list;
     }
+
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcJtaqssJathldmccMapper.selectnum(proname, htd);
+        return selectnum;
+    }
 }

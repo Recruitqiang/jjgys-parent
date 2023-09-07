@@ -350,4 +350,10 @@ public class JjgFbgcLjgcPspqhdServiceImpl extends ServiceImpl<JjgFbgcLjgcPspqhdM
         List<String>  list = jjgFbgcLjgcPspqhdMapper.selectyxps(proname,htd);
         return list;
     }
+
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcLjgcPspqhdMapper.selectnum(proname, htd);
+        return selectnum;
+    }
 }

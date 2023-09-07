@@ -69,6 +69,8 @@ public class JjgZdhMcxsController {
     public void generateJdb(@RequestBody CommonInfoVo commonInfoVo) throws Exception {
         jjgZdhMcxsService.generateJdb(commonInfoVo);
 
+        //将数据以excel数据导出，然后删除库中的数据
+
     }
 
     @ApiOperation("查看摩擦系数鉴定结果")

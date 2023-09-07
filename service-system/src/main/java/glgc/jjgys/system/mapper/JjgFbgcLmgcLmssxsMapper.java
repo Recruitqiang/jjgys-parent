@@ -15,4 +15,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface JjgFbgcLmgcLmssxsMapper extends BaseMapper<JjgFbgcLmgcLmssxs> {
 
+    int selectnum(String proname, String htd);
 }

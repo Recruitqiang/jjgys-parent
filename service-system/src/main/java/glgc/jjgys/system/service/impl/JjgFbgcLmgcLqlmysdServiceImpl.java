@@ -1194,4 +1194,10 @@ public class JjgFbgcLmgcLqlmysdServiceImpl extends ServiceImpl<JjgFbgcLmgcLqlmys
 
     }
 
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcLmgcLqlmysdMapper.selectnum(proname, htd);
+        return selectnum;
+    }
+
 }

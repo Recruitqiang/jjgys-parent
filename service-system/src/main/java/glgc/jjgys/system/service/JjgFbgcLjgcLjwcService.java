@@ -39,4 +39,6 @@ public interface JjgFbgcLjgcLjwcService extends IService<JjgFbgcLjgcLjwc> {
     String getLastTime(XSSFSheet sheet);
 
     void createEvaluateTable(ArrayList<String> ref,XSSFWorkbook xwb);
+
+    int selectnum(String proname, String htd);
 }

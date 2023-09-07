@@ -9,5 +9,7 @@
     <select id="selectchs" resultType="java.util.Map" parameterType="java.lang.String">
         select COUNT(DISTINCT(zh)) zh FROM jjg_fbgc_jtaqss_jathlqd where proname = #{proname} and htd = #{htd}
     </select>
-
+    <select id="selectnum" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select COUNT(DISTINCT(zh)) FROM jjg_fbgc_jtaqss_jathlqd where proname = #{proname} and htd = #{htd}
+    </select>
 </mapper>

@@ -35,6 +35,6 @@ public class FhlmVo extends BaseRowModel {
     private String zhz;
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "路面全长（m）" ,index = 3)
+    @ExcelProperty(value = "路面全长（m）" ,index = 5)
     private String lmqc;
 }

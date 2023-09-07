@@ -32,4 +32,6 @@ public interface JjgFbgcLjgcLjtsfysdSlService extends IService<JjgFbgcLjgcLjtsfy
     void importysdsl(MultipartFile file, CommonInfoVo commonInfoVo) throws IOException, ParseException;
 
     LinkedHashMap<String, ArrayList<String>> writeAndGetData(XSSFWorkbook wb,String proname, String htd, String fbgc);
+
+    int selectnum(String proname, String htd);
 }

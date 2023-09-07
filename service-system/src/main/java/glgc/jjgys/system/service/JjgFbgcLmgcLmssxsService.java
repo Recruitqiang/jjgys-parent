@@ -29,4 +29,6 @@ public interface JjgFbgcLmgcLmssxsService extends IService<JjgFbgcLmgcLmssxs> {
     void exportLmssxs(HttpServletResponse response);
 
     void importLmssxs(MultipartFile file, CommonInfoVo commonInfoVo);
+
+    int selectnum(String proname, String htd);
 }

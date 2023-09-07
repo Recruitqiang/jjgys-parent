@@ -19,4 +19,6 @@ import java.util.Map;
 public interface JjgFbgcLmgcLmwcMapper extends BaseMapper<JjgFbgcLmgcLmwc> {
 
     List<Map<String, Object>> selectwdata(String proname, String htd, String fbgc);
+
+    int selectnum(String proname, String htd);
 }

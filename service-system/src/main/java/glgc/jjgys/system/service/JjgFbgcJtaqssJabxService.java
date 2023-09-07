@@ -33,4 +33,6 @@ public interface JjgFbgcJtaqssJabxService extends IService<JjgFbgcJtaqssJabx> {
     List<Map<String, Object>> lookJdbjg(CommonInfoVo commonInfoVo) throws IOException;
 
     Map<String, Object> selectchs(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

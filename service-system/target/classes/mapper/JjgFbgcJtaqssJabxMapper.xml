@@ -32,4 +32,8 @@
         select COUNT(DISTINCT(wz)) wz FROM jjg_fbgc_jtaqss_jabx where proname = #{proname} and htd = #{htd}
     </select>
 
+    <select id="selectnum" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select COUNT(DISTINCT(zh)) FROM jjg_fbgc_jtaqss_jabx where proname = #{proname} and htd = #{htd}
+    </select>
+
 </mapper>

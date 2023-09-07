@@ -1277,4 +1277,10 @@ public class JjgFbgcLmgcLmhpServiceImpl extends ServiceImpl<JjgFbgcLmgcLmhpMappe
         List<Map<String,String>> sdmclist = jjgFbgcLmgcLmhpMapper.selectlx(proname,htd);
         return sdmclist;
     }
+
+    @Override
+    public int selectnum(String proname, String htd) {
+        int selectnum = jjgFbgcLmgcLmhpMapper.selectnum(proname, htd);
+        return selectnum;
+    }
 }

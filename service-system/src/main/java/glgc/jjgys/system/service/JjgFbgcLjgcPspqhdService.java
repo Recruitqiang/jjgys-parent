@@ -31,4 +31,6 @@ public interface JjgFbgcLjgcPspqhdService extends IService<JjgFbgcLjgcPspqhd> {
     void importpspqhd(MultipartFile file,CommonInfoVo commonInfoVo);
 
     List<String> selectyxps(String proname, String htd);
+
+    int selectnum(String proname, String htd);
 }

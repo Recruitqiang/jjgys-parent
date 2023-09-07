@@ -1,6 +1,7 @@
 package glgc.jjgys.common.excel;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.BaseRowModel;
@@ -153,6 +154,15 @@ public class ExcelUtil {
         }
     }
 
+    private static OutputStream getOutputStream(String fileName, HttpServletResponse response,String sheetName, BaseRowModel object) {
+        try {
+            saveLocal(fileName,object,sheetName);
+            return response.getOutputStream();
+        } catch (IOException e) {
+            throw new ExcelException("创建文件失败！");
+        }
+    }
+
     /**
      * 返回 ExcelReader
      *
@@ -174,4 +184,36 @@ public class ExcelUtil {
         }
         return null;
     }
+
+    /**
+     * 创建本地模板文件
+     */
+    public static void saveLocal(String fileName,BaseRowModel object,String sheetName){
+        //创建本地文件
+        String filePath = fileName + ".xlsx";
+        File dbfFile = new File(filePath);
+        System.out.println("船舰本地文件"+filePath);
+        try {
+            if (!dbfFile.exists() || dbfFile.isDirectory()) {
+                dbfFile.createNewFile();
+            }
+
+            OutputStream outputStream = new FileOutputStream(filePath);
+
+
+            ExcelWriter excelWriter = EasyExcelFactory.getWriter(outputStream);
+            List list=new ArrayList<>();
+            Sheet sheet = new Sheet(1, 0, object.getClass());
+            sheet.setSheetName(sheetName);
+            excelWriter.write(list,sheet);
+            excelWriter.finish();
+            outputStream.close();
+
+
+
+        } catch (IOException e) {
+            throw new ExcelException("创建文件失败！");
+        }
+    }
+
 }

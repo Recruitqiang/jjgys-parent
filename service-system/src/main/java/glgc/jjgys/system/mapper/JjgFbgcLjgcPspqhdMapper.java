@@ -22,4 +22,5 @@ public interface JjgFbgcLjgcPspqhdMapper extends BaseMapper<JjgFbgcLjgcPspqhd> {
 
     List<String> selectyxps(String proname, String htd);
 
+    int selectnum(String proname, String htd);
 }

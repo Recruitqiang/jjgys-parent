@@ -130,12 +130,11 @@ public class JjgZdhPzdController {
         } else {
             return Result.fail().message("删除失败！");
         }
-
     }
 
     @ApiOperation("根据id查询")
-    @GetMapping("getmcxs/{id}")
-    public Result getmcxs(@PathVariable String id) {
+    @GetMapping("getpzd/{id}")
+    public Result getpzd(@PathVariable String id) {
         JjgZdhPzd user = jjgZdhPzdService.getById(id);
         return Result.ok(user);
     }

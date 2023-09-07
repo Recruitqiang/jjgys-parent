@@ -47,7 +47,7 @@ public class JjgZdhCzVo extends BaseRowModel {
 
 
     @ColumnWidth(23)
-    @ExcelProperty(value = "cz" ,index = 2)
+    @ExcelProperty(value = "车辙" ,index = 2)
     private String cz;
 
     /**
